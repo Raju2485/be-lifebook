@@ -1,69 +1,3 @@
-// import 'reflect-metadata';
-// import { Table, Column, DataType, Model, PrimaryKey, Default, AllowNull, Unique, AutoIncrement } from 'sequelize-typescript';
-// @Table({ tableName: 'Users', timestamps: true })
-// export class Users extends Model<Users> {
-//   @Unique
-//   @AllowNull(false)
-//   @PrimaryKey
-//   @AutoIncrement
-//   @Column(DataType.INTEGER)
-//   id!: number;
-
-//   @Unique
-//   @AllowNull(false)
-//   @Column(DataType.STRING)
-//   email!: string;
-
-//   @AllowNull(false)
-//   @Column(DataType.STRING)
-//   password!: string;
-
-//   @AllowNull(false)
-//   @Column(DataType.STRING)
-//   name!: string;
-  
-//   @Column(DataType.STRING)
-//   middleName!: string;
-  
-//   @Column(DataType.STRING)
-//   surName!: string;
-
-//   @AllowNull(false)
-//   @Column(DataType.INTEGER)
-//   mobileNumber!: number;
-
-//   @AllowNull(false)
-//   @Column(DataType.STRING)
-//   countryCode!: string;
-
-//   @AllowNull(false)
-//   @Default(true)
-//   @Column(DataType.BOOLEAN)
-//   isActive!: boolean;
-
-//   @AllowNull(false)
-//   @Column(DataType.DATEONLY)
-//   dob!: Date;
-
-//   @Column(DataType.TIME)
-//   tob!: string;
-  
-//   @AllowNull(false)
-//   @Default(false)
-//   @Column(DataType.BOOLEAN)
-//   isVerified!: boolean;
-  
-//   @Column(DataType.INTEGER)
-//   AccntTypeId!: number;
-  
-//   @Column(DataType.INTEGER)
-//   GenderId!: number;
-  
-//   @Unique
-//   @AllowNull(false)
-//   @Column(DataType.INTEGER)
-//   uid!: number;
-// }
 import {
   Model,
   InferAttributes,
@@ -72,7 +6,6 @@ import {
   DataTypes,
 } from 'sequelize';
 import { sequelize } from '../config/database'; // adjust import to your sequelize instance
-
 export class Users extends Model<
   InferAttributes<Users>,
   InferCreationAttributes<Users>

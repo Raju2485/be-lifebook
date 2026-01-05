@@ -2,14 +2,12 @@ type Env = 'local' | 'development' | 'production' | 'test';
 
 const env: Env = process.env.NODE_ENV as Env;
 
-import { Dialect } from 'sequelize';
-
 interface ConfigObject {
   username: string;
   password: string;
   database: string;
   host: string;
-  dialect: Dialect;
+  dialect: 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql';
   operatorsAliases: number;
   ssl: boolean;
   dialectOptions: any;

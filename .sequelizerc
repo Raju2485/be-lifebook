@@ -4,7 +4,7 @@ const path = require('path');
 
 module.exports = {
   env: process.env.NODE_ENV,
-  config: path.resolve(__dirname, 'src/config/config.js'),
+  config: path.resolve(__dirname, 'src/config/config.ts'),
   'migrations-path': path.resolve(__dirname, 'src/migrations'),
   'models-path': path.resolve(__dirname, 'src/models'),
 };

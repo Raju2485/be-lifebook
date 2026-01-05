@@ -1,7 +1,7 @@
-import { Sequelize } from 'sequelize-typescript';
+import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 dotenv.config();
-import config from './config.js';
+import config from './config.ts';
 
 const sequelize = new Sequelize({
   dialect: 'postgres',
