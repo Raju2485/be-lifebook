@@ -22,7 +22,7 @@ export class Users extends Model<
   declare dob: Date;
   declare tob: string | null;
   declare isVerified: CreationOptional<boolean>;
-  declare AccntTypeId: number | null;
+  declare TypeId: number | null;
   declare GenderId: number | null;
   declare uid: number;
 }
@@ -82,7 +82,7 @@ Users.init(
       allowNull: false,
       defaultValue: false,
     },
-    AccntTypeId: {
+    TypeId: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
