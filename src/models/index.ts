@@ -16,8 +16,8 @@ Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
 GenderMasters.hasMany(Users);
 Users.belongsTo(GenderMasters, {foreignKey: 'GenderId'});
 
-Users.belongsToMany(Users, {as: 'Connections', through: UsrConns, foreignKey: 'UserId'});
-Users.belongsToMany(Users, {as: 'Users',through: UsrConns, foreignKey: 'ConnId'});
+Users.belongsToMany(Users, {as: 'Connections', through: UsrConns, foreignKey: 'UserId', otherKey: 'ConnId'});
+Users.belongsToMany(Users, {as: 'Users',through: UsrConns, foreignKey: 'ConnId', otherKey: 'UserId'});
 
 RelationMasters.hasMany(UsrConns, {foreignKey:'RelId'});
 UsrConns.belongsTo(RelationMasters);
