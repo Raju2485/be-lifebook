@@ -20,31 +20,41 @@ Users.belongsToMany(Users, {as: 'Connections', through: UsrConns, foreignKey: 'U
 Users.belongsToMany(Users, {as: 'Users',through: UsrConns, foreignKey: 'ConnId', otherKey: 'UserId'});
 
 RelationMasters.hasMany(UsrConns, {foreignKey:'RelId'});
-UsrConns.belongsTo(RelationMasters);
+UsrConns.belongsTo(RelationMasters, { foreignKey: 'RelId' });
 
-Users.hasMany(Accounts);
-Accounts.belongsTo(Users);
+Users.hasMany(Accounts, { foreignKey: 'UserId' });
+Accounts.belongsTo(Users, { foreignKey: 'UserId' });
 
-Organizations.hasMany(Accounts, {foreignKey: 'OrgId'});
-Accounts.belongsTo(Organizations);
+Organizations.hasMany(Accounts, { foreignKey: 'OrgId' });
+Accounts.belongsTo(Organizations, { foreignKey: 'OrgId' });
 
-AccTypeMasters.hasMany(Accounts, {foreignKey: 'AccTypeId'});
-Accounts.belongsTo(AccTypeMasters);
+AccTypeMasters.hasMany(Accounts, { foreignKey: 'AccTypeId' });
+Accounts.belongsTo(AccTypeMasters, { foreignKey: 'AccTypeId' });
 
-Accounts.belongsToMany(RoleMasters, {as: 'Roles', through: AccRoles, foreignKey: 'AccountId'});
-RoleMasters.belongsToMany(Accounts, {as: 'Accounts',through: AccRoles, foreignKey: 'RoleId'});
+Accounts.belongsToMany(RoleMasters, {
+  as: 'Roles',
+  through: AccRoles,
+  foreignKey: 'AccountId',
+  otherKey: 'RoleId',
+});
+RoleMasters.belongsToMany(Accounts, {
+  as: 'Accounts',
+  through: AccRoles,
+  foreignKey: 'RoleId',
+  otherKey: 'AccountId',
+});
 
-Accounts.hasMany(CashBooks, {as: 'Debitor', foreignKey: 'DebitorId'});
-CashBooks.belongsTo(Accounts, { as: 'Debitor' });
+Accounts.hasMany(CashBooks, { as: 'Debitor', foreignKey: 'DebitorId' });
+CashBooks.belongsTo(Accounts, { as: 'Debitor', foreignKey: 'DebitorId' });
 
-Accounts.hasMany(CashBooks, {as: 'Creditor', foreignKey: 'CreditorId'});
-CashBooks.belongsTo(Accounts, { as: 'Creditor' });
+Accounts.hasMany(CashBooks, { as: 'Creditor', foreignKey: 'CreditorId' });
+CashBooks.belongsTo(Accounts, { as: 'Creditor', foreignKey: 'CreditorId' });
 
-Accounts.hasMany(CashBooks, {as: 'BookKeeper', foreignKey: 'BkId'});
-CashBooks.belongsTo(Accounts, { as: 'BookKeeper' });
+Accounts.hasMany(CashBooks, { as: 'BookKeeper', foreignKey: 'BkId' });
+CashBooks.belongsTo(Accounts, { as: 'BookKeeper', foreignKey: 'BkId' });
 
-Organizations.hasMany(CashBooks, {foreignKey: 'OrgId'});
-CashBooks.belongsTo(Organizations);
+Organizations.hasMany(CashBooks, { foreignKey: 'OrgId' });
+CashBooks.belongsTo(Organizations, { foreignKey: 'OrgId' });
 
 export default {
   TypeMasters,
