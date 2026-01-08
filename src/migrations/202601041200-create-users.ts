@@ -29,7 +29,7 @@ export async function up( queryInterface: QueryInterface ){
       type: DataTypes.STRING,
     },
     mobileNumber: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     countryCode: {

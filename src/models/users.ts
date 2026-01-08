@@ -59,7 +59,7 @@ Users.init(
       allowNull: true,
     },
     mobileNumber: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     countryCode: {
@@ -94,7 +94,6 @@ Users.init(
     },
     uid: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       unique: true,
     },
     createdAt: {

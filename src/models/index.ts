@@ -10,10 +10,10 @@ import { RoleMasters } from './role-masters';
 import { AccRoles } from './acc-roles';
 import { CashBooks } from './cash-books';
 
-TypeMasters.hasMany(Users);
+TypeMasters.hasMany(Users, {foreignKey: 'TypeId'});
 Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
 
-GenderMasters.hasMany(Users);
+GenderMasters.hasMany(Users, {foreignKey: 'GenderId'});
 Users.belongsTo(GenderMasters, {foreignKey: 'GenderId'});
 
 Users.belongsToMany(Users, {as: 'Connections', through: UsrConns, foreignKey: 'UserId', otherKey: 'ConnId'});

@@ -10,7 +10,7 @@
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             required:
@@ -56,7 +56,7 @@
  *               email:
  *                 type: string
  *                 format: email
- *                 example: john.doe@example.com
+ *                 example: bheema@mailinator.com
  *                 description: "User's email address (must be unique)"
  *               password:
  *                 type: string
@@ -66,7 +66,7 @@
  *                 description: "User's password (minimum 6 characters)"
  *               name:
  *                 type: string
- *                 example: John
+ *                 example: Bheemaraju
  *                 description: User's first name
  *               middleName:
  *                 type: string
@@ -76,16 +76,16 @@
  *               surName:
  *                 type: string
  *                 nullable: true
- *                 example: Doe
+ *                 example: Bojja
  *                 description: "User's surname (optional)"
  *               mobileNumber:
  *                 type: integer
- *                 example: 1234567890
+ *                 example: 8330955007
  *                 description: "User's mobile number (must be a positive number)"
  *               countryCode:
  *                 type: string
  *                 pattern: '^\+?[1-9]\d{0,3}$'
- *                 example: '+1'
+ *                 example: '+91'
  *                 description: "Country code for mobile number (format: +XX or XX)"
  *               dob:
  *                 type: string
@@ -101,12 +101,12 @@
  *               TypeId:
  *                 type: integer
  *                 nullable: true
- *                 example: 1
+ *                 example: 19
  *                 description: "Type ID reference (must exist in TypeMasters table)"
  *               GenderId:
  *                 type: integer
  *                 nullable: true
- *                 example: 1
+ *                 example: 4
  *                 description: "Gender ID reference (must exist in GenderMasters table)" 
  *     responses:
  *       200:

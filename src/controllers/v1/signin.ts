@@ -3,7 +3,11 @@ import models from '../../models/index'
 
 export const signin = async(req: Request, res: Response) => {
     try {
-        const data = await models.Users.findOne();
+        const { email, password } = req.body;
+
+        const data = await models.Users.findOne({
+          where: { email },
+        });
         console.log(data?.dataValues)
 
     return res.status(200).json({ success: true, msg: 'Signed in successfully' })
