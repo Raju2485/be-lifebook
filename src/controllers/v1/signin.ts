@@ -13,12 +13,11 @@ export const signin = async(req: Request, res: Response) => {
             return res.status(400).json({success: false, msg: 'Authentication failed'})
         }
 
-        
-        user = user?.toJSON();
+        const userData = user?.toJSON ? user.toJSON() : user;
         const newUser = {
-            name: user?.name,
-            surName: user?.surName,
-            email: user?.email,
+            name: userData?.name,
+            surName: userData?.surName,
+            email: userData?.email,
         }
     const { accessToken, refreshToken } = await generateTokens(newUser);
 
