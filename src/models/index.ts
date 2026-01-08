@@ -1,6 +1,7 @@
 import { TypeMasters } from './type-masters';
 import { GenderMasters } from './gender-masters';
 import { Users } from './users';
+import { AccessAndRefreshTokens } from './access-and-refresh-tokens';
 import { RelationMasters } from './relation-masters';
 import { UsrConns } from './usr-conns';
 import { AccTypeMasters } from './acc-type-masters';
@@ -15,6 +16,9 @@ Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
 
 GenderMasters.hasMany(Users, {foreignKey: 'GenderId'});
 Users.belongsTo(GenderMasters, {foreignKey: 'GenderId'});
+
+Users.hasMany(AccessAndRefreshTokens, {foreignKey:'UserId'});
+AccessAndRefreshTokens.belongsTo(Users, { foreignKey: 'UserId' });
 
 Users.belongsToMany(Users, {as: 'Connections', through: UsrConns, foreignKey: 'UserId', otherKey: 'ConnId'});
 Users.belongsToMany(Users, {as: 'Users',through: UsrConns, foreignKey: 'ConnId', otherKey: 'UserId'});
@@ -60,6 +64,7 @@ export default {
   TypeMasters,
   GenderMasters,
   Users,
+  AccessAndRefreshTokens,
   RelationMasters,
   UsrConns,
   AccTypeMasters,

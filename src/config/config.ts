@@ -16,6 +16,7 @@ interface ConfigObject {
   pool: any;
   PORT: number;
   JWT_SECRET_KEY: string;
+  REFRESH_TOKEN_SECRET_KEY: string;
 }
 
 const local: ConfigObject = {      
@@ -41,7 +42,8 @@ const local: ConfigObject = {
   },
 
   PORT: Number(process.env.LOCAL_PORT),
-  JWT_SECRET_KEY: String(process.env.LOCAL_JWT_SECRET_KEY),    
+  JWT_SECRET_KEY: String(process.env.LOCAL_JWT_SECRET_KEY), 
+  REFRESH_TOKEN_SECRET_KEY: String(process.env.LOCAL_REFRESH_TOKEN_SECRET_KEY),
 }
 
 const development: ConfigObject = {      
@@ -68,6 +70,7 @@ const development: ConfigObject = {
 
   PORT: Number(process.env.DEV_PORT),
   JWT_SECRET_KEY: String(process.env.DEV_JWT_SECRET_KEY),    
+  REFRESH_TOKEN_SECRET_KEY: String(process.env.DEV_REFRESH_TOKEN_SECRET_KEY),
 }
 
 const production: ConfigObject = {      
@@ -93,7 +96,8 @@ const production: ConfigObject = {
   },
 
   PORT: Number(process.env.PROD_PORT),
-  JWT_SECRET_KEY: String(process.env.PROD_JWT_SECRET_KEY),    
+  JWT_SECRET_KEY: String(process.env.PROD_JWT_SECRET_KEY), 
+  REFRESH_TOKEN_SECRET_KEY: String(process.env.PROD_REFRESH_TOKEN_SECRET_KEY),   
 }
 
 const test: ConfigObject = {      
@@ -119,7 +123,8 @@ const test: ConfigObject = {
   },
 
   PORT: Number(process.env.TEST_PORT),
-  JWT_SECRET_KEY: String(process.env.TEST_JWT_SECRET_KEY),    
+  JWT_SECRET_KEY: String(process.env.TEST_JWT_SECRET_KEY), 
+  REFRESH_TOKEN_SECRET_KEY: String(process.env.TEST_REFRESH_TOKEN_SECRET_KEY),   
 }
 
 
