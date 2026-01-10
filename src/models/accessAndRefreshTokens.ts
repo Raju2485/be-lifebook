@@ -14,7 +14,6 @@ export class AccessAndRefreshTokens extends Model<
   declare id: CreationOptional<number>;
   declare accessToken: string;
   declare refreshToken: string;
-  declare UserId: number;
   declare isActive: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -34,10 +33,6 @@ AccessAndRefreshTokens.init(
     },
     refreshToken: {
       type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    UserId: {
-      type: DataTypes.INTEGER,
       allowNull: false,
     },
     isActive: {

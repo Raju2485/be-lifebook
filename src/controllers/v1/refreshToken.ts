@@ -1,22 +1,36 @@
 const jwt = require('jsonwebtoken');
-const { verifyRefreshToken } = require('../../utils/verifyRefreshToken');
 import config from '../../config/config';
+import models from '../../models/index';
+import { generateTokens } from '../../utils/generateTokens';
 
 export const refreshToken = async (req, res) => {
   const { refreshToken } = req.body;
-  try {
-    const { tokenDetails } = await verifyRefreshToken(refreshToken);
-    console.log('tokenDetails = ', tokenDetails)
-    delete tokenDetails.iat
-    delete tokenDetails.exp
-    const accessToken = jwt.sign(tokenDetails, config.JWT_SECRET_KEY, {
-      expiresIn: '1h',
-    });
+    try {
+        const isExists = await models.AccessAndRefreshTokens.findOne({
+            where: { refreshToken },
+          });
+    
+          if (!isExists) {
+            return res.status(400).json({ success: false, message: 'Invalid refresh token' });
+          }
+    
+          const tokenDetails = jwt.verify(
+            refreshToken,
+            config.REFRESH_TOKEN_SECRET_KEY            
+        );  
+        // delete tokenDetails.iat;
+        // delete tokenDetails.exp;
+          
+          const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await generateTokens(tokenDetails);
+
+        await isExists.destroy();
 
     return res.status(200).json({
       success: true,
       message: 'New access token created successfully!',
-      accessToken,
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      user_details: tokenDetails
     });
   } catch (err) {
     console.log(err);

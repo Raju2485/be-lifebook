@@ -30,7 +30,6 @@ export const signin = async(req: Request, res: Response) => {
         }
         const { accessToken, refreshToken } = await generateTokens(newUser);
 
-        await models.AccessAndRefreshTokens.create({ accessToken, refreshToken, UserId: user?.id });
       
         return res.status(200).json({
           success: true,

@@ -17,10 +17,6 @@ export async function up( queryInterface: QueryInterface ){
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    UserId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
