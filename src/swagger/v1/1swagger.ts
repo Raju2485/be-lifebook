@@ -112,3 +112,39 @@
  *       200:
  *         description: Signed up successfully!
  */
+
+
+// refresh-token
+/**
+ * @swagger
+ * /api/v1/refresh-token:
+ *   post:
+ *     summary: "Re generate an access token"
+ *     tags: ['Authentication']
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
