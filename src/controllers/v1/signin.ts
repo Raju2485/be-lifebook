@@ -23,6 +23,7 @@ export const signin = async(req: Request, res: Response) => {
 
         const userData = user?.toJSON ? user.toJSON() : user;
         const newUser = {
+          id: userData?.id,
           name: userData?.name,
           surName: userData?.surName,
           email: userData?.email,
