@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { verifyRefreshToken } = require('../../utils/verifyRefreshToken');
 import config from '../../config/config';
 
-exports.refreshToken = async (req, res) => {
+export const refreshToken = async (req, res) => {
   const { refreshToken } = req.body;
   try {
     const { tokenDetails } = await verifyRefreshToken(refreshToken);
