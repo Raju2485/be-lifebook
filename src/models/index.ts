@@ -1,15 +1,15 @@
-import { TypeMasters } from './type-masters';
-import { GenderMasters } from './gender-masters';
+import { TypeMasters } from './typeMasters';
+import { GenderMasters } from './genderMasters';
 import { Users } from './users';
-import { AccessAndRefreshTokens } from './access-and-refresh-tokens';
-import { RelationMasters } from './relation-masters';
-import { UsrConns } from './usr-conns';
-import { AccTypeMasters } from './acc-type-masters';
+import { AccessAndRefreshTokens } from './accessAndRefreshTokens';
+import { RelationMasters } from './relationMasters';
+import { UsrConns } from './usrConns';
+import { AccTypeMasters } from './accTypeMasters';
 import { Organizations } from './organizations';
 import { Accounts } from './accounts';
-import { RoleMasters } from './role-masters';
-import { AccRoles } from './acc-roles';
-import { CashBooks } from './cash-books';
+import { RoleMasters } from './roleMasters';
+import { AccRoles } from './accRoles';
+import { CashBooks } from './cashBooks';
 
 TypeMasters.hasMany(Users, {foreignKey: 'TypeId'});
 Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
