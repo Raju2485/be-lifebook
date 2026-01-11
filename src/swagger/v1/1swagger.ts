@@ -120,7 +120,8 @@
  * /api/v1/refresh-token:
  *   post:
  *     summary: "Re generate an access token"
- *     tags: ['Authentication']
+ *     tags:
+ *       - Common
  *     requestBody:
  *       required: true
  *       content:
@@ -156,7 +157,8 @@
  * /api/v1/signout:
  *   post:
  *     summary: "Signout"
- *     tags: ['Authentication']
+ *     tags:
+ *       - Common
  *     security:
  *       - bearerAuth: []
  *     responses:

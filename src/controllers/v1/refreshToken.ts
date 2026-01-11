@@ -32,8 +32,20 @@ export const refreshToken = async (req, res) => {
         refreshToken: newRefreshToken,
       user_details: tokenDetails
     });
-  } catch (err) {
-    console.log(err);
-    return res.status(400).json({ success: false, message: err.message });
+  } catch (error) {
+    console.log(error);
+    if (error.message == 'jwt expired') {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized',
+        error: error?.message
+      });
   }
+  else {
+      return res.status(400).json({
+        success: false,
+        message: 'Something went wrong, we are looking into it',
+        error: error?.message
+       }); 
+  }  }
 };

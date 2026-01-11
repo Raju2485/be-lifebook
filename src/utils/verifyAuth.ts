@@ -17,7 +17,20 @@ export const verifyAuth = async(req, res, next)=> {
         // Call the next middleware
         next();
     } catch (error) {
-        console.log("error at token check: ", error)
-        return res.status(401).json({success: false, message: 'Authentication failed' });
+        console.log("error at token check: ", error.message)
+        if (error.message == 'jwt expired') {
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized',
+                error: error?.message
+            });
+        }
+        else {
+            return res.status(400).json({
+                success: false,
+                message: 'Something went wrong, we are looking into it',
+                error: error?.message
+            }); 
+        }
     }
 }
