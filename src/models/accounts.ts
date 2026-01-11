@@ -12,7 +12,6 @@ export class Accounts extends Model<
   InferCreationAttributes<Accounts>
 > {
   declare id: CreationOptional<number>;
-  declare customName: string;
   declare UserId: number;
   declare OrgId: number;
   declare AccTypeId: number;
@@ -30,11 +29,6 @@ Accounts.init(
       autoIncrement: true,
       primaryKey: true,
       allowNull: false,
-    },
-    customName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
     },
     UserId: {
       type: DataTypes.INTEGER,

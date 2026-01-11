@@ -17,9 +17,6 @@ Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
 GenderMasters.hasMany(Users, {foreignKey: 'GenderId'});
 Users.belongsTo(GenderMasters, {foreignKey: 'GenderId'});
 
-Users.hasMany(AccessAndRefreshTokens, {foreignKey:'UserId'});
-AccessAndRefreshTokens.belongsTo(Users, { foreignKey: 'UserId' });
-
 Users.belongsToMany(Users, {as: 'Connections', through: UsrConns, foreignKey: 'UserId', otherKey: 'ConnId'});
 Users.belongsToMany(Users, {as: 'Users',through: UsrConns, foreignKey: 'ConnId', otherKey: 'UserId'});
 

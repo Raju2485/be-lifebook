@@ -177,3 +177,39 @@
  *               success: false
  *               message: Something went wrong. Our team is working to fix this issue.
  */
+
+// Create Organization
+/**
+ * @swagger
+ * /api/v1/create-organization:
+ *   post:
+ *     summary: "Create Organization"
+ *     tags:
+ *       - Common
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *             properties:
+ *               name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */

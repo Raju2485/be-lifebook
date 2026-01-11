@@ -4,6 +4,7 @@ import { signup } from '../../controllers/v1/signup'
 import { profile } from '../../controllers/v1/profile'
 import { refreshToken } from '../../controllers/v1/refreshToken';
 import { signout } from '../../controllers/v1/signout';
+import { createOrg } from '../../controllers/v1/createOrganization';
 
 
 const router = Router();
@@ -14,5 +15,6 @@ router.post('/signin', signin);
 router.get('/profile', profile);
 router.post('/refresh-token', refreshToken);
 router.post('/signout', verifyAuth, signout);
+router.post('/create-organization', verifyAuth, createOrg);
 
 export default router;

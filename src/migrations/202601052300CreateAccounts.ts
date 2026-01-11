@@ -9,11 +9,6 @@ export async function up( queryInterface: QueryInterface ){
       autoIncrement: true,
       allowNull: false,
     },
-    customName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
     UserId: {
       type: DataTypes.INTEGER,
       allowNull: false,

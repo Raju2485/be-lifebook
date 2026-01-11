@@ -44,7 +44,7 @@ export const refreshToken = async (req, res) => {
   else {
       return res.status(400).json({
         success: false,
-        message: 'Something went wrong, we are looking into it',
+        msg: 'Something went wrong, we are looking into it',
         error: error?.message
        }); 
   }  }

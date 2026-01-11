@@ -16,7 +16,6 @@ export async function up( queryInterface: QueryInterface ){
     },
     uid: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       unique: true
     },
     createdAt: {

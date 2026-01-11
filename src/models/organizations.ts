@@ -34,7 +34,6 @@ Organizations.init(
     },
     uid: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       unique: true,
     },
     createdAt: {
