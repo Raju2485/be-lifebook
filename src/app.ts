@@ -38,6 +38,10 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'API Documentation',
+    swaggerOptions: {
+      docExpansion: 'none',
+      persistAuthorization: true,
+    },
 }));
 
 
