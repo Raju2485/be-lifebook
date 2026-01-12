@@ -7,6 +7,7 @@
  *     summary: Sign in
  *     tags:
  *       - Common
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
@@ -122,6 +123,7 @@
  *     summary: "Re generate an access token"
  *     tags:
  *       - Common
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
@@ -186,6 +188,8 @@
  *     summary: "Create Organization"
  *     tags:
  *       - Common
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -268,6 +272,8 @@
  *     summary: "Change Password"
  *     tags:
  *       - Common
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -281,6 +287,43 @@
  *               oldPassword:
  *                 type: string
  *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
+// Send Password Reset Link
+/**
+ * @swagger
+ * /api/v1/send-password-reset-link:
+ *   post:
+ *     summary: "Send Password Reset Link"
+ *     tags:
+ *       - Common
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
  *                 type: string
  *     responses:
  *       200:

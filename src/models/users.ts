@@ -25,6 +25,7 @@ export class Users extends Model<
   declare TypeId: number | null;
   declare GenderId: number | null;
   declare uid: number;
+  declare hash: CreationOptional<string>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -95,6 +96,9 @@ Users.init(
     uid: {
       type: DataTypes.INTEGER,
       unique: true,
+    },
+    hash: {
+      type: DataTypes.STRING,
     },
     createdAt: {
       type: DataTypes.DATE,

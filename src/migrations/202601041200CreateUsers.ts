@@ -64,6 +64,9 @@ export async function up( queryInterface: QueryInterface ){
       allowNull: false,
       unique: true,
     },
+    hash: {
+      type: DataTypes.STRING,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
