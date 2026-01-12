@@ -6,6 +6,7 @@ import { refreshToken } from '../../controllers/v1/refreshToken';
 import { signout } from '../../controllers/v1/signout';
 import { createOrg } from '../../controllers/v1/createOrganization';
 import { getOrganizations } from '../../controllers/v1/getOrganizations';
+import { changePassword } from '../../controllers/v1/changePassword';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
@@ -17,5 +18,6 @@ router.post('/refresh-token', refreshToken);
 router.post('/signout', verifyAuth, signout);
 router.post('/create-organization', verifyAuth, createOrg);
 router.get('/get-organizations', verifyAuth, getOrganizations);
+router.post('/change-password', verifyAuth, changePassword);
 
 export default router;

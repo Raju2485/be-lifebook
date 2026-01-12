@@ -259,3 +259,42 @@
  *               success: false
  *               message: Something went wrong. Our team is working to fix this issue.
  */
+
+// Change Password
+/**
+ * @swagger
+ * /api/v1/change-password:
+ *   post:
+ *     summary: "Change Password"
+ *     tags:
+ *       - Common
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - oldPassword
+ *               - newPassword
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
