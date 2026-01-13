@@ -341,3 +341,46 @@
  *               success: false
  *               message: Something went wrong. Our team is working to fix this issue.
  */
+
+// Reset password
+/**
+ * @swagger
+ * /api/v1/reset-password:
+ *   post:
+ *     summary: "Reset Password"
+ *     tags:
+ *       - Common
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - hash
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               hash:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */

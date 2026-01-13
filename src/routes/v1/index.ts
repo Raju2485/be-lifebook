@@ -8,6 +8,7 @@ import { createOrg } from '../../controllers/v1/createOrganization';
 import { getOrganizations } from '../../controllers/v1/getOrganizations';
 import { changePassword } from '../../controllers/v1/changePassword';
 import { sendPasswordResetLink } from '../../controllers/v1/sendPasswordResetLink';
+import { resetPassword } from '../../controllers/v1/resetPassword';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
@@ -21,5 +22,6 @@ router.post('/create-organization', verifyAuth, createOrg);
 router.get('/get-organizations', verifyAuth, getOrganizations);
 router.post('/change-password', verifyAuth, changePassword);
 router.post('/send-password-reset-link', sendPasswordResetLink);
+router.post('/reset-password', resetPassword);
 
 export default router;
