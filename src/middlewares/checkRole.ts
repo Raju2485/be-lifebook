@@ -8,7 +8,7 @@ export const checkRole = (rolesArray) => {
         if (!org) {            
             return res.status(400).json({success: false, msg: 'organization not found'})
         }
-        console.log('rolesArray = ', rolesArray)
+
         if (org.roles.some(el => rolesArray.includes(el))) {
             next();
         }
