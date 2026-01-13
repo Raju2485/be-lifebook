@@ -5,6 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import { specs } from './config/swagger';
 import v1Router from './routes/v1/index';
+import morgan from 'morgan'
 
 
 const app = express();
@@ -19,6 +20,8 @@ app.use(cors({
     : ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
 }));
+
+app.use(morgan('dev'));
 
 
 // Body parsing middleware
