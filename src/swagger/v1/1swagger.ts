@@ -384,7 +384,7 @@
 // Get Cash Books
 /**
  * @swagger
- * /api/v1/get-cash-books:
+ * /api/v1/get-cash-book-entries:
  *   get:
  *     summary: "Get cash books"
  *     tags:

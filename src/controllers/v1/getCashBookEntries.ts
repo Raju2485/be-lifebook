@@ -4,7 +4,7 @@ import { Op, where } from 'sequelize'
 import { getLimitAndOffset, getNewPagination} from '../../utils/newPagination'
 import { isValidDate} from '../../utils/isValidDate'
 
-export const getCashBooks = async (req: Request, res: Response) => {
+export const getCashBookEntries = async (req: Request, res: Response) => {
   try {
     const { orgId, page, perPage, search, fromDate, toDate  } = req.query;
     const { id: userId } = req.user;
