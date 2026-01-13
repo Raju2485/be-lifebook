@@ -9,11 +9,28 @@ export const signin = async(req: Request, res: Response) => {
 
         let user = await models.Users.findOne({
           where: { email, isActive: true },
+          include: [{
+            model: models.Accounts,
+            where: {
+              isMember: true,
+            },
+            include: [{
+              model: models.RoleMasters,
+              as: 'Roles',
+              through: { attributes: [] }
+            },
+              {
+              model: models.Organizations
+             }]
+
+          }]
         });
         if (!user) {
             return res.status(400).json({success: false, msg: 'Email does not exists'})
       }
       
+      // user = JSON.parse(JSON.stringify(user))
+
       const isPasswordCorrect = await compare(
         password,
         user.password
@@ -22,11 +39,19 @@ export const signin = async(req: Request, res: Response) => {
       if (isPasswordCorrect) {
 
         const userData = user?.toJSON ? user.toJSON() : user;
+        const orgsAndRoles = userData?.Accounts?.map(account => {
+          const org = {}
+          org.id = account?.Organization?.id || '';
+          org.name = account?.Organization?.name || '';
+          org.roles = account?.Roles?.map(role => role.name) || [];
+          return org;
+        }) || [];
         const newUser = {
           id: userData?.id,
           name: userData?.name,
           surName: userData?.surName,
           email: userData?.email,
+          orgsAndRoles
         }
         const { accessToken, refreshToken } = await generateTokens(newUser);
 
@@ -45,6 +70,10 @@ export const signin = async(req: Request, res: Response) => {
     }
     catch (err) {
         console.log(err)
-        return res.status(400).json({success: false, msg:'Something went wrong, we are looking into it'})
+      return res.status(400).json({
+        success: false,
+        msg: 'Something went wrong, we are looking into it',
+        error: err.message
+      })
     }
 }
