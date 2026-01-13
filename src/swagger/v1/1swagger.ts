@@ -438,3 +438,63 @@
  *               success: false
  *               message: Something went wrong. Our team is working to fix this issue.
  */
+
+// Post cash book entry
+/**
+ * @swagger
+ * /api/v1/post-cash-book-entry:
+ *   post:
+ *     summary: "Post cash book entry"
+ *     tags:
+ *       - Common
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - orgId
+ *               - date
+ *               - particulars
+ *               - DebitorId
+ *               - CreditorId
+ *               - amount
+ *             properties:
+ *               orgId:
+ *                 type: integer
+ *                 example: 1
+ *               date:
+ *                 type: string
+ *                 format: date
+ *                 example: 2026-1-14
+ *               particulars:
+ *                 type: string
+ *                 example: bought furniture
+ *               DebitorId:
+ *                 type: integer
+ *                 example: 1
+ *               CreditorId:
+ *                 type: integer
+ *                 example: 1
+ *               amount:
+ *                 type: integer
+ *                 example: 50000
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
