@@ -1,5 +1,4 @@
-// Post - Sign In
-
+// Sign In
 /**
  * @swagger
  * /api/v1/signin:
@@ -20,17 +19,16 @@
  *             properties:
  *               email:
  *                 type: string
- *                 example: email1256@mailinator.com
+ *                 example: bheema@mailinator.com
  *               password:
  *                 type: string
- *                 example: password
+ *                 example: password123
  *     responses:
  *       200:
  *         description: Signed in successfully!
  */
 
-// Post - Sign Up
-
+// Sign Up
 /**
  * @swagger
  * /api/v1/signup:
@@ -108,14 +106,13 @@
  *                 type: integer
  *                 nullable: true
  *                 example: 4
- *                 description: "Gender ID reference (must exist in GenderMasters table)" 
+ *                 description: "Gender ID reference (must exist in GenderMasters table)"
  *     responses:
  *       200:
  *         description: Signed up successfully!
  */
 
-
-// refresh-token
+// Refresh Token
 /**
  * @swagger
  * /api/v1/refresh-token:
@@ -152,7 +149,6 @@
  *               message: Something went wrong. Our team is working to fix this issue.
  */
 
-
 // Sign Out
 /**
  * @swagger
@@ -163,90 +159,6 @@
  *       - Common
  *     security:
  *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: successful
- *         content:
- *           application/json:
- *             example:
- *               success: true
- *               message: some message
- *       500:
- *         description: Some error occured.
- *         content:
- *           application/json:
- *             example:
- *               success: false
- *               message: Something went wrong. Our team is working to fix this issue.
- */
-
-// Create Organization
-/**
- * @swagger
- * /api/v1/create-organization:
- *   post:
- *     summary: "Create Organization"
- *     tags:
- *       - Common
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *             properties:
- *               name:
- *                 type: string
- *     responses:
- *       200:
- *         description: successful
- *         content:
- *           application/json:
- *             example:
- *               success: true
- *               message: some message
- *       500:
- *         description: Some error occured.
- *         content:
- *           application/json:
- *             example:
- *               success: false
- *               message: Something went wrong. Our team is working to fix this issue.
- */
-
-// get organizations
-/**
- * @swagger
- * /api/v1/get-organizations:
- *   get:
- *     summary: "get organizations"
- *     tags:
- *       - Common
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: search
- *         schema:
- *          type: string
- *       - in: query
- *         name: id
- *         schema:
- *          type: integer
- *       - in: query
- *         name: page
- *         schema:
- *          type: integer
- *         example: 1
- *       - in: query
- *         name: perPage
- *         schema:
- *          type: integer
- *         example: 10
  *     responses:
  *       200:
  *         description: successful
@@ -378,6 +290,148 @@
  *               message: some message
  *       500:
  *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
+// Create Organization
+/**
+ * @swagger
+ * /api/v1/create-organization:
+ *   post:
+ *     summary: "Create Organization"
+ *     tags:
+ *       - Common
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *             properties:
+ *               name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
+// Get Organizations
+/**
+ * @swagger
+ * /api/v1/get-organizations:
+ *   get:
+ *     summary: "get organizations"
+ *     tags:
+ *       - Common
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *          type: string
+ *       - in: query
+ *         name: id
+ *         schema:
+ *          type: integer
+ *       - in: query
+ *         name: page
+ *         schema:
+ *          type: integer
+ *         example: 1
+ *       - in: query
+ *         name: perPage
+ *         schema:
+ *          type: integer
+ *         example: 10
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
+// Get Cash Books
+/**
+ * @swagger
+ * /api/v1/get-cash-books:
+ *   get:
+ *     summary: "Get cash books"
+ *     tags:
+ *       - Common
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: orgId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the organization
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: perPage
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: fromDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *           example: 2026-1-1
+ *       - in: query
+ *         name: toDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *           example: 2026-1-31
+ *     responses:
+ *       200:
+ *         description: Successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occurred.
  *         content:
  *           application/json:
  *             example:
