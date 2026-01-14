@@ -12,6 +12,7 @@ import { changePassword } from '../../controllers/v1/changePassword';
 import { sendPasswordResetLink } from '../../controllers/v1/sendPasswordResetLink';
 import { resetPassword } from '../../controllers/v1/resetPassword';
 import { getUsers } from '../../controllers/v1/getUsers';
+import { getRoles } from '../../controllers/v1/getRoles';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
@@ -30,5 +31,6 @@ router.post('/change-password', verifyAuth, changePassword);
 router.post('/send-password-reset-link', sendPasswordResetLink);
 router.post('/reset-password', resetPassword);
 router.get('/get-users', verifyAuth, getUsers);
+router.get('/get-roles', verifyAuth, getRoles);
 
 export default router;
