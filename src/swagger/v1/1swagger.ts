@@ -511,6 +511,11 @@
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
+ *         name: orgId
+ *         schema:
+ *          type: string
+ *         required: true
+ *       - in: query
  *         name: search
  *         schema:
  *          type: string

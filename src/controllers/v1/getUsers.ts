@@ -5,17 +5,21 @@ import { getLimitAndOffset, getNewPagination} from '../../utils/newPagination'
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const { search, page, perPage } = req.query;
+    const { orgId, search, page, perPage } = req.query;
     // const { id: userId } = req.user;
-      
+      if(!orgId){
+        return res.status(400).json({success:false, msg: 'orgId is mandatory'})
+      }
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
     let whereConditions = {
-      isActive: true
+      isActive: true,
+      orgId:{[Op.or]:[null, orgId]}
     };
     if (search) {
       whereConditions = {
         isActive: true,
+        orgId:{[Op.or]:[null, orgId]},
         [Op.or]: [
           {name:{ [Op.iLike]: `%${search}%`} },
           {middleName:{ [Op.iLike]: `%${search}%`} },
