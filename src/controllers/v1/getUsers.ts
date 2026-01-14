@@ -10,17 +10,29 @@ export const getUsers = async (req: Request, res: Response) => {
       
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
-    const whereConditions = {
+    let whereConditions = {
       isActive: true
     };
     if (search) {
-      whereConditions.name = { [Op.iLike]: `%${search}%` }
-    }
+      whereConditions = {
+        isActive: true,
+        [Op.or]: [
+          {name:{ [Op.iLike]: `%${search}%`} },
+          {middleName:{ [Op.iLike]: `%${search}%`} },
+          {surName:{ [Op.iLike]: `%${search}%`} },
+          {email:{ [Op.iLike]: `%${search}%`} },
+        ]
+      }
+      if (!isNaN(Number(search))) {
+        whereConditions[Op.or].push({ uid: Number(search) });
+      }
+      
+  }
 
     // getting users
     const { count, rows } = await models.Users.findAndCountAll({
       where: whereConditions,
-      attributes: ['id', 'name', 'middleName', 'surName', 'email'],
+      attributes: ['id', 'name', 'middleName', 'surName', 'email', 'uid'],
       limit,
       offset,
       order: [['name', 'ASC']]
