@@ -7,9 +7,9 @@ import {
 } from 'sequelize';
 import { sequelize } from '../config/database';
 
-export class CashBooks extends Model<
-  InferAttributes<CashBooks>,
-  InferCreationAttributes<CashBooks>
+export class Journals extends Model<
+  InferAttributes<Journals>,
+  InferCreationAttributes<Journals>
 > {
   declare id: CreationOptional<number>;
   declare particulars: string;
@@ -24,7 +24,7 @@ export class CashBooks extends Model<
   declare updatedAt: CreationOptional<Date>;
 }
 
-CashBooks.init(
+Journals.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -78,7 +78,7 @@ CashBooks.init(
   },
   {
     sequelize,
-    tableName: 'CashBooks',
+    tableName: 'Journals',
     timestamps: true,
   }
 );

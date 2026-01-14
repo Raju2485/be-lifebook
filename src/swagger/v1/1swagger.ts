@@ -381,12 +381,12 @@
  *               message: Something went wrong. Our team is working to fix this issue.
  */
 
-// Get Cash Books
+// Get Journal entries
 /**
  * @swagger
- * /api/v1/get-cash-book-entries:
+ * /api/v1/get-journal-entries:
  *   get:
- *     summary: "Get cash books"
+ *     summary: "Get journal"
  *     tags:
  *       - Common
  *     security:
@@ -439,12 +439,12 @@
  *               message: Something went wrong. Our team is working to fix this issue.
  */
 
-// Post cash book entry
+// Post Journal entry
 /**
  * @swagger
- * /api/v1/post-cash-book-entry:
+ * /api/v1/post-journal-entry:
  *   post:
- *     summary: "Post cash book entry"
+ *     summary: "Post Journal entry"
  *     tags:
  *       - Common
  *     security:

@@ -2,7 +2,7 @@ export const checkRole = (rolesArray) => {
     return function (req, res, next) {
         let orgId = req.query.orgId ?? req.body.orgId ?? req.params.orgId ?? null;
         if (!orgId) {
-            return res.status(400).json({success: false, msg: 'orgId missing in payload'})
+            return res.status(400).json({success: false, msg: 'orgId is missing in payload'})
         }
         const org = req.user.orgsAndRoles.find(obj => obj.id == orgId)
         if (!org) {            

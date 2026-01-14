@@ -9,7 +9,7 @@ import { Organizations } from './organizations';
 import { Accounts } from './accounts';
 import { RoleMasters } from './roleMasters';
 import { AccRoles } from './accRoles';
-import { CashBooks } from './cashBooks';
+import { Journals } from './journals';
 
 TypeMasters.hasMany(Users, {foreignKey: 'TypeId'});
 Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
@@ -45,17 +45,17 @@ RoleMasters.belongsToMany(Accounts, {
   otherKey: 'AccountId',
 });
 
-Accounts.hasMany(CashBooks, { as: 'Debitor', foreignKey: 'DebitorId' });
-CashBooks.belongsTo(Accounts, { as: 'Debitor', foreignKey: 'DebitorId' });
+Accounts.hasMany(Journals, { as: 'Debitor', foreignKey: 'DebitorId' });
+Journals.belongsTo(Accounts, { as: 'Debitor', foreignKey: 'DebitorId' });
 
-Accounts.hasMany(CashBooks, { as: 'Creditor', foreignKey: 'CreditorId' });
-CashBooks.belongsTo(Accounts, { as: 'Creditor', foreignKey: 'CreditorId' });
+Accounts.hasMany(Journals, { as: 'Creditor', foreignKey: 'CreditorId' });
+Journals.belongsTo(Accounts, { as: 'Creditor', foreignKey: 'CreditorId' });
 
-Accounts.hasMany(CashBooks, { as: 'BookKeeper', foreignKey: 'BkId' });
-CashBooks.belongsTo(Accounts, { as: 'BookKeeper', foreignKey: 'BkId' });
+Accounts.hasMany(Journals, { as: 'BookKeeper', foreignKey: 'BkId' });
+Journals.belongsTo(Accounts, { as: 'BookKeeper', foreignKey: 'BkId' });
 
-Organizations.hasMany(CashBooks, { foreignKey: 'OrgId' });
-CashBooks.belongsTo(Organizations, { foreignKey: 'OrgId' });
+Organizations.hasMany(Journals, { foreignKey: 'OrgId' });
+Journals.belongsTo(Organizations, { foreignKey: 'OrgId' });
 
 export default {
   TypeMasters,
@@ -69,5 +69,5 @@ export default {
   Accounts,
   RoleMasters,
   AccRoles,
-  CashBooks,
+  Journals,
 };

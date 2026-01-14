@@ -4,7 +4,7 @@ import { Op, where } from 'sequelize'
 import { getLimitAndOffset, getNewPagination} from '../../utils/newPagination'
 import { isValidDate} from '../../utils/isValidDate'
 
-export const postCashBookEntry = async (req: Request, res: Response) => {
+export const postJournalEntry = async (req: Request, res: Response) => {
   try {
     const {
       orgId,
@@ -22,7 +22,7 @@ export const postCashBookEntry = async (req: Request, res: Response) => {
     }
 
 
-    await models.CashBooks.create({
+    await models.Journals.create({
       OrgId: orgId,
       date,
       particulars,
@@ -34,7 +34,7 @@ export const postCashBookEntry = async (req: Request, res: Response) => {
 
       return res.status(200).json({
         success: true,
-        msg: 'Cash book entry posted successfully!',
+        msg: 'Journal entry posted successfully!',
       })
 
 } 

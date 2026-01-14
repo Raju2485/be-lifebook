@@ -4,7 +4,7 @@ import { Op, where } from 'sequelize'
 import { getLimitAndOffset, getNewPagination} from '../../utils/newPagination'
 import { isValidDate} from '../../utils/isValidDate'
 
-export const getCashBookEntries = async (req: Request, res: Response) => {
+export const getJournalEntries = async (req: Request, res: Response) => {
   try {
     const { orgId, page, perPage, search, fromDate, toDate  } = req.query;
     const { id: userId } = req.user;
@@ -34,7 +34,7 @@ export const getCashBookEntries = async (req: Request, res: Response) => {
       whereConditions.date = { [Op.between]: [new Date(fromDate), new Date(toDate)] }
     }
 
-    const { count, rows } = await models.CashBooks.findAndCountAll({
+    const { count, rows } = await models.Journals.findAndCountAll({
       where: whereConditions,
       include: [{
         model: models.Accounts,
