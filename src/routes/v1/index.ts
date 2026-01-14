@@ -11,6 +11,7 @@ import { postJournalEntry } from '../../controllers/v1/postJournalEntry';
 import { changePassword } from '../../controllers/v1/changePassword';
 import { sendPasswordResetLink } from '../../controllers/v1/sendPasswordResetLink';
 import { resetPassword } from '../../controllers/v1/resetPassword';
+import { getUsers } from '../../controllers/v1/getUsers';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
@@ -28,5 +29,6 @@ router.get('/get-journal-entries', verifyAuth, getJournalEntries);
 router.post('/change-password', verifyAuth, changePassword);
 router.post('/send-password-reset-link', sendPasswordResetLink);
 router.post('/reset-password', resetPassword);
+router.get('/get-users', verifyAuth, getUsers);
 
 export default router;
