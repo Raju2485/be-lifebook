@@ -31,6 +31,9 @@ export async function up( queryInterface: QueryInterface ){
       allowNull: false,
       defaultValue: false
     },
+    cashOrBank: {
+      type: DataTypes.STRING
+    },
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
