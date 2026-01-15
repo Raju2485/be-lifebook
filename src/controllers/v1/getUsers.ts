@@ -36,7 +36,7 @@ export const getUsers = async (req: Request, res: Response) => {
     // getting users
     const { count, rows } = await models.Users.findAndCountAll({
       where: whereConditions,
-      attributes: ['id', 'name', 'middleName', 'surName', 'email', 'uid'],
+      attributes: ['id', 'name', 'middleName', 'surName', 'email', 'uid', 'orgId'],
       limit,
       offset,
       order: [['name', 'ASC']]

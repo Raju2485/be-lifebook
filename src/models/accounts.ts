@@ -17,7 +17,7 @@ export class Accounts extends Model<
   declare AccTypeId: number;
   declare isAdmin: CreationOptional<boolean>;
   declare isMember: CreationOptional<boolean>;  
-  declare cashOrBank: CreationOptional<'cash' | 'bank'>; 
+  declare cashOrBank: CreationOptional<'cash' | 'bank' | null>; 
   declare isActive: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -57,8 +57,8 @@ Accounts.init(
       type: DataTypes.STRING,      
       validate: {
         isIn: {
-          args: [['cash', 'bank']],
-          msg: 'Name must be one of the following: cash / bank'
+          args: [['cash', 'bank', null]],
+          msg: 'cashOrBank must be one of the following: cash / bank/ null'
         }
       }
     },

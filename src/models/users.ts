@@ -11,13 +11,13 @@ export class Users extends Model<
   InferCreationAttributes<Users>
 > {
   declare id: CreationOptional<number>;
-  declare email: string;
-  declare password: string;
+  declare email: string | null;
+  declare password: string | null;
   declare name: string;
   declare middleName: string | null;
   declare surName: string | null;
-  declare mobileNumber: number;
-  declare countryCode: string;
+  declare mobileNumber: number | null;
+  declare countryCode: string | null;
   declare isActive: CreationOptional<boolean>;
   declare dob: Date;
   declare tob: string | null;
@@ -41,12 +41,12 @@ Users.init(
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true,
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     name: {
       type: DataTypes.STRING,
@@ -62,11 +62,11 @@ Users.init(
     },
     mobileNumber: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     countryCode: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     isActive: {
       type: DataTypes.BOOLEAN,
@@ -75,7 +75,7 @@ Users.init(
     },
     dob: {
       type: DataTypes.DATEONLY,
-      allowNull: false,
+      allowNull: true,
     },
     tob: {
       type: DataTypes.TIME,

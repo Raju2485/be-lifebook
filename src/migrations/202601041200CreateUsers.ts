@@ -11,12 +11,12 @@ export async function up( queryInterface: QueryInterface ){
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true,
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     name: {
       type: DataTypes.STRING, 
@@ -30,11 +30,11 @@ export async function up( queryInterface: QueryInterface ){
     },
     mobileNumber: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     countryCode: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     isActive: {
       type: DataTypes.BOOLEAN,
@@ -43,7 +43,7 @@ export async function up( queryInterface: QueryInterface ){
     },
     dob: {
       type: DataTypes.DATEONLY,
-      allowNull: false,
+      allowNull: true,
     },
     tob: {
       type: DataTypes.TIME,
@@ -78,7 +78,7 @@ export async function up( queryInterface: QueryInterface ){
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW4
     },
   });
   await queryInterface.sequelize.query(

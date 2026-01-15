@@ -388,7 +388,7 @@
  *   get:
  *     summary: "Get journal"
  *     tags:
- *       - Common
+ *       - Book Keeper
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -446,7 +446,7 @@
  *   post:
  *     summary: "Post Journal entry"
  *     tags:
- *       - Common
+ *       - Book Keeper
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -506,7 +506,7 @@
  *   get:
  *     summary: "get users"
  *     tags:
- *       - Common
+ *       - Book Keeper
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -553,7 +553,7 @@
  *   get:
  *     summary: "get roles"
  *     tags:
- *       - Common
+ *       - Book Keeper
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -571,6 +571,116 @@
  *         schema:
  *          type: integer
  *         example: 10
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
+
+// Get Account Types
+/**
+ * @swagger
+ * /api/v1/get-account-types:
+ *   get:
+ *     summary: "get account types"
+ *     tags:
+ *       - Book Keeper
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *          type: string
+ *       - in: query
+ *         name: page
+ *         schema:
+ *          type: integer
+ *         example: 1
+ *       - in: query
+ *         name: perPage
+ *         schema:
+ *          type: integer
+ *         example: 10
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
+// Create Account
+/**
+ * @swagger
+ * /api/v1/create-account:
+ *   post:
+ *     summary: "Create Account"
+ *     tags:
+ *       - Book Keeper
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - orgId
+ *               - AccTypeId
+ *             properties:
+ *               orgId:
+ *                 type: integer
+ *                 example: 1
+ *               UserId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: api is '/api/v1/get-users'
+ *               name:
+ *                 type: string
+ *                 example: cash
+ *                 description: enter name if the desired user not found in dropdown. show either users dropdown or name field.
+ *               AccTypeId:
+ *                 type: integer
+ *                 example: 4
+ *                 description: api is '/api/v1/get-account-types'
+ *               isMember:
+ *                 type: boolean
+ *                 example: false
+ *                 description: Don't populate if selected user has orgId == not null
+ *               RolesIds:
+ *                 type: array
+ *                 items:
+ *                  type: integer
+ *                 example: [1, 2]
+ *                 description: api is '/api/v1/get-roles'. Dropdown should populate if isMember = true. Not a mandatory field
+ *               cashOrBank:
+ *                 type: string
+ *                 enum: [null, cash, bank]
+ *                 example: cash
+ *                 description: Radio buttons should populate if isMember = true. Not a mandatory field
  *     responses:
  *       200:
  *         description: successful
