@@ -15,6 +15,7 @@ import { getUsers } from '../../controllers/v1/getUsers';
 import { getRoles } from '../../controllers/v1/getRoles';
 import { getAccountTypes } from '../../controllers/v1/getAccountTypes';
 import { createAccount } from '../../controllers/v1/createAccount';
+import { getAccounts } from '../../controllers/v1/getAccounts';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
@@ -27,14 +28,30 @@ router.post('/refresh-token', refreshToken);
 router.post('/signout', verifyAuth, signout);
 router.post('/create-organization', verifyAuth, createOrg);
 router.get('/get-organizations', verifyAuth, getOrganizations);
-router.post('/post-journal-entry', verifyAuth, checkRole(['bookKeeper']), postJournalEntry);
-router.get('/get-journal-entries', verifyAuth, checkRole(['bookKeeper']),  getJournalEntries);
+router.post(
+  '/post-journal-entry',
+  verifyAuth,
+  checkRole(['bookKeeper']),
+  postJournalEntry
+);
+router.get(
+  '/get-journal-entries',
+  verifyAuth,
+  checkRole(['bookKeeper']),
+  getJournalEntries
+);
 router.post('/change-password', verifyAuth, changePassword);
 router.post('/send-password-reset-link', sendPasswordResetLink);
 router.post('/reset-password', resetPassword);
 router.get('/get-users', verifyAuth, getUsers);
 router.get('/get-roles', verifyAuth, getRoles);
 router.get('/get-account-types', verifyAuth, getAccountTypes);
-router.post('/create-account', verifyAuth, checkRole(['bookKeeper', 'admin']), createAccount);
+router.post(
+  '/create-account',
+  verifyAuth,
+  checkRole(['bookKeeper', 'admin']),
+  createAccount
+);
+router.get('/get-accounts', verifyAuth, checkRole(['bookKeeper']), getAccounts);
 
 export default router;
