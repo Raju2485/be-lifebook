@@ -28,13 +28,13 @@ router.post('/signout', verifyAuth, signout);
 router.post('/create-organization', verifyAuth, createOrg);
 router.get('/get-organizations', verifyAuth, getOrganizations);
 router.post('/post-journal-entry', verifyAuth, checkRole(['bookKeeper']), postJournalEntry);
-router.get('/get-journal-entries', verifyAuth, getJournalEntries);
+router.get('/get-journal-entries', verifyAuth, checkRole(['bookKeeper']),  getJournalEntries);
 router.post('/change-password', verifyAuth, changePassword);
 router.post('/send-password-reset-link', sendPasswordResetLink);
 router.post('/reset-password', resetPassword);
 router.get('/get-users', verifyAuth, getUsers);
 router.get('/get-roles', verifyAuth, getRoles);
 router.get('/get-account-types', verifyAuth, getAccountTypes);
-router.post('/create-account', verifyAuth, createAccount);
+router.post('/create-account', verifyAuth, checkRole(['bookKeeper', 'admin']), createAccount);
 
 export default router;

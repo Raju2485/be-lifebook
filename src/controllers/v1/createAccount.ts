@@ -23,19 +23,25 @@ export const createAccount = async (req: Request, res: Response) => {
       cashOrBank
     }
 
-  if(UserId){
-    // Check if the account exists
-    const isExists = await models.Accounts.findOne({
-      where:{
-        OrgId: orgId,
+    const isAccountExists = async({UserId, orgId}) => {
+      const isExists = await models.Accounts.findOne({
+        where:{
+          OrgId: orgId,
         UserId
       }
     })
 
     if(isExists){
       return res.status(400).json({success: false, msg: 'Account already exists'})
+      }
+      return isExists
     }
-    else{
+
+  if(UserId){
+    // Check if the account exists
+      
+    const isExists = await isAccountExists({ UserId, orgId })
+    if (!isExists) {
       objToCreate.UserId = UserId
     }
 
@@ -52,7 +58,7 @@ export const createAccount = async (req: Request, res: Response) => {
         })
   
         if(user?.orgId){
-          return res.status(400).json({success: false, msg: 'Accounts created by admin, cannot be added as member'});
+          return res.status(400).json({success: false, msg: 'Accounts created by admin/book keeper, cannot be added as member'});
         }
   
       }
@@ -61,9 +67,21 @@ export const createAccount = async (req: Request, res: Response) => {
     if(isMember || RolesIds.length > 0){
       return res.status(400).json({success: false, msg: 'Account creating with name, isMember cannot be true or RolesIds notnull'})
     }
-    const user = await models.Users.create({
-      name
-    })
+    let user = await models.Users.findOne({
+      where: {
+        name,
+        orgId,
+      },
+    });
+    if (!user) {
+      user = await models.Users.create({
+        name,
+        orgId,
+      });
+    }
+    const isExists = await isAccountExists({ UserId: user.id, orgId })
+
+
     objToCreate.UserId = user.id;
     objToCreate.isMember = false;
   }
