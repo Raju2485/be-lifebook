@@ -24,14 +24,14 @@ export const createAccount = async (req: Request, res: Response) => {
     }
 
     const isAccountExists = async({UserId, orgId}) => {
-      const isExists = await models.Accounts.findOne({
-        where:{
-          OrgId: orgId,
-        UserId
-      }
-    })
+        const isExists = await models.Accounts.findOne({
+          where:{
+            OrgId: orgId,
+          UserId
+        }
+      })
 
-    if(isExists){
+      if(isExists){
       return res.status(400).json({success: false, msg: 'Account already exists'})
       }
       return isExists
