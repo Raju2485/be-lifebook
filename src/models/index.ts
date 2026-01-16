@@ -10,6 +10,8 @@ import { Accounts } from './accounts';
 import { RoleMasters } from './roleMasters';
 import { AccRoles } from './accRoles';
 import { Journals } from './journals';
+import { CarriedForwards } from './carriedForwards';
+import { Ledgers } from './ledgers';
 
 TypeMasters.hasMany(Users, {foreignKey: 'TypeId'});
 Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
@@ -57,6 +59,12 @@ Journals.belongsTo(Accounts, { as: 'BookKeeper', foreignKey: 'BkId' });
 Organizations.hasMany(Journals, { foreignKey: 'OrgId' });
 Journals.belongsTo(Organizations, { foreignKey: 'OrgId' });
 
+Accounts.hasMany(CarriedForwards, { foreignKey: 'AccountId' });
+CarriedForwards.belongsTo(Accounts, { foreignKey: 'AccountId' });
+
+CarriedForwards.hasOne(Ledgers, { foreignKey: 'CfId' });
+Ledgers.belongsTo(CarriedForwards, { foreignKey: 'CfId' });
+
 export default {
   TypeMasters,
   GenderMasters,
@@ -70,4 +78,6 @@ export default {
   RoleMasters,
   AccRoles,
   Journals,
+  CarriedForwards,
+  Ledgers
 };
