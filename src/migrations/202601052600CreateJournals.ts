@@ -37,6 +37,14 @@ export async function up( queryInterface: QueryInterface ){
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    monthNumber: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    year: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

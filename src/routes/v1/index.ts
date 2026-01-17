@@ -16,6 +16,7 @@ import { getRoles } from '../../controllers/v1/getRoles';
 import { getAccountTypes } from '../../controllers/v1/getAccountTypes';
 import { createAccount } from '../../controllers/v1/createAccount';
 import { getAccounts } from '../../controllers/v1/getAccounts';
+import { getAccountingReports } from '../../controllers/v1/getAccountingReports';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
@@ -53,5 +54,6 @@ router.post(
   createAccount
 );
 router.get('/get-accounts', verifyAuth, checkRole(['bookKeeper']), getAccounts);
+router.get('/get-accounting-reports', verifyAuth, getAccountingReports);
 
 export default router;

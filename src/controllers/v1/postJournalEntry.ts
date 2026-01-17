@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import models from '../../models/index';
 import { Op, where } from 'sequelize'
 import { getLimitAndOffset, getNewPagination} from '../../utils/newPagination'
-import { isValidDate} from '../../utils/isValidDate'
+import { isValidDate } from '../../utils/isValidDate'
+import { monthNameToNumber } from '../../utils/monthConversion'
+import momentz from 'moment-timezone'
 
 export const postJournalEntry = async (req: Request, res: Response) => {
   try {
@@ -14,6 +16,10 @@ export const postJournalEntry = async (req: Request, res: Response) => {
       CreditorId,
       amount
     } = req.body;
+
+    const month = momentz(date).format('MMMM');
+    const monthNumber = monthNameToNumber(month);
+    const year = momentz(date).year();
 
     const { id: userId } = req.user;
 
@@ -29,7 +35,9 @@ export const postJournalEntry = async (req: Request, res: Response) => {
       DebitorId,
       CreditorId,
       amount,
-      BkId: userId
+      BkId: userId,
+      monthNumber,
+      year
     })
 
       return res.status(200).json({
