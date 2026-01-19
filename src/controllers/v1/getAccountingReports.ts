@@ -73,7 +73,8 @@ export const getAccountingReports = async (req: Request, res: Response) => {
         ledgers.push({
           name: account?.User?.name ?? '',
           uid: account?.User?.uid ?? '',
-          url: carriedForward?.Ledger?.fileUrl ?? ''
+          url: carriedForward?.Ledger?.fileUrl ?? '',
+          json: carriedForward?.Ledger?.json ?? '',
         })
       }
       // console.log(month)
