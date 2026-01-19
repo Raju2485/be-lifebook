@@ -13,9 +13,11 @@ export async function up( queryInterface: QueryInterface ){
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    amount: {
-      type: DataTypes.DECIMAL(12, 2),
-      allowNull: false,
+    debitAmount: {
+      type: DataTypes.DECIMAL(12, 2)
+    },
+    creditAmount: {
+      type: DataTypes.DECIMAL(12, 2)
     },
     month: {
       type: DataTypes.STRING,

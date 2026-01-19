@@ -786,3 +786,63 @@
  *               success: false
  *               message: Something went wrong. Our team is working to fix this issue.
  */
+
+// Generate Accounting Reports
+/**
+ * @swagger
+ * /api/v1/generate-accounting-reports:
+ *   get:
+ *     summary: "Generate Accounting Reports"
+ *     tags:
+ *       - Common
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: orgId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *         description: The ID of the organization
+ *       - in: query
+ *         name: month
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - January
+ *             - February
+ *             - March
+ *             - April
+ *             - May
+ *             - June
+ *             - July
+ *             - August
+ *             - September
+ *             - October
+ *             - November
+ *             - December
+ *         example: January
+ *         required: true
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *         example: 2026
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occurred.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
