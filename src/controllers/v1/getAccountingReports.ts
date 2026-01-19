@@ -45,7 +45,6 @@ export const getAccountingReports = async (req: Request, res: Response) => {
       })
 
       const accountsIdsArray = Object.values(accountsIds);
-
       
       const ledgers = []
 
@@ -81,6 +80,7 @@ export const getAccountingReports = async (req: Request, res: Response) => {
       // console.log(ledgers)
       return {
         month: month,
+        year: year,
         ledgers: ledgers
       }
     })) : [];

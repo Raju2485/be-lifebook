@@ -78,10 +78,12 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
       for (let j = 0; j < accountJournals.length; j++){
 
         ledger.push({          
-        date: momentz(accountJournals[j].date).format("MMM D"),
-        particulars: accountJournals[j].particulars,
-        debitAmount: accountJournals[j]?.DebitorId == accountsIdsArray[i] ? Number(accountJournals[j].amount) : "",
-        creditAmount: accountJournals[j]?.CreditorId == accountsIdsArray[i] ? Number(accountJournals[j].amount) : "",
+          date: momentz(accountJournals[j].date).format("MMM D"),
+          particulars: accountJournals[j].particulars,
+          debitAmount: accountJournals[j]?.DebitorId == accountsIdsArray[i] ? Number(accountJournals[j].amount) : "",
+          creditAmount: accountJournals[j]?.CreditorId == accountsIdsArray[i] ? Number(accountJournals[j].amount) : "",
+          debitor: accountJournals[j]?.Debitor?.User?.name ?? '',
+          creditor: accountJournals[j]?.Creditor?.User?.name ?? '',
         })
       }
       // Calculate the carried forward and create and push to ledger
