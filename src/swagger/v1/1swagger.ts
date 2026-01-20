@@ -794,7 +794,7 @@
  *   get:
  *     summary: "Generate Accounting Reports"
  *     tags:
- *       - Common
+ *       - Book Keeper
  *     security:
  *       - bearerAuth: []
  *     parameters:

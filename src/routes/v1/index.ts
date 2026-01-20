@@ -56,6 +56,6 @@ router.post(
 );
 router.get('/get-accounts', verifyAuth, checkRole(['bookKeeper']), getAccounts);
 router.get('/get-accounting-reports', verifyAuth, getAccountingReports);
-router.get('/generate-accounting-reports', verifyAuth, generateAccountingReports);
+router.get('/generate-accounting-reports', verifyAuth, checkRole(['bookKeeper']), generateAccountingReports);
 
 export default router;
