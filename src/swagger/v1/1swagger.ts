@@ -846,3 +846,41 @@
  *               success: false
  *               message: Something went wrong. Our team is working to fix this issue.
  */
+
+// Import journals from excel
+/**
+ * @swagger
+ * /api/v1/import-journals-from-excel:
+ *   post:
+ *     summary: "import joournals from excel"
+ *     tags:
+ *       - Book Keeper
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - orgId
+ *               - file
+ *             properties:
+ *               orgId:
+ *                 type: integer
+ *                 example: 1
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: upload excel(.xlsx) file only
+ *
+ *     responses:
+ *       200:
+ *         description: The gift created.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: The gift has been declared successfully.
+ */

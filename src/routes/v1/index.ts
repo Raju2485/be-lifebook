@@ -18,10 +18,12 @@ import { createAccount } from '../../controllers/v1/createAccount';
 import { getAccounts } from '../../controllers/v1/getAccounts';
 import { getAccountingReports } from '../../controllers/v1/getAccountingReports';
 import { generateAccountingReports } from '../../controllers/v1/generateAccountingReports';
+import { importJournalsFromExcel } from '../../controllers/v1/importJournalsFromExcel';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
 import { checkRole } from '../../middlewares/checkRole';
+import {upload} from '../../utils/multer';
 
 router.post('/signup', signup);
 router.post('/signin', signin);
@@ -57,5 +59,7 @@ router.post(
 router.get('/get-accounts', verifyAuth, checkRole(['bookKeeper']), getAccounts);
 router.get('/get-accounting-reports', verifyAuth, getAccountingReports);
 router.get('/generate-accounting-reports', verifyAuth, checkRole(['bookKeeper']), generateAccountingReports);
+router.post('/import-journals-from-excel', 
+  upload.single('file'), verifyAuth, checkRole(['bookKeeper']), importJournalsFromExcel);
 
 export default router;

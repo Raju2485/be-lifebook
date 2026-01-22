@@ -26,7 +26,7 @@ export class Users extends Model<
   declare GenderId: number | null;
   declare uid: number;
   declare hash: CreationOptional<string>;
-  declare orgId: CreationOptional<integer>;
+  declare orgId: CreationOptional<number>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
