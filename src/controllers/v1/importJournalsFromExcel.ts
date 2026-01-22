@@ -111,6 +111,8 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
           }
         });
         if (incorrectColumnNames.length > 0) {
+          fs.unlinkSync(filePath)
+
           return res.status(400).json({
             success: false,
             msg: `${incorrectColumnNames} are incorrect column names`,
@@ -132,6 +134,8 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
         dateColumnValues = dateColumnValues.slice(2)
         dateColumnValues.forEach((ele) => {
           if (!isValidDateString(ele)) {
+            fs.unlinkSync(filePath)
+
             return res
               .status(400)
               .json({ success: false, msg: `${ele} is not a valid date` });
@@ -143,6 +147,8 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
           dateColumnValues.indexOf(null) > 0 ||
           dateColumnValues.indexOf('') > 0
         ) {
+          fs.unlinkSync(filePath)
+
           return res
             .status(400)
             .json({ success: false, msg: 'Date cannot be empty' });
@@ -159,6 +165,8 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
 
         amountColumnValues.forEach((ele) => {
           if (!isValidAmount(ele)) {
+            fs.unlinkSync(filePath)
+
             return res
               .status(400)
               .json({ success: false, msg: `${ele} is not a valid amount` });
@@ -170,6 +178,8 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
           amountColumnValues.indexOf(null) > 0 ||
           amountColumnValues.indexOf('') > 0
         ) {
+          fs.unlinkSync(filePath)
+
           return res
             .status(400)
             .json({ success: false, msg: 'Amount cannot be empty' });
@@ -186,11 +196,14 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
         debitorAccountTypeColumnValues = debitorAccountTypeColumnValues.slice(2);
 
         for (let i = 0; i < debitorAccountTypeColumnValues.length; i++) {
-          if (debitorAccountTypeColumnValues[i] !== 'real' && debitorAccountTypeColumnValues[i] !== 'personal' && debitorAccountTypeColumnValues[i] !== 'nominal')
+          if (debitorAccountTypeColumnValues[i] !== 'real' && debitorAccountTypeColumnValues[i] !== 'personal' && debitorAccountTypeColumnValues[i] !== 'nominal') {
+            fs.unlinkSync(filePath)
+
             return res.status(400).json({
               success: false,
               msg: `${debitorAccountTypeColumnValues[i]} is not a valid account type`
             });
+          }
         }
                 
         if (
@@ -198,6 +211,8 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
           debitorAccountTypeColumnValues.indexOf(null) > 0 ||
           debitorAccountTypeColumnValues.indexOf('') > 0
         ) {
+          fs.unlinkSync(filePath)
+
           return res
             .status(400)
             .json({ success: false, msg: 'debitor account type cannot be empty' });
@@ -214,11 +229,14 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
         debitorAccountCashOrBankColumnValues = debitorAccountCashOrBankColumnValues.slice(2);
 
         for (let i = 0; i < debitorAccountCashOrBankColumnValues.length; i++) {
-          if (debitorAccountCashOrBankColumnValues[i] !== 'cash' && debitorAccountCashOrBankColumnValues[i] !== 'bank' && debitorAccountCashOrBankColumnValues[i] !== '')
+          if (debitorAccountCashOrBankColumnValues[i] !== 'cash' && debitorAccountCashOrBankColumnValues[i] !== 'bank' && debitorAccountCashOrBankColumnValues[i] !== '') {
+            fs.unlinkSync(filePath)
+
             return res.status(400).json({
               success: false,
               msg: `${debitorAccountCashOrBankColumnValues[i]} is not a valid account nature`
             });
+          }
         }
         //#endregion
 
@@ -232,11 +250,14 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
         creditorAccountTypeColumnValues = creditorAccountTypeColumnValues.slice(2);
 
         for (let i = 0; i < creditorAccountTypeColumnValues.length; i++) {
-          if (creditorAccountTypeColumnValues[i] !== 'real' && creditorAccountTypeColumnValues[i] !== 'personal' && creditorAccountTypeColumnValues[i] !== 'nominal')
+          if (creditorAccountTypeColumnValues[i] !== 'real' && creditorAccountTypeColumnValues[i] !== 'personal' && creditorAccountTypeColumnValues[i] !== 'nominal') {
+            fs.unlinkSync(filePath)
+
             return res.status(400).json({
               success: false,
               msg: `${creditorAccountTypeColumnValues[i]} is not a valid account type`
             });
+          }
         }
                 
         if (
@@ -244,6 +265,8 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
           creditorAccountTypeColumnValues.indexOf(null) > 0 ||
           creditorAccountTypeColumnValues.indexOf('') > 0
         ) {
+          fs.unlinkSync(filePath)
+
           return res
             .status(400)
             .json({ success: false, msg: 'debitor account type cannot be empty' });
@@ -260,11 +283,14 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
         creditorAccountCashOrBankColumnValues = creditorAccountCashOrBankColumnValues.slice(2);
 
         for (let i = 0; i < creditorAccountCashOrBankColumnValues.length; i++) {
-          if (creditorAccountCashOrBankColumnValues[i] !== 'cash' && creditorAccountCashOrBankColumnValues[i] !== 'bank' && creditorAccountCashOrBankColumnValues[i] !== '')
+          if (creditorAccountCashOrBankColumnValues[i] !== 'cash' && creditorAccountCashOrBankColumnValues[i] !== 'bank' && creditorAccountCashOrBankColumnValues[i] !== '') {
+            fs.unlinkSync(filePath)
+
             return res.status(400).json({
               success: false,
               msg: `${creditorAccountCashOrBankColumnValues[i]} is not a valid account nature`
             });
+          }
         }
         //#endregion
 
@@ -427,6 +453,9 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
   } catch (err) {
     await t.rollback();
     console.log(err);
+    if (req.file) {
+      fs.unlinkSync(req.file.path)
+    }
     return res.status(500).json({
       success: false,
       msg: 'Something went wrong. We are looking into it.',
