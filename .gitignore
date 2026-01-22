@@ -1,6 +1,7 @@
 Schema.xlsx
 description.txt
 import_template.xlsx
+src/uploads
 # Dependencies
 node_modules/
 npm-debug.log*

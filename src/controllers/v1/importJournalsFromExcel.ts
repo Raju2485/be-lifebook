@@ -1,7 +1,7 @@
 
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
-import fse from 'fs-extra';
+import fs from 'fs';
 import momentz from 'moment-timezone';
 import { sequelize } from '../../config/database';
 import models from '../../models/index';
@@ -19,6 +19,10 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
       
 
     if (!orgId || !req.file) {
+      if (req?.file) {
+        fs.unlinkSync(req.file.path)
+
+      }
       return res
         .status(400)
         .json({ success: false, msg: 'orgId and file and mandatory' });
@@ -94,8 +98,13 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
 
         // #region Validating columns names
         const incorrectColumnNames = [];
-        columns.forEach((obj) => {
-          const header = headerRow[obj.index].replace(/\s+/g, '').toLowerCase();
+        columns?.forEach((obj) => {
+          let header = headerRow[obj.index]
+          if (!header) {
+            fs.unlinkSync(filePath)
+            return res.status(400).json({success: false, msg: 'Incorrect format'})
+          }
+            header = header.replace(/\s+/g, '').toLowerCase();
           const label = obj.label.replace(/\s+/g, '').toLowerCase();
           if (header != label) {
             incorrectColumnNames.push(headerRow[obj.index]);
@@ -313,6 +322,7 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
           })
 
           if (!accType) {
+            fs.unlinkSync(filePath)
             throw new Error(`${debitorAccType} is invalid account type`)
           }
 
@@ -394,14 +404,14 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
             { transaction: t }
           );          
         }
-        await fse.remove(filePath);
+        fs.unlinkSync(filePath);
         await t.commit();
         return res
           .status(200)
           .json({ success: true, msg: 'Journals imported successfully!' });
       }
       else {
-        await fse.remove(filePath);
+        fs.unlinkSync(filePath);
           return res.status(400).json({
             success: false,
             message: 'Please upload a valid .xlsx file',

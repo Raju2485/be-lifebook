@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
-const dir = `${path.join(process.cwd())}/app/uploads`;
+const dir = `${path.join(process.cwd())}/src/uploads`;
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });
 }
