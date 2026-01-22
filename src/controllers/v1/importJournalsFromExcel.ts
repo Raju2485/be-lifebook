@@ -15,7 +15,6 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
     const { id: userId } = req.user;
     let { orgId } = req.body;
     orgId = parseInt(orgId)
-    console.log('orgId = ', orgId)
       
 
     if (!orgId || !req.file) {
@@ -412,7 +411,6 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
             })
           }
           //#endregion
-          console.log('orgId = ', orgId)
 
           // creating journal
           await models.Journals.create(
