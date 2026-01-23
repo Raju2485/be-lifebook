@@ -1,7 +1,7 @@
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 const dir = `${path.join(process.cwd())}/src/uploads`;
 if (!fs.existsSync(dir)) {

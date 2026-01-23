@@ -17,7 +17,7 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
 
     const monthNumber = monthNameToNumber(month)
 
-    // Fetch all account Ids from journals
+    //#region Fetch all account Ids from journals
     const journals = await models.Journals.findAll({
       where: {
         isActive: true,
@@ -52,11 +52,26 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
     })
 
     const accountsIdsArray = Object.values(accountsIds);
+    //#endregion
+
+    //#region Run loop on account ids and prepare and save ledgers in json format - create Carried Forwards if not available else update.
     const ledgers = []
-    // Run loop on account ids and prepare and save ledgers in pdf format - create Carried Forwards if not available else update.
+    const trialBalance = { heading: `Trial Balance - ${month} ${year}`, entries: [] }
     for (let i = 0; i < accountsIdsArray.length; i++){
       const accountJournals = journals.filter(obj => obj.DebitorId == accountsIdsArray[i] || obj.CreditorId == accountsIdsArray[i]);
-      const ledger = [];
+      
+      const account = await models.Accounts.findOne({
+        where: {
+          id: accountsIdsArray[i]
+        },
+        include: [{ model: models.Users }]
+      });
+
+      const ledger = {
+        heading: account?.User?.name ? `${account.User.name} Account - ${month} ${year}` : `${month} ${year}`,
+        entries: []
+      };
+      // Collecting last month carried forward
       const carriedForward = await models.CarriedForwards.findOne({
         where: {
           AccountId: accountsIdsArray[i],
@@ -67,7 +82,7 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
       const carriedForwardDebitAmount = carriedForward?.debitAmount ?? "";
       const carriedForwardCreditAmount = carriedForward?.creditAmount ?? "";
 
-      ledger.push({
+      ledger.entries.push({
         date: momentz(`${year}-${monthNumber < 10 ? `0${monthNumber}` : monthNumber}-01`).format('MMM D'),
         particulars: 'Balance b/f',
         debitAmount: carriedForwardCreditAmount ? Number(carriedForwardCreditAmount) : carriedForwardCreditAmount,
@@ -77,7 +92,7 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
       // running loop on accountJournals and collecting records
       for (let j = 0; j < accountJournals.length; j++){
 
-        ledger.push({          
+        ledger.entries.push({          
           date: momentz(accountJournals[j].date).format("MMM D"),
           particulars: accountJournals[j].particulars,
           debitAmount: accountJournals[j]?.DebitorId == accountsIdsArray[i] ? Number(accountJournals[j].amount) : "",
@@ -86,21 +101,30 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
           creditor: accountJournals[j]?.Creditor?.User?.name ?? '',
         })
       }
-      // Calculate the carried forward and create and push to ledger
+      // Calculating the carried forward
       const totals = {
         debit: 0,
         credit: 0
       }
-      ledger.forEach(obj => {
+      ledger.entries.forEach(obj => {
         obj.creditAmount ? totals.credit += Number(obj.creditAmount) : '';
         obj.debitAmount ? totals.debit += Number(obj.debitAmount) : '';
       })
 
       const debitBalance = totals.debit > totals.credit ? totals.debit - totals.credit : "";
       const creditBalance = totals.credit > totals.debit ? totals.credit - totals.debit : "";
-      
+
+      // Collecting data for trial balance      
+
+      const trialBalanceAccount = {
+        accountName: account?.User?.name ?? "",
+        debitBalance,
+        creditBalance
+      };
+      trialBalance.entries.push(trialBalanceAccount)
+            
       if (totals.credit != totals.debit) {
-        ledger.push({
+        ledger.entries.push({
           date: "",
           particulars: 'Balance c/f',
           debitAmount: creditBalance ?? '',
@@ -108,7 +132,7 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
         });
       }
       
-      ledger.push({
+      ledger.entries.push({
         date: "",
         particulars: 'Totals',
         debitAmount: creditBalance ? totals.debit + creditBalance : totals.debit,
@@ -116,6 +140,7 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
       });
       ledgers.push(ledger);
 
+      // Creating or updating carried forward
       let isCfExists = await models.CarriedForwards.findOne({
         where: {          
         AccountId: accountsIdsArray[i],
@@ -140,7 +165,7 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
           year: Number(year)
         })
       }
-      // Generate pdf and save
+      // Creating or updating ledger
       let isLedgerExists = await models.Ledgers.findOne({
         where: {
           CfId: isCfExists.id
@@ -162,7 +187,25 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
         });
       }
     }
-    // prepare and save cash book
+    // caculating totals of trail balance
+    // calculating totals      
+    trialBalance.entries.push({
+      accountName: "Totals",
+      debitBalance: trialBalance.entries.reduce((sum, entry) => {
+        // Convert empty string to 0, otherwise use the number
+        const debit = Number(entry.debitBalance) || 0;
+        return sum + debit;
+      }, 0),
+      creditBalance: trialBalance.entries.reduce((sum, entry) => {
+        // Convert empty string to 0, otherwise use the number
+        const credit = Number(entry.creditBalance) || 0;
+        return sum + credit;
+      }, 0)
+    })
+    //#endregion
+    //#region Generating trial balance sheet
+
+    //#endregion
 
 
     return res.status(200).json({
@@ -170,7 +213,9 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
       data: {
         month: month,
         ledgers: ledgers
-      }
+      },
+      trialBalance,
+      msg: 'Accounting reports generated successfully!'
     })
 } 
     catch (err) {
