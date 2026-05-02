@@ -78,7 +78,7 @@ export async function up( queryInterface: QueryInterface ){
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW4
+      defaultValue: DataTypes.NOW
     },
   });
   await queryInterface.sequelize.query(

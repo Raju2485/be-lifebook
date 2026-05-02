@@ -34,7 +34,7 @@ export const importJournalsFromExcel = async (req : Request, res: Response) => {
         await workbook.xlsx.readFile(filePath);
         const sheet1 = workbook.getWorksheet(1);
 
-        const dateLabel = 'date (date&month&year)';
+        const dateLabel = 'date (d&m&year)';
         const particularsLabel = 'particulars';
         const amountLabel = 'amount';
         const debitorAccountNameLabel = 'debitor account name';
