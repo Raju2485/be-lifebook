@@ -13,6 +13,7 @@ import { Journals } from './journals';
 import { CarriedForwards } from './carriedForwards';
 import { Ledgers } from './ledgers';
 import { CashBooks } from './cashBooks';
+import { Cards } from './cards';
 
 TypeMasters.hasMany(Users, {foreignKey: 'TypeId'});
 Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
@@ -84,5 +85,6 @@ export default {
   Journals,
   CarriedForwards,
   Ledgers,
-  CashBooks
+  CashBooks,
+  Cards
 };

@@ -8,7 +8,10 @@ export const signin = async(req: Request, res: Response) => {
         const { email, password } = req.body;
 
         let user = await models.Users.findOne({
-          where: { email, isActive: true },
+          where: { 
+            email, 
+            isActive: true 
+          },
           include: [{
             model: models.Accounts,
             where: {

@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { signin } from '../../controllers/v1/signin'
-import { signup } from '../../controllers/v1/signup'
-import { profile } from '../../controllers/v1/profile'
+import { signin } from '../../controllers/v1/signin';
+import { signup } from '../../controllers/v1/signup';
+import { profile } from '../../controllers/v1/profile';
 import { refreshToken } from '../../controllers/v1/refreshToken';
 import { signout } from '../../controllers/v1/signout';
 import { createOrg } from '../../controllers/v1/createOrganization';
@@ -23,7 +23,8 @@ import { importJournalsFromExcel } from '../../controllers/v1/importJournalsFrom
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
 import { checkRole } from '../../middlewares/checkRole';
-import {upload} from '../../utils/multer';
+import { upload } from '../../utils/multer';
+import { getCards } from '../../controllers/v1/getDashboardCards';
 
 router.post('/signup', signup);
 router.post('/signin', signin);
@@ -58,8 +59,19 @@ router.post(
 );
 router.get('/get-accounts', verifyAuth, checkRole(['bookKeeper']), getAccounts);
 router.get('/get-accounting-reports', verifyAuth, getAccountingReports);
-router.get('/generate-accounting-reports', verifyAuth, checkRole(['bookKeeper']), generateAccountingReports);
-router.post('/import-journals-from-excel', 
-  upload.single('file'), verifyAuth, checkRole(['bookKeeper']), importJournalsFromExcel);
+router.get(
+  '/generate-accounting-reports',
+  verifyAuth,
+  checkRole(['bookKeeper']),
+  generateAccountingReports
+);
+router.post(
+  '/import-journals-from-excel',
+  upload.single('file'),
+  verifyAuth,
+  checkRole(['bookKeeper']),
+  importJournalsFromExcel
+);
+router.get('/get-cards', verifyAuth, getCards);
 
 export default router;

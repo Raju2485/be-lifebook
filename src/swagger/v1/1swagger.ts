@@ -884,3 +884,51 @@
  *               success: true
  *               message: The gift has been declared successfully.
  */
+
+// Get Cards
+/**
+ * @swagger
+ * /api/v1/get-cards:
+ *   get:
+ *     summary: "get cards"
+ *     tags:
+ *       - Common
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: type
+ *         schema:
+ *          type: string
+ *          enum: [dashboard]
+ *         required: true
+ *       - in: query
+ *         name: search
+ *         schema:
+ *          type: string
+ *       - in: query
+ *         name: page
+ *         schema:
+ *          type: integer
+ *         example: 1
+ *       - in: query
+ *         name: perPage
+ *         schema:
+ *          type: integer
+ *         example: 10
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
