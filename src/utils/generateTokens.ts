@@ -7,7 +7,7 @@ import models from '../models/index.ts';
 export const generateTokens = async (user) => {
   try {
     const payload = user;
-    let expiresIn: any = '24h';
+    let expiresIn: any = '12h';
     if (payload?.exp) {
       expiresIn = payload.exp - Math.floor(Date.now() / 1000);
 
@@ -16,7 +16,7 @@ export const generateTokens = async (user) => {
     }
 
     const accessToken = jwt.sign(payload, config.JWT_SECRET_KEY, {
-      expiresIn: '12h',
+      expiresIn: '1h',
     });
 
     const refreshToken = jwt.sign(payload, config.REFRESH_TOKEN_SECRET_KEY, {
