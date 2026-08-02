@@ -70,7 +70,7 @@
  *               middleName:
  *                 type: string
  *                 nullable: true
- *                 example: Michael
+ *                 example: 
  *                 description: "User's middle name (optional)"
  *               surName:
  *                 type: string

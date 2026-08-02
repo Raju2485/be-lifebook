@@ -14,6 +14,7 @@ export const signin = async(req: Request, res: Response) => {
           },
           include: [{
             model: models.Accounts,
+            required: false,
             where: {
               isMember: true,
             },
