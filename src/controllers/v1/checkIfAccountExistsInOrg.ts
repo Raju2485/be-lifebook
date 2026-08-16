@@ -7,7 +7,7 @@ export const checkIfAccountExistsInOrg = async (
   res: Response
 ) => {
   try {
-    let { orgId, email } = req.query;
+    let { orgId, name: email } = req.query;
     email = email?.toString().trim();
 
     // getting users
