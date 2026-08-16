@@ -19,7 +19,7 @@ export const checkIfAccountExistsInOrg = async (
       include: [
         {
           model: models.Users,
-          where: { email: { [Op.iLike]: `${email}` } },
+          where: { [Op.or]: [{ email: { [Op.iLike]: `${email}` } }, { name: { [Op.iLike]: `${email}` } }] },
         },
       ],
     });
