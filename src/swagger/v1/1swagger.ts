@@ -668,6 +668,44 @@
  *               message: Something went wrong. Our team is working to fix this issue.
  */
 
+// Check If User Exists
+/**
+ * @swagger
+ * /api/v1/check-if-user-exists:
+ *   get:
+ *     summary: "check if user exists"
+ *     tags:
+ *       - Book Keeper
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: orgId
+ *         schema:
+ *          type: integer
+ *         required: true
+ *       - in: query
+ *         name: email
+ *         schema:
+ *          type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
 // Create Account
 /**
  * @swagger
