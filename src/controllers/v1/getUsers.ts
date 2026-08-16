@@ -14,19 +14,21 @@ export const getUsers = async (req: Request, res: Response) => {
 
     let whereConditions = {
       isActive: true,
-      orgId:{[Op.or]:[null, orgId]}
+      // orgId:{[Op.or]:[null, orgId]}
+      orgId: null,
     };
     if (search) {
       whereConditions = {
         isActive: true,
-        orgId:{[Op.or]:[null, orgId]},
+        orgId: null,
+        // orgId:{[Op.or]:[null, orgId]},
         [Op.or]: [
-          {name:{ [Op.iLike]: `%${search}%`} },
-          {middleName:{ [Op.iLike]: `%${search}%`} },
-          {surName:{ [Op.iLike]: `%${search}%`} },
-          {email:{ [Op.iLike]: `%${search}%`} },
-        ]
-      }
+          { name: { [Op.iLike]: `%${search}%` } },
+          { middleName: { [Op.iLike]: `%${search}%` } },
+          { surName: { [Op.iLike]: `%${search}%` } },
+          { email: { [Op.iLike]: `%${search}%` } },
+        ],
+      };
       if (!isNaN(Number(search))) {
         whereConditions[Op.or].push({ uid: Number(search) });
       }

@@ -70,7 +70,7 @@
  *               middleName:
  *                 type: string
  *                 nullable: true
- *                 example: 
+ *                 example:
  *                 description: "User's middle name (optional)"
  *               surName:
  *                 type: string
@@ -588,7 +588,6 @@
  *               message: Something went wrong. Our team is working to fix this issue.
  */
 
-
 // Get Account Types
 /**
  * @swagger
@@ -614,6 +613,44 @@
  *         schema:
  *          type: integer
  *         example: 10
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
+// Check If Account Exists In Org
+/**
+ * @swagger
+ * /api/v1/check-if-account-exists:
+ *   get:
+ *     summary: "check if account exists in org"
+ *     tags:
+ *       - Book Keeper
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: orgId
+ *         schema:
+ *          type: integer
+ *         required: true
+ *       - in: query
+ *         name: email
+ *         schema:
+ *          type: string
+ *         required: true
  *     responses:
  *       200:
  *         description: successful
@@ -669,7 +706,7 @@
  *               isMember:
  *                 type: boolean
  *                 example: false
- *                 description: Don't populate if selected user has orgId == not null
+ *                 description: Don't populate if selected user has orgId
  *               RolesIds:
  *                 type: array
  *                 items:
@@ -744,7 +781,6 @@
  *               success: false
  *               message: Something went wrong. Our team is working to fix this issue.
  */
-
 
 // Get Accounting Reports
 /**

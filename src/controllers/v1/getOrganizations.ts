@@ -36,10 +36,9 @@ export const getOrganizations = async (req: Request, res: Response) => {
         where: {
           UserId: userId,
         },
-        // attributes: [],
-        separate: true,
-        // required: true
+        required: true,
       }],
+      distinct: true,
       limit,
       offset,
       order: [['createdAt', 'DESC']]

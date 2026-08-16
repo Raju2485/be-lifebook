@@ -4,9 +4,10 @@ export const checkRole = (rolesArray) => {
         if (!orgId) {
             return res.status(400).json({success: false, msg: 'orgId is missing in payload'})
         }
+        // console.log('req.user.orgsAndRoles = ', req.user.orgsAndRoles);
         const org = req.user.orgsAndRoles.find(obj => obj.id == orgId)
         if (!org) {            
-            return res.status(400).json({success: false, msg: 'organization not found'})
+            return res.status(400).json({success: false, msg: 'organization not mapped'})
         }
 
         if (org.roles.some(el => rolesArray.includes(el))) {

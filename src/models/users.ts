@@ -103,6 +103,7 @@ Users.init(
     },
     orgId: {
       type: DataTypes.INTEGER,
+      // This column describes that this user is not a Person and is dedicated to 1 organization only.
     },
     createdAt: {
       type: DataTypes.DATE,

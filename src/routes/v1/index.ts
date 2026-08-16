@@ -16,6 +16,7 @@ import { getRoles } from '../../controllers/v1/getRoles';
 import { getAccountTypes } from '../../controllers/v1/getAccountTypes';
 import { createAccount } from '../../controllers/v1/createAccount';
 import { getAccounts } from '../../controllers/v1/getAccounts';
+import { checkIfAccountExistsInOrg } from '../../controllers/v1/checkIfAccountExistsInOrg';
 import { getAccountingReports } from '../../controllers/v1/getAccountingReports';
 import { generateAccountingReports } from '../../controllers/v1/generateAccountingReports';
 import { importJournalsFromExcel } from '../../controllers/v1/importJournalsFromExcel';
@@ -58,6 +59,12 @@ router.post(
   createAccount
 );
 router.get('/get-accounts', verifyAuth, checkRole(['bookKeeper']), getAccounts);
+router.get(
+  '/check-if-account-exists',
+  verifyAuth,
+  checkRole(['bookKeeper']),
+  checkIfAccountExistsInOrg
+);
 router.get('/get-accounting-reports', verifyAuth, getAccountingReports);
 router.get(
   '/generate-accounting-reports',
