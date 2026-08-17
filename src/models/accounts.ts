@@ -16,8 +16,8 @@ export class Accounts extends Model<
   declare OrgId: number;
   declare AccTypeId: number;
   declare isAdmin: CreationOptional<boolean>;
-  declare isMember: CreationOptional<boolean>;  
-  declare cashOrBank: CreationOptional<'cash' | 'bank' | null>; 
+  declare isMember: CreationOptional<boolean>;
+  declare natureOfAccount: CreationOptional<'cash' | 'bank' | null>;
   declare isActive: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -53,14 +53,14 @@ Accounts.init(
       allowNull: false,
       defaultValue: false,
     },
-    cashOrBank: {
-      type: DataTypes.STRING,      
+    natureOfAccount: {
+      type: DataTypes.STRING,
       validate: {
         isIn: {
           args: [['cash', 'bank', null]],
-          msg: 'cashOrBank must be one of the following: cash / bank/ null'
-        }
-      }
+          msg: 'natureOfAccount must be one of the following: cash / bank/ null',
+        },
+      },
     },
     isActive: {
       type: DataTypes.BOOLEAN,

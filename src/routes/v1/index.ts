@@ -12,6 +12,7 @@ import { changePassword } from '../../controllers/v1/changePassword';
 import { sendPasswordResetLink } from '../../controllers/v1/sendPasswordResetLink';
 import { resetPassword } from '../../controllers/v1/resetPassword';
 import { getUsers } from '../../controllers/v1/getUsers';
+import { getNonAccountUsers } from '../../controllers/v1/getNonAccountUsers';
 import { getRoles } from '../../controllers/v1/getRoles';
 import { getAccountTypes } from '../../controllers/v1/getAccountTypes';
 import { createAccount } from '../../controllers/v1/createAccount';
@@ -51,6 +52,7 @@ router.post('/change-password', verifyAuth, changePassword);
 router.post('/send-password-reset-link', sendPasswordResetLink);
 router.post('/reset-password', resetPassword);
 router.get('/get-users', verifyAuth, getUsers);
+router.get('/get-non-account-users', verifyAuth, getNonAccountUsers);
 router.get('/get-roles', verifyAuth, getRoles);
 router.get('/get-account-types', verifyAuth, getAccountTypes);
 router.post(

@@ -24,30 +24,30 @@ export async function up( queryInterface: QueryInterface ){
     isAdmin: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false
+      defaultValue: false,
     },
     isMember: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false
+      defaultValue: false,
     },
-    cashOrBank: {
-      type: DataTypes.STRING
+    natureOfAccount: {
+      type: DataTypes.STRING,
     },
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
   });
 };

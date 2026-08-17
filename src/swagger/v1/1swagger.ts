@@ -732,7 +732,7 @@
  *               UserId:
  *                 type: integer
  *                 example: 1
- *                 description: api is '/api/v1/get-users'
+ *                 description: api is '/api/v1/get-non-account-users'
  *               name:
  *                 type: string
  *                 example: cash
