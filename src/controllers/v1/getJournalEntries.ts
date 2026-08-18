@@ -36,26 +36,29 @@ export const getJournalEntries = async (req: Request, res: Response) => {
 
     const { count, rows } = await models.Journals.findAndCountAll({
       where: whereConditions,
-      include: [{
-        model: models.Accounts,
-        as: 'Debitor',
-        attributes: ['id', 'UserId'],
-        include: {
-          model: models.Users,
-          attributes: ['id', 'name', 'surName', 'middleName', 'email']
-        }
-      },{
-        model: models.Accounts,
-        as: 'Creditor',
-        attributes: ['id', 'UserId'],
-        include: {model: models.Users,
-          attributes: ['id', 'name', 'surName', 'middleName', 'email']
-        }
-      },
+      include: [
+        {
+          model: models.Accounts,
+          as: 'Debitor',
+          attributes: ['id', 'UserId'],
+          include: {
+            model: models.Users,
+            attributes: ['id', 'name', 'surName', 'middleName', 'email', 'uid'],
+          },
+        },
+        {
+          model: models.Accounts,
+          as: 'Creditor',
+          attributes: ['id', 'UserId'],
+          include: {
+            model: models.Users,
+            attributes: ['id', 'name', 'surName', 'middleName', 'email', 'uid'],
+          },
+        },
       ],
       limit,
       offset,
-      order: [['date', 'DESC']]
+      order: [['date', 'DESC']],
     });
     
     
