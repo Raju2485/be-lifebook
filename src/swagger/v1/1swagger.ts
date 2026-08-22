@@ -1015,7 +1015,7 @@
  *   get:
  *     summary: "download bulk upload template"
  *     tags:
- *       - Common
+ *       - Book Keeper
  *     security:
  *       - bearerAuth: []
  *     responses:

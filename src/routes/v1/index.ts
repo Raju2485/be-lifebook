@@ -93,6 +93,7 @@ router.get('/get-cards', verifyAuth, getCards);
 router.get(
   '/download-bulk-upload-template',
   verifyAuth,
+  checkRole(['bookKeeper']),
   downloadBulkUploadTemplate
 );
 

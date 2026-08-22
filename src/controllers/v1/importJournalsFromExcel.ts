@@ -9,8 +9,6 @@ import Excel from 'exceljs';
 import { monthNameToNumber } from '../../utils/monthConversion';
 
 export const importJournalsFromExcel = async (req : Request, res: Response) => {
-  const t = await sequelize.transaction();
-
   try {
     const { id: userId } = req.user;
     let { orgId } = req.body;
@@ -329,7 +327,9 @@ if(notFoundAccounts.length > 0) {
         // //#endregion
 
         const rows = sheet1.getSheetValues();
-        
+
+        const t = await sequelize.transaction();
+        try {
         // Creating records
         for (let i = 2; i < rows.length; i++) {
           let row = rows[i];
@@ -371,6 +371,8 @@ if(notFoundAccounts.length > 0) {
           })
           
           if (!isDebitorUserExists) {
+            await t.rollback();
+            fs.unlinkSync(filePath);
             return res.status(404).json({
               success: false,
               msg: `${debitorAcc} not found`
@@ -417,6 +419,8 @@ if(notFoundAccounts.length > 0) {
           })
 
           if (!isCreditorUserExists) {
+            await t.rollback();
+            fs.unlinkSync(filePath);
             return res.status(404).json({
               success: false,
               msg: `${creditorAcc} not found`
@@ -466,11 +470,15 @@ if(notFoundAccounts.length > 0) {
             { transaction: t }
           );          
         }
-        fs.unlinkSync(filePath);
         await t.commit();
+        fs.unlinkSync(filePath);
         return res
           .status(200)
           .json({ success: true, msg: 'Journals imported successfully!' });
+        } catch (err) {
+          await t.rollback();
+          throw err;
+        }
       }
       else {
         fs.unlinkSync(filePath);
@@ -487,15 +495,14 @@ if(notFoundAccounts.length > 0) {
         });
       }
   } catch (err) {
-    await t.rollback();
     console.log(err);
-    if (req.file) {
-      fs.unlinkSync(req.file.path)
+    if (req.file?.path && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
     }
     return res.status(500).json({
       success: false,
       msg: 'Something went wrong. We are looking into it.',
-      error: err.message,
+      error: err instanceof Error ? err.message : 'Unknown error',
     });
   }
 };
