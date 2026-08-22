@@ -22,6 +22,7 @@ import { checkIfUserExists } from '../../controllers/v1/checkIfUserExists';
 import { getAccountingReports } from '../../controllers/v1/getAccountingReports';
 import { generateAccountingReports } from '../../controllers/v1/generateAccountingReports';
 import { importJournalsFromExcel } from '../../controllers/v1/importJournalsFromExcel';
+import { downloadBulkUploadTemplate } from '../../controllers/v1/downloadBulkUploadTemplate';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
@@ -89,5 +90,10 @@ router.post(
   importJournalsFromExcel
 );
 router.get('/get-cards', verifyAuth, getCards);
+router.get(
+  '/download-bulk-upload-template',
+  verifyAuth,
+  downloadBulkUploadTemplate
+);
 
 export default router;
