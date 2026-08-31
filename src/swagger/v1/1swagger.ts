@@ -709,9 +709,9 @@
 // Create Account
 /**
  * @swagger
- * /api/v1/create-account:
+ * /api/v1/create-accounts:
  *   post:
- *     summary: "Create Account"
+ *     summary: "Create Accounts"
  *     tags:
  *       - Book Keeper
  *     security:
@@ -724,38 +724,61 @@
  *             type: object
  *             required:
  *               - orgId
- *               - AccTypeId
+ *               - accounts
  *             properties:
  *               orgId:
  *                 type: integer
  *                 example: 1
- *               UserId:
- *                 type: integer
- *                 example: 1
- *                 description: api is '/api/v1/get-non-account-users'
- *               name:
- *                 type: string
- *                 example: cash
- *                 description: enter name if the desired user not found in dropdown. show either users dropdown or name field.
- *               AccTypeId:
- *                 type: integer
- *                 example: 4
- *                 description: api is '/api/v1/get-account-types'
- *               isMember:
- *                 type: boolean
- *                 example: false
- *                 description: Don't populate if selected user has orgId
- *               RolesIds:
+ *               accounts:
  *                 type: array
  *                 items:
- *                  type: integer
- *                 example: [1, 2]
- *                 description: api is '/api/v1/get-roles'. Dropdown should populate if isMember = true. Not a mandatory field
- *               cashOrBank:
- *                 type: string
- *                 enum: [null, cash, bank]
- *                 example: cash
- *                 description: Radio buttons should populate if isMember = true. Not a mandatory field
+ *                   type: object
+ *                   required:
+ *                     - AccTypeId
+ *                   properties:
+ *                     UserId:
+ *                       type: integer
+ *                       example: 1
+ *                       description: api is '/api/v1/get-non-account-users'
+ *                     isPerson:
+ *                       type: boolean
+ *                       example: true
+ *                       description: true if the account is a person.
+ *                     email:
+ *                       type: string
+ *                       example: bheema@mailinator.com
+ *                       description: enter email.
+ *                     name:
+ *                       type: string
+ *                       example: cash
+ *                       description: enter name if the desired user not found in dropdown. show either users dropdown or name field.
+ *                     middleName:
+ *                       type: string
+ *                       example: cash
+ *                       description: enter middle name.
+ *                     surname:
+ *                       type: string
+ *                       example: cash
+ *                       description: enter surname.
+ *                     AccTypeId:
+ *                       type: integer
+ *                       example: 4
+ *                       description: api is '/api/v1/get-account-types'
+ *                     isMember:
+ *                       type: boolean
+ *                       example: false
+ *                       description: Don't populate if selected user has orgId
+ *                     RolesIds:
+ *                       type: array
+ *                       items:
+ *                         type: integer
+ *                       example: [1, 2]
+ *                       description: api is '/api/v1/get-roles'. Dropdown should populate if isMember = true. Not a mandatory field
+ *                     natureOfAccount:
+ *                       type: string
+ *                       enum: [null, cash, bank]
+ *                       example: cash
+ *                       description: Radio buttons should populate if isMember = true. Not a mandatory field
  *     responses:
  *       200:
  *         description: successful

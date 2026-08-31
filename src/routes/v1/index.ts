@@ -57,7 +57,7 @@ router.get('/get-non-account-users', verifyAuth, getNonAccountUsers);
 router.get('/get-roles', verifyAuth, getRoles);
 router.get('/get-account-types', verifyAuth, getAccountTypes);
 router.post(
-  '/create-account',
+  '/create-accounts',
   verifyAuth,
   checkRole(['bookKeeper', 'admin']),
   createAccount
