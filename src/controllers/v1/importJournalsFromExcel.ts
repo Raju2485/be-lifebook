@@ -7,6 +7,7 @@ import models from '../../models/index';
 import Excel from 'exceljs';
 import { monthNameToNumber } from '../../utils/monthConversion';
 import { normalizeExcelValues } from '../../utils/normalizeExcelValues';
+import { getSystemErrorMessage } from 'util';
 
 export const importJournalsFromExcel = async (req: Request, res: Response) => {
   try {
@@ -20,7 +21,7 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
       }
       return res
         .status(400)
-        .json({ success: false, msg: 'orgId and file and mandatory' });
+        .json({ success: false, msg: 'orgId and file are mandatory' });
     }
 
     if (req?.file) {
@@ -97,7 +98,7 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             fs.unlinkSync(filePath);
             return res
               .status(400)
-              .json({ success: false, msg: 'Incorrect format' });
+              .json({ success: false, msg: 'Incorrect template format' });
           }
           header = header.replace(/\s+/g, '').toLowerCase();
           const label = obj.label.replace(/\s+/g, '').toLowerCase();
@@ -229,7 +230,8 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
         ); // column number or key
         debitorAccountEmailColumnValues =
           debitorAccountEmailColumnValues?.slice(2);
-
+        
+        let errors: string[] = [];
         const isUserExists = async ({
           email,
           name,
@@ -244,7 +246,11 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
                 email: { [Op.iLike]: email },
               },
             });
-            console.log('email user = ', user, email);
+
+            if (user && user.name !== name) {
+              errors.push(`${email} exists with name "${user.name}" but wrong name "${name}" is provided`);
+            }
+            console.log('email user = ', email, name);
           } else {
             user = await models.Users.findOne({
               where: {
@@ -333,6 +339,13 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
           }
         }
 
+        if (errors.length > 0) {
+          fs.unlinkSync(filePath);
+          return res.status(400).json({
+            success: false,
+            msg: errors,
+          });
+        }
         // notFoundAccounts = Object.values(notFoundAccounts)
 
         if (notFoundAccounts.length > 0) {
@@ -475,7 +488,7 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
               return cell;
             });
 
-            // let date = row[dateColumn.index];
+            let rawDate = row[dateColumn.index];
             const year = row[dateColumn.index].split('&')[2];
             const month = row[dateColumn.index].split('&')[1];
             const date = row[dateColumn.index].split('&')[0];
@@ -487,21 +500,36 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             let particulars = row[particularsColumn.index];
             let amount = row[amountColumn.index];
             let debitorAcc = row[debitorAccountNameColumn.index];
-            // let debitorAccType = row[debitorAccountTypeColumn.index];
+            let debitorAccEmail = row[debitorAccountEmailColumn.index];
             // let debitorAccCashOrBank = row[debitorAccountCashOrBankColumn.index];
             let creditorAcc = row[creditorAccountNameColumn.index];
-            // let creditorAccType = row[creditorAccountTypeColumn.index];
+            let creditorAccEmail = row[creditorAccountEmailColumn.index];
             // let creditorAccCashOrBank = row[creditorAccountCashOrBankColumn.index];
 
-            // //#region find or create debitor account
-            let isDebitorUserExists = await models.Users.findOne({
+            // // //#region find or create debitor account
+            let isDebitorUserExists;
+            if (debitorAccEmail) {              
+             isDebitorUserExists  = await models.Users.findOne({
+               where: {
+                 name: {
+                   [Op.iLike]: debitorAcc,
+                 },
+                 email: {
+                  [Op.iLike]: debitorAccEmail,
+                 },
+               },
+             });
+          } else {
+            isDebitorUserExists = await models.Users.findOne({
               where: {
                 name: {
                   [Op.iLike]: debitorAcc,
                 },
-                orgId,
+                orgId: orgId,
               },
             });
+            }
+            
 
             if (!isDebitorUserExists) {
               await t.rollback();
@@ -528,7 +556,19 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
                 OrgId: orgId,
                 UserId: isDebitorUserExists.id,
               },
+              // include: [
+              //   {
+              //     model: models.Users,
+              //     attributes: ['id', 'name'],
+              //     where: {
+              //       name: { [Op.iLike]: debitorAcc },
+              //     },
+              //   },
+              // ],
             });
+            // console.log('isDebitorAccountExists = ', isDebitorAccountExists);
+            // console.log('debitorAcc = ', debitorAcc);
+            // console.log('debitorAccEmail = ', debitorAccEmail);
             // if (!isDebitorAccountExists) {
             //   isDebitorAccountExists = await models.Accounts.create({
             //     OrgId: orgId,
@@ -540,24 +580,24 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             // }
             // //#endregion
 
-            // //#region find or create creditor account
-            let isCreditorUserExists = await models.Users.findOne({
-              where: {
-                name: {
-                  [Op.iLike]: creditorAcc,
-                },
-                orgId,
-              },
-            });
+            // // //#region find or create creditor account
+            // let isCreditorUserExists = await models.Users.findOne({
+            //   where: {
+            //     name: {
+            //       [Op.iLike]: creditorAcc,
+            //     },
+            //     orgId,
+            //   },
+            // });
 
-            if (!isCreditorUserExists) {
-              await t.rollback();
-              fs.unlinkSync(filePath);
-              return res.status(404).json({
-                success: false,
-                msg: `${creditorAcc} not found`,
-              });
-            }
+            // if (!isCreditorUserExists) {
+            //   await t.rollback();
+            //   fs.unlinkSync(filePath);
+            //   return res.status(404).json({
+            //     success: false,
+            //     msg: `${creditorAcc} not found`,
+            //   });
+            // }
 
             // const credAccType = await models.AccTypeMasters.findOne({
             //   where: {
@@ -572,9 +612,21 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             let isCreditorAccountExists = await models.Accounts.findOne({
               where: {
                 OrgId: orgId,
-                UserId: isCreditorUserExists.id,
+                // UserId: isCreditorUserExists.id,
               },
+              include: [
+                {
+                  model: models.Users,
+                  attributes: ['id', 'name'],
+                  where: {
+                    name: { [Op.iLike]: creditorAcc },
+                  },
+                },
+              ],
             });
+            // console.log('isCreditorAccountExists = ', isCreditorAccountExists);
+            // console.log('creditorAcc = ', creditorAcc);
+            // console.log('creditorAccEmail = ', creditorAccEmail);
             // if (!isCreditorAccountExists) {
             //   isCreditorAccountExists = await models.Accounts.create({
             //     OrgId: orgId,
@@ -585,15 +637,35 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             //   })
             // }
             // //#endregion
-
+            console.log('debitorAcc = ', debitorAcc);
+            console.log('DebitorId = ', isDebitorAccountExists?.dataValues?.id);
+            console.log('creditorAcc = ', creditorAcc);
+console.log('CreditorId = ', isCreditorAccountExists?.dataValues?.id);
             // creating journal
+            const isTheJournalExists = await models.Journals.findOne({
+              where: {
+                OrgId: orgId,
+                date: date2,
+                particulars,
+                DebitorId: isDebitorAccountExists?.dataValues?.id,
+                CreditorId: isCreditorAccountExists?.dataValues?.id,
+              },
+            });
+            if(isTheJournalExists){
+              await t.rollback();
+              fs.unlinkSync(filePath);
+              return res.status(400).json({
+                success: false,
+                msg: `particulars = "${particulars}", Debtor = "${debitorAcc}", Creditor = "${creditorAcc}", date = "${rawDate}" and amount = "${amount}" already exists`,
+              });
+            }
             await models.Journals.create(
               {
                 OrgId: orgId,
                 date: date2,
                 particulars,
-                DebitorId: isDebitorAccountExists.id,
-                CreditorId: isCreditorAccountExists.id,
+                DebitorId: isDebitorAccountExists?.dataValues?.id,
+                CreditorId: isCreditorAccountExists?.dataValues?.id,
                 amount,
                 BkId: userId,
                 monthNumber,

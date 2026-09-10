@@ -29,18 +29,27 @@ export const createAccount = async (req: Request, res: Response) => {
       } = accounts[i];
 
       if (!UserId && isPerson) {
-        UserId = await models.Users.create({
-          email: email ? String(email.trim()) : null,
-          name: name ? String(name.trim()) : '',
-          middleName: middleName ? String(middleName.trim()) : '',
-          surName: surname ? String(surname.trim()) : '',
-        }).then((user) => user.id);
+        const isUserExists = await models.Users.findOne({
+          where: {
+            email: String(email.trim()),
+          },
+        });
+        if (isUserExists) {
+          UserId = isUserExists.id;
+        } else {
+          UserId = await models.Users.create({
+            email: email ? String(email.trim()) : null,
+            name: name ? String(name.trim()) : '',
+            middleName: middleName ? String(middleName.trim()) : '',
+            surName: surname ? String(surname.trim()) : '',
+          }).then((user) => user.id);
+        }
       } else if (!UserId && !isPerson) {
-        UserId = await models.Users.create({
-          name: name ? String(name.trim()) : '',
-          orgId: orgId ? parseInt(orgId) : 0,
-        }).then((user) => user.id);
-      }
+          UserId = await models.Users.create({
+            name: name ? String(name.trim()) : '',
+            orgId: orgId ? parseInt(orgId) : 0,
+          }).then((user) => user.id);
+        }
 
       const objToCreate = {
         OrgId: orgId,
@@ -57,7 +66,8 @@ export const createAccount = async (req: Request, res: Response) => {
         },
       });
 
-      if (isExists) {
+        if (isExists) {
+        
       } else {
         // create account
         const account = await models.Accounts.create(objToCreate);
@@ -77,7 +87,7 @@ export const createAccount = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      msg: 'Account(s) created successfully!',
+      msg: 'Account(s) created successfully!, retry bulk upload',
     });
   } catch (err) {
     console.log(err);
