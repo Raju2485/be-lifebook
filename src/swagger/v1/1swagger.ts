@@ -1030,7 +1030,6 @@
  *               message: Something went wrong. Our team is working to fix this issue.
  */
 
-
 // Download Bulk Upload Template
 /**
  * @swagger
@@ -1041,6 +1040,46 @@
  *       - Book Keeper
  *     security:
  *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
+// Get Years and Months
+/**
+ * @swagger
+ * /api/v1/get-years-and-months:
+ *   get:
+ *     summary: "get years and months"
+ *     tags:
+ *       - Common
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: type
+ *         schema:
+ *          type: string
+ *          enum: ['financial-reports']
+ *         required: true
+ *       - in: query
+ *         name: orgId
+ *         schema:
+ *          type: integer
+ *          example: 1
+ *         required: true
  *     responses:
  *       200:
  *         description: successful

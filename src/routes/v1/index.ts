@@ -23,6 +23,7 @@ import { getAccountingReports } from '../../controllers/v1/getAccountingReports'
 import { generateAccountingReports } from '../../controllers/v1/generateAccountingReports';
 import { importJournalsFromExcel } from '../../controllers/v1/importJournalsFromExcel';
 import { downloadBulkUploadTemplate } from '../../controllers/v1/downloadBulkUploadTemplate';
+import { getYearsAndMonths } from '../../controllers/v1/getYearsAndMonths';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
@@ -96,5 +97,7 @@ router.get(
   checkRole(['bookKeeper']),
   downloadBulkUploadTemplate
 );
+
+router.get('/get-years-and-months', verifyAuth, getYearsAndMonths);
 
 export default router;
