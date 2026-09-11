@@ -25,8 +25,9 @@ export class Users extends Model<
   declare TypeId: number | null;
   declare GenderId: number | null;
   declare uid: number;
-  declare hash: CreationOptional<string>;
-  declare orgId: CreationOptional<number>;
+  declare hash: CreationOptional<string> | null;
+  declare hashExpiresAt: CreationOptional<Date> | null;
+  declare orgId: CreationOptional<number> | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -100,6 +101,9 @@ Users.init(
     },
     hash: {
       type: DataTypes.STRING,
+    },
+    hashExpiresAt: {
+      type: DataTypes.DATE,
     },
     orgId: {
       type: DataTypes.INTEGER,

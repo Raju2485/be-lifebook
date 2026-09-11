@@ -67,6 +67,9 @@ export async function up( queryInterface: QueryInterface ){
     hash: {
       type: DataTypes.STRING,
     },
+    hashExpiresAt: {
+      type: DataTypes.DATE,
+    },
     orgId: {
       type: DataTypes.INTEGER,
     },
