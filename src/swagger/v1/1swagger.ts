@@ -1072,7 +1072,7 @@
  *         name: type
  *         schema:
  *          type: string
- *          enum: ['financial-reports']
+ *          enum: ['financial-reports', 'test']
  *         required: true
  *       - in: query
  *         name: orgId
