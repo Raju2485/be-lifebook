@@ -214,8 +214,9 @@ export const generateAccountingReports = async (req: Request, res: Response) => 
         month: month,
         ledgers: ledgers
       },
-      trialBalance,
-      msg: 'Accounting reports generated successfully!'
+      trialBalance: trialBalance,
+      msg: 'Accounting reports generated successfully!',
+      metaData: req?.meta ?? null,
     })
 } 
     catch (err) {

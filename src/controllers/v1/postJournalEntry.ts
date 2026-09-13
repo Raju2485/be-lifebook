@@ -38,6 +38,7 @@ export const postJournalEntry = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       msg: 'Journal entry posted successfully!',
+      metaData: req?.meta ?? null,
     });
   } catch (err) {
     console.log(err);

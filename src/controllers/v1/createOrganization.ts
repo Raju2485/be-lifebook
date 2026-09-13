@@ -56,7 +56,11 @@ export const createOrg = async(req: Request, res: Response) => {
           // })
 
           // //#endregion
-          return res.status(200).json({ success: true, msg: 'Organization created successfully!' });
+          return res.status(200).json({
+            success: true,
+            msg: 'Organization created successfully!',
+            metaData: req?.meta ?? null,
+          });
         }
       
     }

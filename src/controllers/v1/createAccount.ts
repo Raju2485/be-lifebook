@@ -8,10 +8,14 @@ export const createAccount = async (req: Request, res: Response) => {
   try {
     const { accounts, orgId } = req.body;
 
-    if (accounts.length === 0) {
+    if (!accounts || !Array.isArray(accounts) || accounts.length === 0) {
       return res
         .status(400)
-        .json({ success: false, msg: 'No accounts to create' });
+        .json({
+          success: false,
+          msg: 'accounts must be an array and cannot be empty',
+          metaData: req?.meta ?? null,
+        });
     }
 
     for (let i = 0; i < accounts.length; i++) {
@@ -87,7 +91,8 @@ export const createAccount = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      msg: 'Account(s) created successfully!, retry bulk upload',
+      msg: 'Account(s) created successfully!',
+      metaData: req?.meta ?? null,
     });
   } catch (err) {
     console.log(err);

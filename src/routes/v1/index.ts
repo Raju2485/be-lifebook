@@ -27,77 +27,68 @@ import { getYearsAndMonths } from '../../controllers/v1/getYearsAndMonths';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
+import { attachMetadataToRequest } from '../../middlewares/attachMetaToReq';
 import { checkRole } from '../../middlewares/checkRole';
 import { upload } from '../../utils/multer';
 import { getCards } from '../../controllers/v1/getDashboardCards';
 
 router.post('/signup', signup);
 router.post('/signin', signin);
-router.get('/profile', profile);
 router.post('/refresh-token', refreshToken);
-router.post('/signout', verifyAuth, signout);
-router.post('/create-organization', verifyAuth, createOrg);
-router.get('/get-organizations', verifyAuth, getOrganizations);
-router.post(
-  '/post-journal-entry',
-  verifyAuth,
-  checkRole(['bookKeeper']),
-  postJournalEntry
-);
+
+(router.use(verifyAuth), router.use(attachMetadataToRequest));
+router.get('/profile', profile);
+router.post('/signout', signout);
+router.post('/create-organization', createOrg);
+router.get('/get-organizations', getOrganizations);
+router.post('/post-journal-entry', checkRole(['bookKeeper']), postJournalEntry);
 router.get(
   '/get-journal-entries',
-  verifyAuth,
   checkRole(['bookKeeper']),
   getJournalEntries
 );
-router.post('/change-password', verifyAuth, changePassword);
+router.post('/change-password', changePassword);
 router.post('/send-password-reset-link', sendPasswordResetLink);
 router.post('/reset-password', resetPassword);
-router.get('/get-users', verifyAuth, getUsers);
-router.get('/get-non-account-users', verifyAuth, getNonAccountUsers);
-router.get('/get-roles', verifyAuth, getRoles);
-router.get('/get-account-types', verifyAuth, getAccountTypes);
+router.get('/get-users', getUsers);
+router.get('/get-non-account-users', getNonAccountUsers);
+router.get('/get-roles', getRoles);
+router.get('/get-account-types', getAccountTypes);
 router.post(
   '/create-accounts',
-  verifyAuth,
   checkRole(['bookKeeper', 'admin']),
   createAccount
 );
-router.get('/get-accounts', verifyAuth, checkRole(['bookKeeper']), getAccounts);
+router.get('/get-accounts', checkRole(['bookKeeper']), getAccounts);
 router.get(
   '/check-if-account-exists',
-  verifyAuth,
   checkRole(['bookKeeper']),
   checkIfAccountExistsInOrg
 );
 router.get(
   '/check-if-user-exists',
-  verifyAuth,
   checkRole(['bookKeeper']),
   checkIfUserExists
 );
-router.get('/get-accounting-reports', verifyAuth, getAccountingReports);
+router.get('/get-accounting-reports', getAccountingReports);
 router.get(
   '/generate-accounting-reports',
-  verifyAuth,
   checkRole(['bookKeeper']),
   generateAccountingReports
 );
 router.post(
   '/import-journals-from-excel',
   upload.single('file'),
-  verifyAuth,
   checkRole(['bookKeeper']),
   importJournalsFromExcel
 );
-router.get('/get-cards', verifyAuth, getCards);
+router.get('/get-cards', getCards);
 router.get(
   '/download-bulk-upload-template',
-  verifyAuth,
   checkRole(['bookKeeper']),
   downloadBulkUploadTemplate
 );
 
-router.get('/get-years-and-months', verifyAuth, getYearsAndMonths);
+router.get('/get-years-and-months', getYearsAndMonths);
 
 export default router;

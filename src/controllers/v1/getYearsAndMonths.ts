@@ -55,6 +55,7 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
       return res.status(200).json({
         success: true,
         data: yearsAndMonths,
+        metaData: req?.meta ?? null,
       });
     }
 

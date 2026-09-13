@@ -676,9 +676,11 @@ console.log('CreditorId = ', isCreditorAccountExists?.dataValues?.id);
           }
           await t.commit();
           fs.unlinkSync(filePath);
-          return res
-            .status(200)
-            .json({ success: true, msg: 'Journals imported successfully!' });
+          return res.status(200).json({
+            success: true,
+            msg: 'Journals imported successfully!',
+            metaData: req?.meta ?? null,
+          });
         } catch (err) {
           await t.rollback();
           throw err;

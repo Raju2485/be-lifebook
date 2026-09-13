@@ -34,7 +34,8 @@ export const getAccountTypes = async (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     data: rows,
-    pagination: pagination
+    pagination: pagination,
+    metaData: req?.meta ?? null,
   });
 } 
     catch (err) {

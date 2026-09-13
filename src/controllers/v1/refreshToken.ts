@@ -30,7 +30,7 @@ export const refreshToken = async (req, res) => {
       message: 'New access token created successfully!',
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
-      user_details: tokenDetails
+      metaData: req?.meta ?? null,
     });
   } catch (error) {
     console.log(error);

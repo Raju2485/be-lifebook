@@ -88,6 +88,7 @@ export const getAccountingReports = async (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     data: reports,
+    metaData: req?.meta ?? null,
   });
 } 
     catch (err) {

@@ -72,6 +72,7 @@ export const getNonAccountUsers = async (req: Request, res: Response) => {
       success: true,
       data: rows,
       pagination: pagination,
+      metaData: req?.meta ?? null,
     });
   } catch (err) {
     console.log(err);
