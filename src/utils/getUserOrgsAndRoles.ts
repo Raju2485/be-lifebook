@@ -69,6 +69,8 @@ export const getUserOrganizationsAndRoles = async ({
           const org = {};
           org.id = account?.Organization?.id || '';
           org.name = account?.Organization?.name || '';
+          org.isAdmin = account?.isAdmin || false;
+          org.isMember = account?.isMember || false;
           org.roles = account?.Roles?.map((role) => role.name) || [];
           return org;
         }) || [];
