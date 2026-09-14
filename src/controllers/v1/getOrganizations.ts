@@ -20,9 +20,18 @@ export const getOrganizations = async (req: Request, res: Response) => {
     if (id) {
       const org = await models.Organizations.findOne({
         where: {
-          id: Number(id)
-        }
-      })
+          id: Number(id),
+        },
+        include: [
+          {
+            model: models.Accounts,
+            where: {
+              UserId: userId,
+            },
+            required: true,
+          },
+        ],
+      });
       return res.status(200).json({
         success: true,
         data: org,
