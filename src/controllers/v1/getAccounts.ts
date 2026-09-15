@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
 
 export const getAccounts = async (req: Request, res: Response) => {
@@ -37,17 +37,28 @@ export const getAccounts = async (req: Request, res: Response) => {
       include: [
         {
           model: models.Users,
-          where: whereConditions,
+          ...(search ? { where: whereConditions, required: true } : {}),
           attributes: ['id', 'name', 'middleName', 'surName', 'email', 'uid'],
         },
         {
           model: models.AccTypeMasters,
           attributes: ['id', 'name', 'goldenRule'],
         },
+        {
+          model: models.RoleMasters,
+          as: 'Roles',
+          attributes: ['id', 'name'],
+          through: {
+            attributes: [],
+          }
+        },
       ],
+      distinct: true,
+      // Avoid subquery pagination that ORDER BY User.name without joining Users.
+      subQuery: false,
       limit,
       offset,
-      order: [[models.Users, 'name', 'ASC']],
+      order: [[{ model: models.Users }, 'name', 'ASC']],
     });
 
     const pagination = getNewPagination({

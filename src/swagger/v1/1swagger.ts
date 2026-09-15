@@ -714,6 +714,7 @@
  *     summary: "Create Accounts"
  *     tags:
  *       - Book Keeper
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -804,6 +805,7 @@
  *     summary: "get accounts"
  *     tags:
  *       - Book Keeper
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:

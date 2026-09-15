@@ -29,6 +29,15 @@ export const getOrganizations = async (req: Request, res: Response) => {
               UserId: userId,
             },
             required: true,
+            include: [
+              {
+                model: models.RoleMasters,
+                as: 'Roles',
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
           },
         ],
       });

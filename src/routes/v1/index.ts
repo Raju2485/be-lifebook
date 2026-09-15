@@ -41,10 +41,10 @@ router.get('/profile', profile);
 router.post('/signout', signout);
 router.post('/create-organization', createOrg);
 router.get('/get-organizations', getOrganizations);
-router.post('/post-journal-entry', checkRole(['bookKeeper']), postJournalEntry);
+router.post('/post-journal-entry', checkRole(['book keeper']), postJournalEntry);
 router.get(
   '/get-journal-entries',
-  checkRole(['bookKeeper']),
+  checkRole(['book keeper']),
   getJournalEntries
 );
 router.post('/change-password', changePassword);
@@ -56,36 +56,36 @@ router.get('/get-roles', getRoles);
 router.get('/get-account-types', getAccountTypes);
 router.post(
   '/create-accounts',
-  checkRole(['bookKeeper', 'admin']),
+  checkRole(['book keeper', 'admin']),
   createAccount
 );
-router.get('/get-accounts', checkRole(['bookKeeper']), getAccounts);
+router.get('/get-accounts', checkRole(['book keeper', 'admin']), getAccounts);
 router.get(
   '/check-if-account-exists',
-  checkRole(['bookKeeper']),
+  checkRole(['book keeper']),
   checkIfAccountExistsInOrg
 );
 router.get(
   '/check-if-user-exists',
-  checkRole(['bookKeeper']),
+  checkRole(['book keeper']),
   checkIfUserExists
 );
 router.get('/get-accounting-reports', getAccountingReports);
 router.get(
   '/generate-accounting-reports',
-  checkRole(['bookKeeper']),
+  checkRole(['book keeper']),
   generateAccountingReports
 );
 router.post(
   '/import-journals-from-excel',
   upload.single('file'),
-  checkRole(['bookKeeper']),
+  checkRole(['book keeper']),
   importJournalsFromExcel
 );
 router.get('/get-cards', getCards);
 router.get(
   '/download-bulk-upload-template',
-  checkRole(['bookKeeper']),
+  checkRole(['book keeper']),
   downloadBulkUploadTemplate
 );
 

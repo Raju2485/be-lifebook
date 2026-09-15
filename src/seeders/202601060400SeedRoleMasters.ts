@@ -1,7 +1,7 @@
 import type { QueryInterface } from 'sequelize';
 
 const ROLE_MASTER_VALUES = [
-  'bookKeeper',
+  'book keeper',
   'accountant',
   'auditor',
   'manager',
