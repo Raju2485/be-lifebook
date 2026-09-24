@@ -24,6 +24,7 @@ import { generateAccountingReports } from '../../controllers/v1/generateAccounti
 import { importJournalsFromExcel } from '../../controllers/v1/importJournalsFromExcel';
 import { downloadBulkUploadTemplate } from '../../controllers/v1/downloadBulkUploadTemplate';
 import { getYearsAndMonths } from '../../controllers/v1/getYearsAndMonths';
+import { updateAccount  } from '../../controllers/v1/updateAccount';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
@@ -90,5 +91,7 @@ router.get(
 );
 
 router.get('/get-years-and-months', getYearsAndMonths);
+
+router.post('/update-account', checkRole(['admin']), updateAccount);
 
 export default router;

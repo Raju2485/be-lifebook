@@ -14,6 +14,11 @@ export async function up( queryInterface: QueryInterface ){
       allowNull: false,
       unique: true,
     },
+    code: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

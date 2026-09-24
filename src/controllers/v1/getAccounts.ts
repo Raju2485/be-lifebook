@@ -20,6 +20,9 @@ export const getAccounts = async (req: Request, res: Response) => {
           {
             name: { [Op.iLike]: `%${search}%` },
           },
+          {
+            email: { [Op.iLike]: `%${search}%` },
+          },
         ],
       };
       if (!isNaN(Number(search))) {

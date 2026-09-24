@@ -1098,3 +1098,47 @@
  *               success: false
  *               message: Something went wrong. Our team is working to fix this issue.
  */
+
+
+// Update account
+/**
+ * @swagger
+ * /api/v1/update-account:
+ *   post:
+ *     summary: "update account"
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - orgId
+ *               - account
+ *             properties:
+ *               orgId:
+ *                 type: integer
+ *                 example: 1
+ *               account:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   RolesIds:
+ *                     type: array
+ *                     example: [1, 2]
+ *
+ *     responses:
+ *       200:
+ *         description: The gift created.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: The gift has been declared successfully.
+ */

@@ -72,6 +72,8 @@ export const getUserOrganizationsAndRoles = async ({
           org.isAdmin = account?.isAdmin || false;
           org.isMember = account?.isMember || false;
           org.roles = account?.Roles?.map((role) => role.name) || [];
+          org.isAdmin && org.roles.push('admin')
+          org.isMember && org.roles.push('member');
           return org;
         }) || [];
       const newUser = {
