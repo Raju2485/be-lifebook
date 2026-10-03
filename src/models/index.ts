@@ -13,6 +13,8 @@ import { Journals } from './journals';
 import { CarriedForwards } from './carriedForwards';
 import { Ledgers } from './ledgers';
 import { Cards } from './cards';
+import { Documents } from './documents';
+import { FinalAccs } from './finalAccs';
 
 TypeMasters.hasMany(Users, {foreignKey: 'TypeId'});
 Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
@@ -66,6 +68,9 @@ CarriedForwards.belongsTo(Accounts, { foreignKey: 'AccountId' });
 CarriedForwards.hasOne(Ledgers, { foreignKey: 'CfId' });
 Ledgers.belongsTo(CarriedForwards, { foreignKey: 'CfId' });
 
+FinalAccs.hasOne(Documents, { foreignKey: 'DocumentId' });
+Documents.belongsTo(FinalAccs, { foreignKey: 'DocumentId' });
+
 
 export default {
   TypeMasters,
@@ -82,5 +87,7 @@ export default {
   Journals,
   CarriedForwards,
   Ledgers,
-  Cards
+  Cards,
+  Documents,
+  FinalAccs,
 };
