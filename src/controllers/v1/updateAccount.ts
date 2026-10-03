@@ -12,8 +12,8 @@ export const updateAccount = async (req: Request, res: Response) => {
         metaData: req?.meta ?? null,
       });
     }
-
-    let { id, RolesIds } = account;
+console.log('account = ', JSON.stringify(account));
+    let { id, RolesIds, isAdjustAcc } = account;
 
     const isExists = await models.Accounts.findOne({
       where: {
@@ -23,6 +23,7 @@ export const updateAccount = async (req: Request, res: Response) => {
     });
 
     if (isExists) {
+      await isExists?.update({ isAdjustAcc });
       await isExists?.setRoles([]);
       // if (RolesIds?.length > 0) {
         await isExists?.setRoles(RolesIds);

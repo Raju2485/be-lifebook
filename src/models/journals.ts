@@ -22,6 +22,7 @@ export class Journals extends Model<
   declare monthNumber: number;
   declare year: number;
   declare isActive: CreationOptional<boolean>;
+  declare isAdjustment: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -74,6 +75,11 @@ Journals.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
+    },
+    isAdjustment: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     createdAt: {
       type: DataTypes.DATE,

@@ -19,6 +19,7 @@ export class Accounts extends Model<
   declare isMember: CreationOptional<boolean>;
   declare natureOfAccount: CreationOptional<'cash' | 'bank' | null>;
   declare isActive: CreationOptional<boolean>;
+  declare isAdjustAcc: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -67,6 +68,11 @@ Accounts.init(
       allowNull: false,
       defaultValue: true,
     },
+    isAdjustAcc: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -84,4 +90,3 @@ Accounts.init(
     timestamps: true,
   }
 );
-

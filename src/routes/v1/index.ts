@@ -24,7 +24,7 @@ import { generateAccountingReports } from '../../controllers/v1/generateAccounti
 import { importJournalsFromExcel } from '../../controllers/v1/importJournalsFromExcel';
 import { downloadBulkUploadTemplate } from '../../controllers/v1/downloadBulkUploadTemplate';
 import { getYearsAndMonths } from '../../controllers/v1/getYearsAndMonths';
-import { updateAccount  } from '../../controllers/v1/updateAccount';
+import { updateAccount } from '../../controllers/v1/updateAccount';
 
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
@@ -32,17 +32,23 @@ import { attachMetadataToRequest } from '../../middlewares/attachMetaToReq';
 import { checkRole } from '../../middlewares/checkRole';
 import { upload } from '../../utils/multer';
 import { getCards } from '../../controllers/v1/getDashboardCards';
+import { pdfMakeTest } from '../../controllers/v1/pdfMakeTest';
 
 router.post('/signup', signup);
 router.post('/signin', signin);
 router.post('/refresh-token', refreshToken);
+router.post('/pdfmake-test', pdfMakeTest);
 
 (router.use(verifyAuth), router.use(attachMetadataToRequest));
 router.get('/profile', profile);
 router.post('/signout', signout);
 router.post('/create-organization', createOrg);
 router.get('/get-organizations', getOrganizations);
-router.post('/post-journal-entry', checkRole(['book keeper']), postJournalEntry);
+router.post(
+  '/post-journal-entry',
+  checkRole(['book keeper']),
+  postJournalEntry
+);
 router.get(
   '/get-journal-entries',
   checkRole(['book keeper']),
@@ -93,5 +99,6 @@ router.get(
 router.get('/get-years-and-months', getYearsAndMonths);
 
 router.post('/update-account', checkRole(['admin']), updateAccount);
+
 
 export default router;

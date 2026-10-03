@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import type { QueryInterface } from 'sequelize';
 
-export async function up( queryInterface: QueryInterface ){
+export async function up(queryInterface: QueryInterface) {
   await queryInterface.createTable('Accounts', {
     id: {
       type: DataTypes.INTEGER,
@@ -39,6 +39,11 @@ export async function up( queryInterface: QueryInterface ){
       allowNull: false,
       defaultValue: true,
     },
+    isAdjustAcc: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -50,8 +55,8 @@ export async function up( queryInterface: QueryInterface ){
       defaultValue: DataTypes.NOW,
     },
   });
-};
+}
 
-export async function down(queryInterface: QueryInterface ){
+export async function down(queryInterface: QueryInterface) {
   await queryInterface.dropTable('Accounts');
-};
+}

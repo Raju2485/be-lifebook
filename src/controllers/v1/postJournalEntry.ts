@@ -8,7 +8,7 @@ import momentz from 'moment-timezone';
 
 export const postJournalEntry = async (req: Request, res: Response) => {
   try {
-    const { orgId, date, particulars, DebitorId, CreditorId, amount } =
+    const { orgId, date, particulars, DebitorId, CreditorId, amount, isAdjustment } =
       req.body;
 
     const month = momentz(date).format('MMMM');
@@ -33,6 +33,7 @@ export const postJournalEntry = async (req: Request, res: Response) => {
       BkId: userId,
       monthNumber,
       year,
+      isAdjustment,
     });
 
     return res.status(200).json({

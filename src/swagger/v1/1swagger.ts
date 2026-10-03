@@ -780,6 +780,10 @@
  *                       enum: [null, cash, bank]
  *                       example: cash
  *                       description: Radio buttons should populate if isMember = true. Not a mandatory field
+ *                     isAdjustAcc:
+ *                       type: boolean
+ *                       example: false
+ *                       description: true if the account is an adjust account. Not a mandatory field
  *     responses:
  *       200:
  *         description: successful
@@ -868,6 +872,12 @@
  *         schema:
  *           type: integer
  *         example: 2026
+ *         required: true
+ *       - in: query
+ *         name: month
+ *         schema:
+ *           type: string
+ *           enum: [January, February, March, April, May, June, July, August, September, October, November, December, First_Quarter, Second_Quarter, Third_Quarter, Fourth_Quarter, Half_Yearly, Yearly]
  *         required: true
  *     responses:
  *       200:
@@ -1099,7 +1109,6 @@
  *               message: Something went wrong. Our team is working to fix this issue.
  */
 
-
 // Update account
 /**
  * @swagger
@@ -1141,4 +1150,36 @@
  *             example:
  *               success: true
  *               message: The gift has been declared successfully.
+ */
+
+
+// PdfMake Test 
+/**
+ * @swagger
+ * /api/v1/pdfmake-test:
+ *   post:
+ *     summary: "Pdf Make Test"
+ *     tags:
+ *       - '@Developer'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - json
+ *             properties:
+ *               json:
+ *                 type: object
+ *                 description: pdfmake document definition
+ *
+ *     responses:
+ *       200:
+ *         description: Generated PDF
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
  */

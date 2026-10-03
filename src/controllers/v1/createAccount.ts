@@ -30,6 +30,7 @@ export const createAccount = async (req: Request, res: Response) => {
         isMember,
         RolesIds,
         natureOfAccount,
+        isAdjustAcc,
       } = accounts[i];
 
       if (!UserId && isPerson) {
@@ -61,6 +62,7 @@ export const createAccount = async (req: Request, res: Response) => {
         isMember,
         natureOfAccount,
         UserId,
+        isAdjustAcc,
       };
 
       const isExists = await models.Accounts.findOne({

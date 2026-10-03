@@ -36,7 +36,7 @@ export const getAccounts = async (req: Request, res: Response) => {
         OrgId: orgId,
         isActive: true,
       },
-      attributes: ['id'],
+      attributes: ['id', 'isAdjustAcc'],
       include: [
         {
           model: models.Users,
