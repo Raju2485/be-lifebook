@@ -51,45 +51,67 @@ export const generateAccountingReports = async (
       order: [['date', 'ASC']],
     });
 
+    let accounts = [];
     const accountsIds = {};
     journals?.forEach((obj) => {
       accountsIds[`${obj.CreditorId}`] = obj.CreditorId;
       accountsIds[`${obj.DebitorId}`] = obj.DebitorId;
+
+      const isCreditorFound = accounts.find(
+        (account) => account.id === obj.CreditorId
+      );
+      if (!isCreditorFound) {
+        accounts.push({
+          id: obj.CreditorId,
+          name: obj.Creditor?.User?.name ?? '',
+          uid: obj.Creditor?.User?.uid ?? '',
+        });
+      }
+      const isDebitorFound = accounts.find(
+        (account) => account.id === obj.DebitorId
+      );
+      if (!isDebitorFound) {
+        accounts.push({
+          id: obj.DebitorId,
+          name: obj.Debitor?.User?.name ?? '',
+          uid: obj.Debitor?.User?.uid ?? '',
+        });
+      }
     });
 
     const accountsIdsArray = Object.values(accountsIds);
+    accounts = accounts?.sort((a, b) => a.name.localeCompare(b.name)) || [];
     //#endregion
-
+    // console.log('accounts =', accounts);
     //#region Run loop on account ids and prepare and save ledgers in json format - create Carried Forwards if not available else update.
-    const ledgers = [];
+    const finalAccounts = { ledgers: [] };
     const trialBalance = {
       heading: `Trial Balance - ${month} ${year}`,
       entries: [],
     };
-    for (let i = 0; i < accountsIdsArray.length; i++) {
+    for (let i = 0; i < accounts.length; i++) {
       const accountJournals = journals.filter(
         (obj) =>
-          obj.DebitorId == accountsIdsArray[i] ||
-          obj.CreditorId == accountsIdsArray[i]
+          obj.DebitorId == accounts[i].id || obj.CreditorId == accounts[i].id
       );
 
-      const account = await models.Accounts.findOne({
-        where: {
-          id: accountsIdsArray[i],
-        },
-        include: [{ model: models.Users }],
-      });
+      // const account = await models.Accounts.findOne({
+      //   where: {
+      //     id: accounts[i].id,
+      //   },
+      //   include: [{ model: models.Users }],
+      // });
 
       const ledger = {
-        heading: account?.User?.name
-          ? `${account.User.name} (${account.User.uid}) Account - ${month} ${year}`
+        heading: accounts[i]?.name
+          ? `${accounts[i].name} (${accounts[i].uid}) Account - ${month} ${year}`
           : `${month} ${year}`,
         entries: [],
       };
       // Collecting last month carried forward
       const carriedForward = await models.CarriedForwards.findOne({
         where: {
-          AccountId: accountsIdsArray[i],
+          AccountId: accounts[i].id,
           monthNumber: monthNumber - 1,
           year,
         },
@@ -145,7 +167,7 @@ export const generateAccountingReports = async (
       // Collecting data for trial balance
 
       const trialBalanceAccount = {
-        accountName: account?.User?.name ?? '',
+        accountName: accounts[i]?.name ?? '',
         debitBalance,
         creditBalance,
       };
@@ -162,7 +184,7 @@ export const generateAccountingReports = async (
 
       ledger.entries.push({
         date: '',
-        particulars: 'Totals',
+        particulars: 'Total',
         debitAmount: creditBalance
           ? totals.debit + creditBalance
           : totals.debit,
@@ -170,7 +192,7 @@ export const generateAccountingReports = async (
           ? totals.credit + debitBalance
           : totals.credit,
       });
-      ledgers.push(ledger);
+      finalAccounts.ledgers.push(ledger);
 
       // Creating or updating carried forward
       let isCfExists = await models.CarriedForwards.findOne({
@@ -197,30 +219,30 @@ export const generateAccountingReports = async (
         });
       }
       // Creating or updating ledger
-      let isLedgerExists = await models.Ledgers.findOne({
-        where: {
-          CfId: isCfExists.id,
-        },
-      });
-      if (isLedgerExists) {
-        await isLedgerExists.update({
-          json: ledger,
-          fileName: 'test',
-          fileUrl: 'test',
-        });
-      } else {
-        await models.Ledgers.create({
-          CfId: isCfExists.id,
-          json: ledger,
-          fileName: 'test',
-          fileUrl: 'test',
-        });
-      }
+      // let isLedgerExists = await models.Ledgers.findOne({
+      //   where: {
+      //     CfId: isCfExists.id,
+      //   },
+      // });
+      // if (isLedgerExists) {
+      //   await isLedgerExists.update({
+      //     json: ledger,
+      //     fileName: 'test',
+      //     fileUrl: 'test',
+      //   });
+      // } else {
+      //   await models.Ledgers.create({
+      //     CfId: isCfExists.id,
+      //     json: ledger,
+      //     fileName: 'test',
+      //     fileUrl: 'test',
+      //   });
+      // }
     }
     // caculating totals of trail balance
     // calculating totals
     trialBalance.entries.push({
-      accountName: 'Totals',
+      accountName: 'Total',
       debitBalance: trialBalance.entries.reduce((sum, entry) => {
         // Convert empty string to 0, otherwise use the number
         const debit = Number(entry.debitBalance) || 0;
@@ -232,8 +254,24 @@ export const generateAccountingReports = async (
         return sum + credit;
       }, 0),
     });
+    finalAccounts['trialBalance'] = trialBalance;
     //#endregion
-    //#region Generating trial balance sheet
+    //#region Generating adjustment ledgers
+
+    //#endregion
+    //#region Generating adjusted trial balance sheet
+
+    //#endregion
+    //#region Generating trading account(Prepared in goods based business only)
+
+    //#endregion
+    //#region Generating P&L Account Statement
+
+    //#endregion
+    //#region Generating Balance Sheet
+
+    //#endregion
+    //#region Generating Cash Flow Statement
 
     //#endregion
 
@@ -241,9 +279,8 @@ export const generateAccountingReports = async (
       success: true,
       data: {
         month: month,
-        ledgers: ledgers,
+        ledgers: finalAccounts,
       },
-      trialBalance: trialBalance,
       msg: 'Accounting reports generated successfully!',
       metaData: req?.meta ?? null,
     });
