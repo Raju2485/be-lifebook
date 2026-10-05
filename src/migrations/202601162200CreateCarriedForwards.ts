@@ -14,10 +14,10 @@ export async function up( queryInterface: QueryInterface ){
       allowNull: false,
     },
     debitAmount: {
-      type: DataTypes.DECIMAL(12, 2)
+      type: DataTypes.DECIMAL(12, 2),
     },
     creditAmount: {
-      type: DataTypes.DECIMAL(12, 2)
+      type: DataTypes.DECIMAL(12, 2),
     },
     month: {
       type: DataTypes.STRING,
@@ -32,17 +32,17 @@ export async function up( queryInterface: QueryInterface ){
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
   });
 };

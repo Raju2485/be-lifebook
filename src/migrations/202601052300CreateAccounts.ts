@@ -39,11 +39,6 @@ export async function up(queryInterface: QueryInterface) {
       allowNull: false,
       defaultValue: true,
     },
-    isAdjustAcc: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

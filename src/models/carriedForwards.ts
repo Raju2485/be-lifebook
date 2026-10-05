@@ -36,10 +36,10 @@ CarriedForwards.init(
       allowNull: false,
     },
     debitAmount: {
-      type: DataTypes.DECIMAL(12, 2)
+      type: DataTypes.DECIMAL(12, 2),
     },
     creditAmount: {
-      type: DataTypes.DECIMAL(12, 2)
+      type: DataTypes.DECIMAL(12, 2),
     },
     month: {
       type: DataTypes.STRING,
