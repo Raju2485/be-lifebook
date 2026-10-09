@@ -17,6 +17,7 @@ export class Accounts extends Model<
   declare AccTypeId: number;
   declare isAdmin: CreationOptional<boolean>;
   declare isMember: CreationOptional<boolean>;
+  declare isClosed: CreationOptional<boolean>;
   declare natureOfAccount: CreationOptional<'cash' | 'bank' | null>;
   declare isActive: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
@@ -49,6 +50,11 @@ Accounts.init(
       defaultValue: false,
     },
     isMember: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isClosed: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,

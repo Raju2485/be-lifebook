@@ -31,6 +31,11 @@ export async function up(queryInterface: QueryInterface) {
       allowNull: false,
       defaultValue: false,
     },
+    isClosed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     natureOfAccount: {
       type: DataTypes.STRING,
     },

@@ -49,9 +49,9 @@ export const getAccountingReports = async (req: Request, res: Response) => {
           monthNumber: monthNumber,
           year,
         },
-        include: {
-          model: models.Ledgers,
-        },
+        // include: {
+        //   model: models.Ledgers,
+        // },
       });
 
       const account = await models.Accounts.findOne({
@@ -66,8 +66,8 @@ export const getAccountingReports = async (req: Request, res: Response) => {
       ledgers.push({
         name: account?.User?.name ?? '',
         uid: account?.User?.uid ?? '',
-        url: carriedForward?.Ledger?.fileUrl ?? '',
-        json: carriedForward?.Ledger?.json ?? '',
+        // url: carriedForward?.Ledger?.fileUrl ?? '',
+        // json: carriedForward?.Ledger?.json ?? '',
       });
     }
 

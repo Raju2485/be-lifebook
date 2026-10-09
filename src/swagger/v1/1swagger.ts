@@ -857,6 +857,7 @@
  *     summary: "Get Accounting Reports"
  *     tags:
  *       - Common
+ *       - Book Keeper
  *     security:
  *       - bearerAuth: []
  *     parameters:
