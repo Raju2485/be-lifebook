@@ -19,8 +19,10 @@ export const getDropdowns = async (req: Request, res: Response) => {
       });
     }
 
+    const typeQuery = type === 'monthsAndQuarters' ? {[Op.or]: ['months', 'quarters']} : type;
+
     const whereConditions = {
-      type: type,
+      type: typeQuery,
       isActive: true,
     };
     if (search) {

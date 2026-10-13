@@ -19,6 +19,8 @@ export class Dropdowns extends Model<
   declare toDate: CreationOptional<Date>;
   declare fromMonthNum: CreationOptional<number>;
   declare toMonthNum: CreationOptional<number>;
+  declare lastMonthNum: number;
+  declare monthNum: number;
   declare isActive: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -40,8 +42,8 @@ Dropdowns.init(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [['months', 'years']],
-        msg: 'Type must be months / years',
+        isIn: [['months', 'quarters', 'years']],
+        msg: 'Type must be months / quarters / years',
       },
     },
     sequence: {
@@ -60,6 +62,12 @@ Dropdowns.init(
     toMonthNum: {
       type: DataTypes.INTEGER,
     },
+    // lastMonthNum: {
+    //   type: DataTypes.INTEGER,
+    // },
+    // monthNum: {
+    //   type: DataTypes.INTEGER,
+    // },
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

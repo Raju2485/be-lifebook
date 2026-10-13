@@ -916,29 +916,18 @@
  *         example: 1
  *         description: The ID of the organization
  *       - in: query
- *         name: month
- *         schema:
- *           type: string
- *           enum:
- *             - January
- *             - February
- *             - March
- *             - April
- *             - May
- *             - June
- *             - July
- *             - August
- *             - September
- *             - October
- *             - November
- *             - December
- *         example: January
- *         required: true
- *       - in: query
- *         name: year
+ *         name: monthId
  *         schema:
  *           type: integer
- *         example: 2026
+ *         example: 1
+ *         required: true
+ *         description: /get-dropdowns?type=months
+ *       - in: query
+ *         name: yearId
+ *         schema:
+ *           type: integer
+ *         example: 19
+ *         description: /get-dropdowns?type=years
  *         required: true
  *     responses:
  *       200:
@@ -1201,7 +1190,7 @@
  *         name: type
  *         schema:
  *          type: string
- *          enum: ['months', 'years']
+ *          enum: ['months', 'quarters', 'monthsAndQuarters', 'years']
  *         required: true
  *       - in: query
  *         name: search

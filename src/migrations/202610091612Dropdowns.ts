@@ -37,6 +37,12 @@ export async function up( queryInterface: QueryInterface ){
     toMonthNum: {
       type: DataTypes.INTEGER,
     },
+    // lastMonthNum: {
+    //   type: DataTypes.INTEGER,
+    // },
+    // monthNum: {
+    //   type: DataTypes.INTEGER,
+    // },
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
