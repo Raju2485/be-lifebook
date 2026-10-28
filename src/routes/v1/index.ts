@@ -26,6 +26,7 @@ import { downloadBulkUploadTemplate } from '../../controllers/v1/downloadBulkUpl
 import { getYearsAndMonths } from '../../controllers/v1/getYearsAndMonths';
 import { updateAccount } from '../../controllers/v1/updateAccount';
 import { getDropdowns } from '../../controllers/v1/getDropdowns';
+import { getKeysAndLabels } from '../../controllers/v1/getKeysAndLabels';
 const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
 import { attachMetadataToRequest } from '../../middlewares/attachMetaToReq';
@@ -101,6 +102,6 @@ router.get('/get-years-and-months', getYearsAndMonths);
 router.post('/update-account', checkRole(['admin']), updateAccount);
 
 router.get('/get-dropdowns', getDropdowns);
-
+router.get('/get-keys-and-labels', getKeysAndLabels);
 
 export default router;

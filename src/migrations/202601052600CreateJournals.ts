@@ -37,33 +37,41 @@ export async function up( queryInterface: QueryInterface ){
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    monthNumber: {
+    // monthNumber: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
+    // year: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
+    monthId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    year: {
+    yearId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
     },
     isAdjustment: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false
+      defaultValue: false,
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
   });
 };

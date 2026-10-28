@@ -111,7 +111,7 @@ const DROPDOWN_VALUES = [
   },
   {
     name: '1st Quarter',
-    type: 'months',
+    type: 'quarters',
     sequence: 13,
     fromDate: new Date('2026-01-01'),
     toDate: new Date('2026-03-31'),
@@ -120,7 +120,7 @@ const DROPDOWN_VALUES = [
   },
   {
     name: '2nd Quarter',
-    type: 'months',
+    type: 'quarters',
     sequence: 14,
     fromDate: new Date('2026-04-01'),
     toDate: new Date('2026-06-30'),
@@ -129,7 +129,7 @@ const DROPDOWN_VALUES = [
   },
   {
     name: '3rd Quarter',
-    type: 'months',
+    type: 'quarters',
     sequence: 15,
     fromDate: new Date('2026-07-01'),
     toDate: new Date('2026-09-30'),
@@ -138,7 +138,7 @@ const DROPDOWN_VALUES = [
   },
   {
     name: '4th Quarter',
-    type: 'months',
+    type: 'quarters',
     sequence: 16,
     fromDate: new Date('2026-10-01'),
     toDate: new Date('2026-12-31'),
@@ -147,7 +147,7 @@ const DROPDOWN_VALUES = [
   },
   {
     name: 'Half Yearly',
-    type: 'months',
+    type: 'quarters',
     sequence: 17,
     fromDate: new Date('2026-01-01'),
     toDate: new Date('2026-06-30'),
@@ -156,7 +156,7 @@ const DROPDOWN_VALUES = [
   },
   {
     name: 'Yearly',
-    type: 'months',
+    type: 'quarters',
     sequence: 18,
     fromDate: new Date('2026-01-01'),
     toDate: new Date('2026-12-31'),

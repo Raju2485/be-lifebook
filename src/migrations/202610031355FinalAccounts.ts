@@ -13,12 +13,12 @@ export async function up( queryInterface: QueryInterface ){
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    year: {
+    yearId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    month: {
-      type: DataTypes.STRING,
+    monthId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     monthNumber: {

@@ -19,8 +19,10 @@ export class Journals extends Model<
   declare CreditorId: number;
   declare BkId: number;
   declare OrgId: number;
-  declare monthNumber: number;
-  declare year: number;
+  // declare monthNumber: number;
+  // declare year: number;
+  declare monthId: number;
+  declare yearId: number;
   declare isActive: CreationOptional<boolean>;
   declare isAdjustment: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
@@ -63,11 +65,19 @@ Journals.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    monthNumber: {
+    // monthNumber: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
+    // year: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
+    monthId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    year: {
+    yearId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

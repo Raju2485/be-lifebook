@@ -23,34 +23,58 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
           OrgId: orgId,
           isActive: true,
         },
-        attributes: ['year', 'monthNumber'],
-        raw: true,
-        group: ['year', 'monthNumber'],
-        order: [
-          ['year', 'DESC'],
-          ['monthNumber', 'ASC'],
+        attributes: ['yearId', 'monthId'],
+        // attributes: ['year', 'monthNumber'],
+        include: [
+          {
+            model: models.Dropdowns,
+            as: 'Month',
+          },
+          {
+            model: models.Dropdowns,
+            as: 'Year',
+          },
         ],
+        raw: true,
+        group: ['yearId', 'monthId', 'Month.id', 'Year.id'],
+        // group: ['year', 'monthNumber'],
+        // order: [
+        //   ['year', 'DESC'],
+        //   ['monthNumber', 'ASC'],
+        // ],
       });
 
-      const yearsAndMonths = [];
+
+      let yearsAndMonths = [];
       for (let i = 0; i < journals.length; i++) {
         const journal = journals[i];
-        const year = journal.year;
-        const monthNumber = journal.monthNumber;
-        const monthName = toTitleCase(monthNumberToName(monthNumber));
+        const year = Number(journal['Year.name']);
+        const yearId = Number(journal['Year.id']);
+        const monthName = toTitleCase(journal['Month.name']);
+        const monthNum = journal['Month.monthNum'];
+        const monthId = journal['Month.id'];
 
         const yearIndex = yearsAndMonths.findIndex((obj) => obj.year === year);
         if (yearIndex === -1) {
-          yearsAndMonths.push({ year, months: [monthName] });
+          yearsAndMonths.push({ id: yearId, year, months: [{ id: monthId, monthName, monthNum }] });
         } else {
           const monthIndex = yearsAndMonths[yearIndex].months.findIndex(
-            (ele) => ele === monthName
+            (obj) => obj.monthName === monthName
           );
           if (monthIndex === -1) {
-            yearsAndMonths[yearIndex].months.push(monthName);
+            yearsAndMonths[yearIndex].months.push({
+              id: monthId,
+              monthName,
+              monthNum,
+            });
           }
         }
       }
+
+      yearsAndMonths.sort((a, b) => b.year - a.year);;
+      yearsAndMonths.forEach((item) => {
+        item.months.sort((a, b) => a.monthNum - b.monthNum);
+      });;
 
       return res.status(200).json({
         success: true,

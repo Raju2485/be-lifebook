@@ -866,19 +866,21 @@
  *         required: true
  *         schema:
  *           type: integer
- *         example: 1
+ *         example: 6
  *         description: The ID of the organization
  *       - in: query
- *         name: year
+ *         name: monthId
  *         schema:
  *           type: integer
- *         example: 2026
+ *         example: 12
  *         required: true
+ *         description: /get-dropdowns?type=months
  *       - in: query
- *         name: month
+ *         name: yearId
  *         schema:
- *           type: string
- *           enum: [January, February, March, April, May, June, July, August, September, October, November, December, First_Quarter, Second_Quarter, Third_Quarter, Fourth_Quarter, Half_Yearly, Yearly]
+ *           type: integer
+ *         example: 24
+ *         description: /get-dropdowns?type=years
  *         required: true
  *     responses:
  *       200:
@@ -1206,6 +1208,40 @@
  *         schema:
  *          type: integer
  *         example: 10
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
+// Get Keys and Labels
+/**
+ * @swagger
+ * /api/v1/get-keys-and-labels:
+ *   get:
+ *     summary: "get keys and labels"
+ *     tags:
+ *       - Common
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: apiEndpoint
+ *         schema:
+ *          type: string
+ *          example: /api/v1/get-accounting-reports
+ *         required: true
  *     responses:
  *       200:
  *         description: successful

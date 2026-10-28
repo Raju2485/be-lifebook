@@ -16,6 +16,7 @@ import { Cards } from './cards';
 import { Documents } from './documents';
 import { FinalAccs } from './finalAccs';
 import { Dropdowns } from './dropdowns';
+import { KeysAndLabels } from './keysAndLabels';
 
 TypeMasters.hasMany(Users, {foreignKey: 'TypeId'});
 Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
@@ -72,6 +73,11 @@ CarriedForwards.belongsTo(Accounts, { foreignKey: 'AccountId' });
 FinalAccs.hasOne(Documents, { foreignKey: 'DocumentId' });
 Documents.belongsTo(FinalAccs, { foreignKey: 'DocumentId' });
 
+Dropdowns.hasMany(Journals, { as: 'Month', foreignKey: 'monthId' });
+Journals.belongsTo(Dropdowns, { as: 'Month', foreignKey: 'monthId' });
+
+Dropdowns.hasMany(Journals, { as: 'Year', foreignKey: 'yearId' });
+Journals.belongsTo(Dropdowns, { as: 'Year', foreignKey: 'yearId' });
 
 export default {
   TypeMasters,
@@ -92,4 +98,5 @@ export default {
   Documents,
   FinalAccs,
   Dropdowns,
+  KeysAndLabels,
 };

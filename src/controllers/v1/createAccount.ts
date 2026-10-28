@@ -35,7 +35,7 @@ export const createAccount = async (req: Request, res: Response) => {
       if (!UserId && isPerson) {
         const isUserExists = await models.Users.findOne({
           where: {
-            email: String(email.trim()),
+            email: String(email?.trim()),
           },
         });
         if (isUserExists) {

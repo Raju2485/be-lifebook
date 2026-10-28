@@ -11,9 +11,24 @@ export const postJournalEntry = async (req: Request, res: Response) => {
     const { orgId, date, particulars, DebitorId, CreditorId, amount, isAdjustment } =
       req.body;
 
-    const month = momentz(date).format('MMMM');
-    const monthNumber = monthNameToNumber(month);
-    const year = momentz(date).year();
+    const monthName = momentz(date).format('MMMM');
+    // const monthNumber = monthNameToNumber(month);
+    const yearName = momentz(date).year();
+
+    const month = await models.Dropdowns.findOne({
+      where: {
+        name: {
+          [Op.iLike]: monthName,
+        },
+        type: 'months',
+      },
+    });
+    const year = await models.Dropdowns.findOne({
+      where: {
+        name: String(yearName),
+        type: 'years',
+      },
+    });
 
     const { id: userId } = req.user;
 
@@ -31,8 +46,8 @@ export const postJournalEntry = async (req: Request, res: Response) => {
       CreditorId,
       amount,
       BkId: userId,
-      monthNumber,
-      year,
+      monthId: month?.id,
+      yearId: year?.id,
       isAdjustment,
     });
 

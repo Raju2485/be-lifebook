@@ -38,6 +38,7 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
         const debitorAccountEmailLabel = 'debitor account email';
         const creditorAccountNameLabel = 'creditor account name';
         const creditorAccountEmailLabel = 'creditor account email';
+        const isAdjustmentLabel = 'is adjustment?(yes/no)';
 
         const columns = [
           {
@@ -68,6 +69,10 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             label: creditorAccountEmailLabel,
             index: 7,
           },
+          {
+            label: isAdjustmentLabel,
+            index: 8,
+          },
         ];
 
         const dateColumn = columns.find((a) => a.label === dateLabel);
@@ -87,6 +92,9 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
         );
         const creditorAccountEmailColumn = columns.find(
           (a) => a.label === creditorAccountEmailLabel
+        );
+        const isAdjustmentColumn = columns.find(
+          (a) => a.label === isAdjustmentLabel
         );
         const headerRow = sheet1.getRow(1).values;
 
@@ -342,7 +350,7 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
         if (errors.length > 0) {
           fs.unlinkSync(filePath);
           return res.status(400).json({
-            success: false,
+            success: false, 
             msg: errors,
           });
         }
@@ -504,7 +512,25 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             // let debitorAccCashOrBank = row[debitorAccountCashOrBankColumn.index];
             let creditorAcc = row[creditorAccountNameColumn.index];
             let creditorAccEmail = row[creditorAccountEmailColumn.index];
+            let isAdjustment = row[isAdjustmentColumn.index];
             // let creditorAccCashOrBank = row[creditorAccountCashOrBankColumn.index];
+
+    const month2 = await models.Dropdowns.findOne({
+      where: {
+        monthNum: Number(month),
+        type: 'months',
+      },
+      raw: true
+    });
+    const year2 = await models.Dropdowns.findOne({
+      where: {
+        name: String(year),
+        type: 'years',
+      },
+      raw: true,
+    });
+            // console.log('monthNumber = ', month)
+            // console.log('month =' , month2, 'year = ', year2)
 
             // // //#region find or create debitor account
             let isDebitorUserExists;
@@ -581,6 +607,32 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             // //#endregion
 
             // // //#region find or create creditor account
+            let isCreditorUserExists;
+            if (creditorAccEmail) {
+              isCreditorUserExists = await models.Users.findOne({
+                where: {
+                  name: { [Op.iLike]: creditorAcc },
+                  email: { [Op.iLike]: creditorAccEmail },
+                },
+              });
+            } else {
+              isCreditorUserExists = await models.Users.findOne({
+                where: {
+                  name: { [Op.iLike]: creditorAcc },
+                  orgId: orgId,
+                },
+              });
+            }
+
+            if (!isCreditorUserExists) {
+              await t.rollback();
+              fs.unlinkSync(filePath);
+              return res.status(404).json({
+                success: false,
+                msg: `${creditorAcc} not found`,
+              });
+            }
+
             // let isCreditorUserExists = await models.Users.findOne({
             //   where: {
             //     name: {
@@ -612,17 +664,17 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             let isCreditorAccountExists = await models.Accounts.findOne({
               where: {
                 OrgId: orgId,
-                // UserId: isCreditorUserExists.id,
+                UserId: isCreditorUserExists.id,
               },
-              include: [
-                {
-                  model: models.Users,
-                  attributes: ['id', 'name'],
-                  where: {
-                    name: { [Op.iLike]: creditorAcc },
-                  },
-                },
-              ],
+              // include: [
+              //   {
+              //     model: models.Users,
+              //     attributes: ['id', 'name'],
+              //     where: {
+              //       name: { [Op.iLike]: creditorAcc },
+              //     },
+              //   },
+              // ],
             });
             // console.log('isCreditorAccountExists = ', isCreditorAccountExists);
             // console.log('creditorAcc = ', creditorAcc);
@@ -668,8 +720,9 @@ console.log('CreditorId = ', isCreditorAccountExists?.dataValues?.id);
                 CreditorId: isCreditorAccountExists?.dataValues?.id,
                 amount,
                 BkId: userId,
-                monthNumber,
-                year,
+                monthId: month2?.id,
+                yearId: year2?.id,
+                isAdjustment: isAdjustment?.toLowerCase() === 'yes' ? true : false,
               },
               { transaction: t }
             );

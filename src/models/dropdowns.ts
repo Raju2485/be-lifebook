@@ -65,9 +65,9 @@ Dropdowns.init(
     // lastMonthNum: {
     //   type: DataTypes.INTEGER,
     // },
-    // monthNum: {
-    //   type: DataTypes.INTEGER,
-    // },
+    monthNum: {
+      type: DataTypes.INTEGER,
+    },
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

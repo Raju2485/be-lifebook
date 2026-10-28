@@ -8,6 +8,7 @@ import {
 import { toTitleCase } from '../../utils/toTitleCase';
 import momentz from 'moment-timezone';
 import { Journals } from '../../models/journals';
+import { getPreviousMonthAndYear } from '../../utils/getPreviousMonthAndYear.ts';
 export const generateAccountingReports = async (
   req: Request,
   res: Response
@@ -31,10 +32,10 @@ export const generateAccountingReports = async (
         id: yearId,
       },
     });
-    console.log('month =', month);
-    console.log('year =', year);
+    // console.log('month =', month?.toJSON());
+    // console.log('year =', year);
 
-    if(!month || !year){
+    if (!month || !year) {
       return res.status(400).json({
         success: false,
         msg: 'month / year not found for the given monthId / yearId',
@@ -51,7 +52,14 @@ export const generateAccountingReports = async (
         year: Number(year.name),
         OrgId: orgId,
       },
-      attributes: ['CreditorId', 'DebitorId', 'particulars', 'amount', 'date'],
+      attributes: [
+        'CreditorId',
+        'DebitorId',
+        'particulars',
+        'amount',
+        'date',
+        'isAdjustment',
+      ],
       include: [
         {
           model: models.Accounts,
@@ -124,8 +132,9 @@ export const generateAccountingReports = async (
         particulars: obj.particulars,
         debitAmount: Number(obj.amount),
         creditAmount: Number(obj.amount),
-        debitor: obj.Debitor?.User?.name ?? '',
+        debtor: obj.Debitor?.User?.name ?? '',
         creditor: obj.Creditor?.User?.name ?? '',
+        isAdjustment: obj.isAdjustment ?? false,
       });
     });
 
@@ -141,7 +150,8 @@ export const generateAccountingReports = async (
     });
     months = months?.map((obj) => obj.name.toLowerCase());
 
-    if (months.includes(month.name?.toLowerCase())) {
+    // if (months.includes(month.name?.toLowerCase())) {
+    if (month.type == 'months') {
       const carriedForwards = await models.CarriedForwards.findAll({
         where: {
           [Op.and]: [
@@ -176,7 +186,7 @@ export const generateAccountingReports = async (
         ],
         raw: true,
       });
-      console.log('carriedForwards =', carriedForwards);
+      // console.log('carriedForwards =', carriedForwards);
       carriedForwards.forEach((obj) => {
         const isAccountFound = accounts.find(
           (account) => account.id === obj.AccountId
@@ -216,8 +226,20 @@ export const generateAccountingReports = async (
         entries: [],
       };
       // Collecting last month carried forward
-      const previousMonthNum = month.toMonthNum == 1 ? 12 : month.toMonthNum - 1;
-      const previousYear = month.toMonthNum == 1 ? Number(year.name) - 1 : Number(year.name);
+      const { previousMonthNum, previousYear } = await getPreviousMonthAndYear({
+        month,
+        year,
+      });
+      // console.log(
+      //   'previousMonthNum',
+      //   previousMonthNum,
+      //   'previousYear',
+      //   previousYear
+      // );
+      // const previousMonthNum =
+      //   month.toMonthNum == 1 ? 12 : month.toMonthNum - 1;
+      // const previousYear =
+      //   month.toMonthNum == 1 ? Number(year.name) - 1 : Number(year.name);
 
       const carriedForward = await models.CarriedForwards.findOne({
         where: {
@@ -242,6 +264,7 @@ export const generateAccountingReports = async (
         creditAmount: carriedForwardDebitAmount
           ? Number(carriedForwardDebitAmount)
           : 0,
+        isAdjustment: false,
       });
 
       // running loop on accountJournals and collecting records
@@ -254,49 +277,94 @@ export const generateAccountingReports = async (
               ? (accountJournals[j]?.Creditor?.User?.name ?? '')
               : (accountJournals[j]?.Debitor?.User?.name ?? ''),
           debitAmount:
-            accountJournals[j]?.DebitorId == accountsIdsArray[i]
+            accountJournals[j]?.DebitorId == ledgerUserId
               ? Number(accountJournals[j].amount)
-              : '',
+              : 0,
           creditAmount:
-            accountJournals[j]?.CreditorId == accountsIdsArray[i]
+            accountJournals[j]?.CreditorId == ledgerUserId
               ? Number(accountJournals[j].amount)
-              : '',
+              : 0,
+          isAdjustment: accountJournals[j]?.isAdjustment ?? false,
           // debitor: accountJournals[j]?.Debitor?.User?.name ?? '',
           // creditor: accountJournals[j]?.Creditor?.User?.name ?? '',
         });
       }
       // Calculating the carried forward
-      const totals = {
+      const totalsUnadjusted = {
         debit: 0,
         credit: 0,
       };
+
+      const totalsAdjusted = {
+        debit: 0,
+        credit: 0,
+      };
+
       ledger.entries.forEach((obj) => {
-        obj.creditAmount ? (totals.credit += Number(obj.creditAmount)) : '';
-        obj.debitAmount ? (totals.debit += Number(obj.debitAmount)) : '';
+        if (!obj.isAdjustment) {
+          obj.creditAmount
+            ? (totalsUnadjusted.credit += Number(obj.creditAmount))
+            : '';
+          obj.debitAmount
+            ? (totalsUnadjusted.debit += Number(obj.debitAmount))
+            : '';
+        }
+
+        obj.creditAmount
+          ? (totalsAdjusted.credit += Number(obj.creditAmount))
+          : '';
+        obj.debitAmount
+          ? (totalsAdjusted.debit += Number(obj.debitAmount))
+          : '';
       });
 
-      const debitBalance =
-        totals.debit > totals.credit ? totals.debit - totals.credit : 0;
-      const creditBalance =
-        totals.credit > totals.debit ? totals.credit - totals.debit : 0;
+      const debitBalanceUnadjusted =
+        totalsUnadjusted.debit > totalsUnadjusted.credit
+          ? totalsUnadjusted.debit - totalsUnadjusted.credit
+          : 0;
+      const creditBalanceUnadjusted =
+        totalsUnadjusted.credit > totalsUnadjusted.debit
+          ? totalsUnadjusted.credit - totalsUnadjusted.debit
+          : 0;
+
+      const debitBalanceAdjusted =
+        totalsAdjusted.debit > totalsAdjusted.credit
+          ? totalsAdjusted.debit - totalsAdjusted.credit
+          : 0;
+      const creditBalanceAdjusted =
+        totalsAdjusted.credit > totalsAdjusted.debit
+          ? totalsAdjusted.credit - totalsAdjusted.debit
+          : 0;
 
       // Collecting data for trial balance
 
-      const trialBalanceAccount = {
+      const trialBalanceAccountUnadjusted = {
         accountName: accounts[i]?.name ?? '',
-        debitBalance: debitBalance ?? 0,
-        creditBalance: creditBalance ?? 0,
+        debitBalance: debitBalanceUnadjusted ?? 0,
+        creditBalance: creditBalanceUnadjusted ?? 0,
       };
       // console.log('trialBalanceAccount =', trialBalanceAccount);
-      finalAccounts.trialBalanceUnudjusted.entries.push(trialBalanceAccount);
+      finalAccounts.trialBalanceUnudjusted.entries.push(
+        trialBalanceAccountUnadjusted
+      );
 
-      if (totals.credit != totals.debit) {
+      const trialBalanceAccountAdjusted = {
+        accountName: accounts[i]?.name ?? '',
+        debitBalance: debitBalanceAdjusted ?? 0,
+        creditBalance: creditBalanceAdjusted ?? 0,
+      };
+      finalAccounts.trialBalanceAdjusted.entries.push(
+        trialBalanceAccountAdjusted
+      );
+
+      if (totalsAdjusted.credit != totalsAdjusted.debit) {
         ledger.entries.push({
           date: '',
           particulars: '',
           accountName: 'Balance c/f',
-          debitAmount: creditBalance ?? 0,
-          creditAmount: debitBalance ?? 0,
+          debitAmount: creditBalanceAdjusted ?? 0,
+          creditAmount: debitBalanceAdjusted ?? 0,
+          isAdjustment: false,
         });
       }
 
@@ -317,22 +385,22 @@ export const generateAccountingReports = async (
       let isCfExists = await models.CarriedForwards.findOne({
         where: {
           AccountId: accounts[i].id,
-          monthNumber: month.toMonthNum,
+          monthNumber: month.monthNum,
           year: Number(year.name),
         },
       });
       if (isCfExists) {
         await isCfExists.update({
-          debitAmount: debitBalance ? debitBalance : 0,
-          creditAmount: creditBalance ? creditBalance : 0,
+          debitAmount: debitBalanceAdjusted ? debitBalanceAdjusted : 0,
+          creditAmount: creditBalanceAdjusted ? creditBalanceAdjusted : 0,
         });
       } else {
         isCfExists = await models.CarriedForwards.create({
           AccountId: accounts[i].id,
-          debitAmount: debitBalance ? debitBalance : 0,
-          creditAmount: creditBalance ? creditBalance : 0,
+          debitAmount: debitBalanceAdjusted ? debitBalanceAdjusted : 0,
+          creditAmount: creditBalanceAdjusted ? creditBalanceAdjusted : 0,
           month: toTitleCase(month.name),
-          monthNumber: month.toMonthNum,
+          monthNumber: month.monthNum,
           year: Number(year.name),
         });
       }
@@ -378,6 +446,26 @@ export const generateAccountingReports = async (
         0
       ),
     });
+
+    finalAccounts.trialBalanceAdjusted.entries.push({
+      accountName: 'Total',
+      debitBalance: finalAccounts.trialBalanceAdjusted.entries.reduce(
+        (sum, entry) => {
+          // Convert empty string to 0, otherwise use the number
+          const debit = Number(entry.debitBalance) || 0;
+          return sum + debit;
+        },
+        0
+      ),
+      creditBalance: finalAccounts.trialBalanceAdjusted.entries.reduce(
+        (sum, entry) => {
+          // Convert empty string to 0, otherwise use the number
+          const credit = Number(entry.creditBalance) || 0;
+          return sum + credit;
+        },
+        0
+      ),
+    });
     //#endregion
     //#region Generating adjustment ledgers
 
@@ -397,13 +485,38 @@ export const generateAccountingReports = async (
     //#region Generating Cash Flow Statement
 
     //#endregion
+    //#region Generate one PDF file with all reports 
 
+    //#endregion
+
+    const isFinalAccountsExists = await models.FinalAccs.findAll({
+      where: {
+        orgId: Number(orgId),
+        yearId: Number(yearId),
+        monthId: Number(monthId),
+      },
+      order: [['id', 'DESC']],
+      limit: 1,
+    });
+    if (isFinalAccountsExists?.length > 0) {
+      await isFinalAccountsExists[0].update({
+        isLatest: false,
+      });
+    }
+
+    await models.FinalAccs.create({
+      orgId: Number(orgId),
+      yearId: Number(yearId),
+      monthId: Number(monthId),
+      jsonData: finalAccounts,
+      sequence:
+        isFinalAccountsExists?.length > 0
+          ? isFinalAccountsExists[0].sequence + 1
+          : 1,
+    });
     return res.status(200).json({
       success: true,
-      data: {
-        month: month.name,
-        finalAccounts: finalAccounts,
-      },
+      data: finalAccounts,
       msg: 'Accounting reports generated successfully!',
       metaData: req?.meta ?? null,
     });
