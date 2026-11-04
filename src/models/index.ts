@@ -11,7 +11,6 @@ import { RoleMasters } from './roleMasters';
 import { AccRoles } from './accRoles';
 import { Journals } from './journals';
 import { CarriedForwards } from './carriedForwards';
-// import { Ledgers } from './ledgers';
 import { Cards } from './cards';
 import { Documents } from './documents';
 import { FinalAccs } from './finalAccs';
@@ -68,9 +67,6 @@ Journals.belongsTo(Organizations, { foreignKey: 'OrgId' });
 Accounts.hasMany(CarriedForwards, { foreignKey: 'AccountId' });
 CarriedForwards.belongsTo(Accounts, { foreignKey: 'AccountId' });
 
-// CarriedForwards.hasOne(Ledgers, { foreignKey: 'CfId' });
-// Ledgers.belongsTo(CarriedForwards, { foreignKey: 'CfId' });
-
 FinalAccs.hasOne(Documents, { foreignKey: 'DocumentId' });
 Documents.belongsTo(FinalAccs, { foreignKey: 'DocumentId' });
 
@@ -100,7 +96,6 @@ export default {
   AccRoles,
   Journals,
   CarriedForwards,
-  // Ledgers,
   Cards,
   Documents,
   FinalAccs,

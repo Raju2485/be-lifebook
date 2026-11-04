@@ -15,9 +15,6 @@ export class CarriedForwards extends Model<
   declare AccountId: number;
   declare debitAmount: CreationOptional<number>;
   declare creditAmount: CreationOptional<number>;
-  // declare month: CreationOptional<string>;
-  // declare monthNumber: CreationOptional<number>;
-  // declare year: number;
   declare OrgId: number;
   declare MonthId: number;
   declare YearId: number;
@@ -44,16 +41,6 @@ CarriedForwards.init(
     creditAmount: {
       type: DataTypes.DECIMAL(12, 2),
     },
-    // month: {
-    //   type: DataTypes.STRING,
-    // },
-    // monthNumber: {
-    //   type: DataTypes.INTEGER,
-    // },
-    // year: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    // },
     OrgId: {
       type: DataTypes.INTEGER,
     },

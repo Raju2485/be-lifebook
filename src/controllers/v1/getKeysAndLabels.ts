@@ -1,9 +1,5 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where } from 'sequelize';
-import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
-import { monthNumberToName } from '../../utils/monthConversion';
-import { toTitleCase } from '../../utils/toTitleCase';
 
 export const getKeysAndLabels = async (req: Request, res: Response) => {
   try {

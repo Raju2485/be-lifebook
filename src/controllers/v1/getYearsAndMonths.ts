@@ -1,8 +1,5 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where } from 'sequelize';
-import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
-import { monthNumberToName } from '../../utils/monthConversion';
 import { toTitleCase } from '../../utils/toTitleCase';
 
 export const getYearsAndMonths = async (req: Request, res: Response) => {
@@ -24,7 +21,6 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
           isActive: true,
         },
         attributes: ['YearId', 'MonthId'],
-        // attributes: ['year', 'monthNumber'],
         include: [
           {
             model: models.Months,
@@ -35,18 +31,13 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
         ],
         raw: true,
         group: ['YearId', 'MonthId', 'Month.id', 'Year.id'],
-        // group: ['year', 'monthNumber'],
-        // order: [
-        //   ['year', 'DESC'],
-        //   ['monthNumber', 'ASC'],
-        // ],
       });
 
 
       let yearsAndMonths = [];
       for (let i = 0; i < journals.length; i++) {
         const journal = journals[i];
-        console.log('journal = ', journal);
+
         const year = Number(journal['Year.name']);
         const yearId = Number(journal.YearId);
         const monthName = toTitleCase(journal['Month.name']);

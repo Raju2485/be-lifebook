@@ -18,7 +18,6 @@ export  const sendEmail = async ({toEmail, subject, template, context}) => {
         scopes: ['https://graph.microsoft.com/.default'],
       });
       const accessToken = result.accessToken;
-      // console.log(`Access Token: ${accessToken}`);
 
       if (Array.isArray(toEmail)) {
         toEmail = toEmail

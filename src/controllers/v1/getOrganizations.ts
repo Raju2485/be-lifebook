@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where } from 'sequelize'
+import { Op } from 'sequelize'
 import { getLimitAndOffset, getNewPagination} from '../../utils/newPagination'
 
 export const getOrganizations = async (req: Request, res: Response) => {
@@ -11,7 +11,6 @@ export const getOrganizations = async (req: Request, res: Response) => {
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
     const whereConditions = {
-      // isActive: true
     };
     if (search) {
       whereConditions.name = { [Op.iLike]: `%${search}%` }

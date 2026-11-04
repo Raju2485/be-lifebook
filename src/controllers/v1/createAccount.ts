@@ -1,8 +1,5 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where } from 'sequelize';
-import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
-import { isValidDate } from '../../utils/isValidDate';
 
 export const createAccount = async (req: Request, res: Response) => {
   try {

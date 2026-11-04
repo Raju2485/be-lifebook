@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
 
 export const getCards = async (req: Request, res: Response) => {

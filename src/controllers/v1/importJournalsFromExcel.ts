@@ -1,13 +1,11 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import fs from 'fs';
-import momentz from 'moment-timezone';
 import { sequelize } from '../../config/database';
 import models from '../../models/index';
 import Excel from 'exceljs';
 import { monthNameToNumber } from '../../utils/monthConversion';
 import { normalizeExcelValues } from '../../utils/normalizeExcelValues';
-import { getSystemErrorMessage } from 'util';
 
 export const importJournalsFromExcel = async (req: Request, res: Response) => {
   try {
@@ -211,7 +209,6 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
           return !!account;
         };
 
-        // let notFoundAccounts = {};
         let notFoundAccounts = [];
 
         let debtorAccountNameColumnValues = normalizeExcelValues(
@@ -420,9 +417,6 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
       },
       raw: true,
     });
-            // console.log('monthNumber = ', month)
-            // console.log('month =' , month2, 'year = ', year2)
-
             // // //#region find or create debtor account
             let isDebtorUserExists;
             if (debtorAccEmail) {              
@@ -501,10 +495,6 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             });
             
             // //#endregion
-            console.log('debtorAcc = ', debtorAcc);
-            console.log('DebtorId = ', isDebtorAccountExists?.dataValues?.id);
-            console.log('creditorAcc = ', creditorAcc);
-console.log('CreditorId = ', isCreditorAccountExists?.dataValues?.id);
             // creating journal
             const isTheJournalExists = await models.Journals.findOne({
               where: {

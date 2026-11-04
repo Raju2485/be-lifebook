@@ -1,14 +1,7 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where, Sequelize } from 'sequelize';
-import {
-  monthNumberToName,
-  monthNameToNumber,
-} from '../../utils/monthConversion';
-import { toTitleCase } from '../../utils/toTitleCase';
+import { Op } from 'sequelize';
 import momentz from 'moment-timezone';
-import { Journals } from '../../models/journals';
-import { getPreviousMonthAndYear } from '../../utils/getPreviousMonthAndYear.ts';
 import { getPreviouslyAvailableCfMonthAndYear } from '../../utils/getPreviouslyAvailableCfMonthAndYear.ts';
 export const generateAccountingReports = async (
   req: Request,
@@ -33,8 +26,6 @@ export const generateAccountingReports = async (
         id: yearId,
       },
     });
-    // console.log('month =', month?.toJSON());
-    // console.log('year =', year);
 
     if (!month || !year) {
       return res.status(400).json({
@@ -43,7 +34,6 @@ export const generateAccountingReports = async (
       });
     }
 
-    // const monthNumber = monthNameToNumber(month);
 
     //#region Fetch all account Ids from journals
     const journals = await models.Journals.findAll({
@@ -51,8 +41,6 @@ export const generateAccountingReports = async (
         isActive: true,
         MonthId: monthId,
         YearId: yearId,
-        // monthNumber: { [Op.between]: [month.fromMonthNum, month.toMonthNum] },
-        // year: Number(year.name),
         OrgId: orgId,
       },
       attributes: [
@@ -157,10 +145,6 @@ export const generateAccountingReports = async (
     });
 
     if (month.type == 'months') {
-
-      // console.log('previousCfYearId =', previousCfYearId);
-      // console.log('previousCfMonthId =', previousCfMonthId);
-      
       if (previousCfYearId && previousCfMonthId) {
         const carriedForwards = await models.CarriedForwards.findAll({
           where: {
@@ -184,12 +168,7 @@ export const generateAccountingReports = async (
           ],
           // raw: true,
         });
-        // console.log('carriedForwards =', carriedForwards);
         carriedForwards.forEach((obj) => {
-          // const isAccountFound = accounts.find(
-          //   (account) => account.id === obj.AccountId
-          // );
-          // if (!isAccountFound) {
             console.log('obj =', obj);
             accounts.push({
               id: obj.AccountId,
@@ -203,7 +182,6 @@ export const generateAccountingReports = async (
     //#endregion
     accounts = accounts?.sort((a, b) => a.name.localeCompare(b.name)) || [];
 
-    // console.log('accounts =', accounts);
     //#region Run loop on account ids and prepare and save ledgers in json format - create Carried Forwards if not available else update.
     for (let i = 0; i < accounts.length; i++) {
       const accountJournals = journals.filter(
@@ -212,13 +190,6 @@ export const generateAccountingReports = async (
       );
       const ledgerUserId = accounts[i].id;
 
-      // const account = await models.Accounts.findOne({
-      //   where: {
-      //     id: accounts[i].id,
-      //   },
-      //   include: [{ model: models.Users }],
-      // });
-
       const ledger = {
         name: `${accounts[i]?.name} (${accounts[i].uid})`,
         heading: accounts[i]?.name
@@ -226,21 +197,6 @@ export const generateAccountingReports = async (
           : `${month.name} ${year.name}`,
         entries: [],
       };
-      // Collecting last month carried forward
-      // const { previousMonthNum, previousYear } = await getPreviousMonthAndYear({
-      //   month,
-      //   year,
-      // });
-      // console.log(
-      //   'previousMonthNum',
-      //   previousMonthNum,
-      //   'previousYear',
-      //   previousYear
-      // );
-      // const previousMonthNum =
-      //   month.toMonthNum == 1 ? 12 : month.toMonthNum - 1;
-      // const previousYear =
-      //   month.toMonthNum == 1 ? Number(year.name) - 1 : Number(year.name);
       if (previousCfYearId && previousCfMonthId) {
         const carriedForward = await models.CarriedForwards.findOne({
           where: {
@@ -293,8 +249,6 @@ export const generateAccountingReports = async (
                 ? Number(accountJournals[j].amount)
                 : 0,
             isAdjustment: accountJournals[j]?.isAdjustment ?? false,
-            // debtor: accountJournals[j]?.Debtor?.User?.name ?? '',
-            // creditor: accountJournals[j]?.Creditor?.User?.name ?? '',
           });
             if (accountJournals[j]?.isAdjustment) {
               console.log('accountName = ', ledger.entries[ledger.entries.length - 1]);
@@ -354,7 +308,7 @@ export const generateAccountingReports = async (
         debitBalance: debitBalanceUnadjusted ?? 0,
         creditBalance: creditBalanceUnadjusted ?? 0,
       };
-      // console.log('trialBalanceAccount =', trialBalanceAccount);
+
       if ((debitBalanceUnadjusted + creditBalanceUnadjusted) > 0) {
         finalAccounts.trialBalanceUnadjusted.entries.push(
           trialBalanceAccountUnadjusted
@@ -382,17 +336,6 @@ export const generateAccountingReports = async (
         });
       }
 
-      // ledger.entries.push({
-      //   date: '',
-      //   particulars: '',
-      //   accountName: 'Total',
-      //   debitAmount: creditBalance
-      //     ? totals.debit + creditBalance
-      //     : totals.debit,
-      //   creditAmount: debitBalance
-      //     ? totals.credit + debitBalance
-      //     : totals.credit,
-      // });
       finalAccounts.ledgers.push(ledger);
 
       // Creating or updating carried forward

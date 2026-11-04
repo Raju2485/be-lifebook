@@ -15,7 +15,6 @@ export class FinalAccs extends Model<
   declare OrgId: number;
   declare YearId: number;
   declare MonthId: number;
-  // declare monthNumber: number;
   declare isLatest: boolean;
   declare jsonData: Record<string, any>;
   declare sequence: number;
@@ -46,10 +45,6 @@ FinalAccs.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    // monthNumber: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    // },
     isLatest: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

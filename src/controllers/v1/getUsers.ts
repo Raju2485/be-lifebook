@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where } from 'sequelize'
+import { Op } from 'sequelize'
 import { getLimitAndOffset, getNewPagination} from '../../utils/newPagination'
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const { orgId, search, page, perPage } = req.query;
-    // const { id: userId } = req.user;
       if(!orgId){
         return res.status(400).json({success:false, msg: 'orgId is mandatory'})
       }
@@ -14,14 +13,12 @@ export const getUsers = async (req: Request, res: Response) => {
 
     let whereConditions = {
       isActive: true,
-      // orgId:{[Op.or]:[null, orgId]}
       orgId: null,
     };
     if (search) {
       whereConditions = {
         isActive: true,
         orgId: null,
-        // orgId:{[Op.or]:[null, orgId]},
         [Op.or]: [
           { name: { [Op.iLike]: `%${search}%` } },
           { middleName: { [Op.iLike]: `%${search}%` } },

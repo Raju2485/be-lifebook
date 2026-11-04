@@ -1,9 +1,6 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where } from 'sequelize';
-import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
-import { isValidDate } from '../../utils/isValidDate';
-import { monthNameToNumber } from '../../utils/monthConversion';
+import { Op } from 'sequelize';
 import momentz from 'moment-timezone';
 
 export const postJournalEntry = async (req: Request, res: Response) => {
@@ -12,7 +9,6 @@ export const postJournalEntry = async (req: Request, res: Response) => {
       req.body;
 
     const monthName = momentz(date).format('MMMM');
-    // const monthNumber = monthNameToNumber(month);
     const yearName = momentz(date).year();
 
     const month = await models.Months.findOne({

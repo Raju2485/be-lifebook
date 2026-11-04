@@ -41,21 +41,6 @@ export const createOrg = async(req: Request, res: Response) => {
             isAdmin: true,
             isMember: true
           })
-
-          // //#region Adding admin role to created account
-          // let adminRole = await models.RoleMasters.findOne({
-          //   where: { name: { [Op.iLike]: 'admin' } }
-          // });
-          // if (!adminRole) {
-          //   adminRole = await models.RoleMasters.create({name: 'admin'})
-          // }
-
-          // await models.AccRoles.create({
-          //   RoleId: adminRole.id,
-          //   AccountId: account.id
-          // })
-
-          // //#endregion
           return res.status(200).json({
             success: true,
             msg: 'Organization created successfully!',

@@ -19,16 +19,6 @@ export async function up( queryInterface: QueryInterface ){
     creditAmount: {
       type: DataTypes.DECIMAL(12, 2),
     },
-    // month: {
-    //   type: DataTypes.STRING,
-    // },
-    // monthNumber: {
-    //   type: DataTypes.INTEGER,
-    // },
-    // year: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    // },
     OrgId: {
       type: DataTypes.INTEGER,
       allowNull: false,

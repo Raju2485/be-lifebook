@@ -18,9 +18,7 @@ export const refreshToken = async (req, res) => {
             refreshToken,
             config.REFRESH_TOKEN_SECRET_KEY            
         );  
-        // delete tokenDetails.iat;
-        // delete tokenDetails.exp;
-          
+
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await generateTokens(tokenDetails);
 
         await isExists.destroy();
