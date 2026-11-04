@@ -12,9 +12,9 @@ export class FinalAccs extends Model<
   InferCreationAttributes<FinalAccs>
 > {
   declare id: CreationOptional<number>;
-  declare orgId: number;
-  declare yearId: number;
-  declare monthId: number;
+  declare OrgId: number;
+  declare YearId: number;
+  declare MonthId: number;
   // declare monthNumber: number;
   declare isLatest: boolean;
   declare jsonData: Record<string, any>;
@@ -34,15 +34,15 @@ FinalAccs.init(
       primaryKey: true,
       allowNull: false,
     },
-    orgId: {
+    OrgId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    yearId: {
+    YearId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    monthId: {
+    MonthId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

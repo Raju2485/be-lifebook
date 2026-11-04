@@ -15,7 +15,8 @@ import { CarriedForwards } from './carriedForwards';
 import { Cards } from './cards';
 import { Documents } from './documents';
 import { FinalAccs } from './finalAccs';
-import { Dropdowns } from './dropdowns';
+import { Months } from './months';
+import { Years } from './years';
 import { KeysAndLabels } from './keysAndLabels';
 
 TypeMasters.hasMany(Users, {foreignKey: 'TypeId'});
@@ -52,8 +53,8 @@ RoleMasters.belongsToMany(Accounts, {
   otherKey: 'AccountId',
 });
 
-Accounts.hasMany(Journals, { as: 'Debitor', foreignKey: 'DebitorId' });
-Journals.belongsTo(Accounts, { as: 'Debitor', foreignKey: 'DebitorId' });
+Accounts.hasMany(Journals, { as: 'Debtor', foreignKey: 'DebtorId' });
+Journals.belongsTo(Accounts, { as: 'Debtor', foreignKey: 'DebtorId' });
 
 Accounts.hasMany(Journals, { as: 'Creditor', foreignKey: 'CreditorId' });
 Journals.belongsTo(Accounts, { as: 'Creditor', foreignKey: 'CreditorId' });
@@ -73,11 +74,17 @@ CarriedForwards.belongsTo(Accounts, { foreignKey: 'AccountId' });
 FinalAccs.hasOne(Documents, { foreignKey: 'DocumentId' });
 Documents.belongsTo(FinalAccs, { foreignKey: 'DocumentId' });
 
-Dropdowns.hasMany(Journals, { as: 'Month', foreignKey: 'monthId' });
-Journals.belongsTo(Dropdowns, { as: 'Month', foreignKey: 'monthId' });
+Months.hasMany(Journals, { foreignKey: 'MonthId' });
+Journals.belongsTo(Months, { foreignKey: 'MonthId' });
 
-Dropdowns.hasMany(Journals, { as: 'Year', foreignKey: 'yearId' });
-Journals.belongsTo(Dropdowns, { as: 'Year', foreignKey: 'yearId' });
+Years.hasMany(Journals, { foreignKey: 'YearId' });
+Journals.belongsTo(Years, { foreignKey: 'YearId' });
+
+Months.hasMany(CarriedForwards, { foreignKey: 'MonthId' });
+CarriedForwards.belongsTo(Months, { foreignKey: 'MonthId' });
+
+Years.hasMany(CarriedForwards, { foreignKey: 'YearId' });
+CarriedForwards.belongsTo(Years, { foreignKey: 'YearId' });
 
 export default {
   TypeMasters,
@@ -97,6 +104,7 @@ export default {
   Cards,
   Documents,
   FinalAccs,
-  Dropdowns,
+  Months,
+  Years,
   KeysAndLabels,
 };

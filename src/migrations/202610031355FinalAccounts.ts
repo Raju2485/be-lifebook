@@ -9,15 +9,15 @@ export async function up( queryInterface: QueryInterface ){
       autoIncrement: true,
       allowNull: false,
     },
-    orgId: {
+    OrgId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    yearId: {
+    YearId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    monthId: {
+    MonthId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

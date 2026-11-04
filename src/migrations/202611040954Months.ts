@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import type { QueryInterface } from 'sequelize';
 
 export async function up( queryInterface: QueryInterface ){
-  await queryInterface.createTable('Dropdowns', {
+  await queryInterface.createTable('Months', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -11,18 +11,20 @@ export async function up( queryInterface: QueryInterface ){
     },
     name: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
     },
     type: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [['months', 'years']],
-        msg: 'Type must be months / years',
+        isIn: [['months', 'quarters']],
+        msg: 'Type must be months / quarters',
       },
     },
     sequence: {
       type: DataTypes.INTEGER,
+      unique: true,
       allowNull: false,
     },
     fromDate: {
@@ -35,12 +37,6 @@ export async function up( queryInterface: QueryInterface ){
       type: DataTypes.INTEGER,
     },
     toMonthNum: {
-      type: DataTypes.INTEGER,
-    },
-    // lastMonthNum: {
-    //   type: DataTypes.INTEGER,
-    // },
-    monthNum: {
       type: DataTypes.INTEGER,
     },
     isActive: {
@@ -59,14 +55,8 @@ export async function up( queryInterface: QueryInterface ){
       defaultValue: DataTypes.NOW,
     },
   });
-
-  await queryInterface.addConstraint('Dropdowns', {
-    fields: ['name', 'type'],
-    type: 'unique',
-    name: 'Dropdowns_name_type_uk',
-  });
 };
 
 export async function down(queryInterface: QueryInterface ){
-  await queryInterface.dropTable('Dropdowns');
+  await queryInterface.dropTable('Months');
 };

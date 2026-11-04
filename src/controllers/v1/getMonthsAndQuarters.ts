@@ -5,7 +5,7 @@ import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
 import { monthNumberToName } from '../../utils/monthConversion';
 import { toTitleCase } from '../../utils/toTitleCase';
 
-export const getDropdowns = async (req: Request, res: Response) => {
+export const getMonthsAndQuarters = async (req: Request, res: Response) => {
   try {
     let { type, page, perPage, search } = req.query;
     const { limit, offset } = getLimitAndOffset({ page, perPage });
@@ -28,7 +28,7 @@ export const getDropdowns = async (req: Request, res: Response) => {
     if (search) {
       whereConditions.name = { [Op.iLike]: `%${search}%` };
     }
-    const { count, rows } = await models.Dropdowns.findAndCountAll({
+    const { count, rows } = await models.Months.findAndCountAll({
       where: whereConditions,
       attributes: ['id', 'name'],
       limit,

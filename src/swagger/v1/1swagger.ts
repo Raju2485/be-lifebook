@@ -459,7 +459,7 @@
  *               - orgId
  *               - date
  *               - particulars
- *               - DebitorId
+ *               - DebtorId
  *               - CreditorId
  *               - amount
  *             properties:
@@ -473,7 +473,7 @@
  *               particulars:
  *                 type: string
  *                 example: bought furniture
- *               DebitorId:
+ *               DebtorId:
  *                 type: integer
  *                 example: 1
  *               CreditorId:
@@ -1177,12 +1177,12 @@
  */
 
 
-// Get Dropdowns
+// Get Months and Quarters
 /**
  * @swagger
- * /api/v1/get-dropdowns:
+ * /api/v1/get-months-and-quarters:
  *   get:
- *     summary: "get dropdowns"
+ *     summary: "get months and quarters"
  *     tags:
  *       - Common
  *     security:
@@ -1192,7 +1192,7 @@
  *         name: type
  *         schema:
  *          type: string
- *          enum: ['months', 'quarters', 'monthsAndQuarters', 'years']
+ *          enum: ['months', 'quarters', 'monthsAndQuarters']
  *         required: true
  *       - in: query
  *         name: search

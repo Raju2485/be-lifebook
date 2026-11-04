@@ -1,6 +1,6 @@
 import type { QueryInterface, Op } from 'sequelize';
 
-const DROPDOWN_VALUES = [
+const MONTHS_VALUES = [
   {
     name: 'January',
     type: 'months',
@@ -163,59 +163,14 @@ const DROPDOWN_VALUES = [
     fromMonthNum: 1,
     toMonthNum: 12,
   },
-  {
-    name: '2026',
-    type: 'years',
-    sequence: 1,
-    fromDate: new Date('2026-01-01'),
-    toDate: new Date('2026-12-31'),
-    fromMonthNum: null,
-    toMonthNum: null,
-  },
-  {
-    name: '2027',
-    type: 'years',
-    sequence: 2,
-    fromDate: new Date('2027-01-01'),
-    toDate: new Date('2027-12-31'),
-    fromMonthNum: null,
-    toMonthNum: null,
-  },
-  {
-    name: '2028',
-    type: 'years',
-    sequence: 3,
-    fromDate: new Date('2028-01-01'),
-    toDate: new Date('2028-12-31'),
-    fromMonthNum: null,
-    toMonthNum: null,
-  },
-  {
-    name: '2029',
-    type: 'years',
-    sequence: 4,
-    fromDate: new Date('2029-01-01'),
-    toDate: new Date('2029-12-31'),
-    fromMonthNum: null,
-    toMonthNum: null,
-  },
-  {
-    name: '2030',
-    type: 'years',
-    sequence: 5,
-    fromDate: new Date('2030-01-01'),
-    toDate: new Date('2030-12-31'),
-    fromMonthNum: null,
-    toMonthNum: null,
-  },
 ];
 
 export async function up(queryInterface: QueryInterface) {
   const now = new Date();
 
   await queryInterface.bulkInsert(
-    'Dropdowns',
-    DROPDOWN_VALUES.map((obj) => ({
+    'Months',
+    MONTHS_VALUES.map((obj) => ({
       name: obj.name,
       type: obj.type,
       sequence: obj.sequence,
@@ -232,10 +187,10 @@ export async function up(queryInterface: QueryInterface) {
 
 export async function down(queryInterface: QueryInterface) {
   await queryInterface.bulkDelete(
-    'Dropdowns',
+    'Months',
     {
-      name: { [Op.in]: DROPDOWN_VALUES.map((obj) => obj.name) as string[] },
-      type: { [Op.in]: DROPDOWN_VALUES.map((obj) => obj.type) as string[] },
+      name: { [Op.in]: MONTHS_VALUES.map((obj) => obj.name) as string[] },
+      type: { [Op.in]: MONTHS_VALUES.map((obj) => obj.type) as string[] },
     },
     {}
   );

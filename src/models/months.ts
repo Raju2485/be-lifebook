@@ -7,9 +7,9 @@ import {
 } from 'sequelize';
 import { sequelize } from '../config/database';
 
-export class Dropdowns extends Model<
-  InferAttributes<Dropdowns>,
-  InferCreationAttributes<Dropdowns>
+export class Months extends Model<
+  InferAttributes<Months>,
+  InferCreationAttributes<Months>
 > {
   declare id: CreationOptional<number>;
   declare name: string;
@@ -19,14 +19,12 @@ export class Dropdowns extends Model<
   declare toDate: CreationOptional<Date>;
   declare fromMonthNum: CreationOptional<number>;
   declare toMonthNum: CreationOptional<number>;
-  declare lastMonthNum: number;
-  declare monthNum: number;
   declare isActive: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
 
-Dropdowns.init(
+Months.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -36,18 +34,20 @@ Dropdowns.init(
     },
     name: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
     },
     type: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [['months', 'quarters', 'years']],
-        msg: 'Type must be months / quarters / years',
+        isIn: [['months', 'quarters']],
+        msg: 'Type must be months / quarters',
       },
     },
     sequence: {
       type: DataTypes.INTEGER,
+      unique: true,
       allowNull: false,
     },
     fromDate: {
@@ -60,12 +60,6 @@ Dropdowns.init(
       type: DataTypes.INTEGER,
     },
     toMonthNum: {
-      type: DataTypes.INTEGER,
-    },
-    // lastMonthNum: {
-    //   type: DataTypes.INTEGER,
-    // },
-    monthNum: {
       type: DataTypes.INTEGER,
     },
     isActive: {
@@ -86,7 +80,7 @@ Dropdowns.init(
   },
   {
     sequelize,
-    tableName: 'Dropdowns',
+    tableName: 'Months',
     timestamps: true,
   }
 );

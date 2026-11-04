@@ -21,7 +21,7 @@ export async function up( queryInterface: QueryInterface ){
       type: DataTypes.DATE,
       allowNull: false,
     },
-    DebitorId: {
+    DebtorId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -45,11 +45,11 @@ export async function up( queryInterface: QueryInterface ){
     //   type: DataTypes.INTEGER,
     //   allowNull: false,
     // },
-    monthId: {
+    MonthId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    yearId: {
+    YearId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

@@ -23,20 +23,18 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
           OrgId: orgId,
           isActive: true,
         },
-        attributes: ['yearId', 'monthId'],
+        attributes: ['YearId', 'MonthId'],
         // attributes: ['year', 'monthNumber'],
         include: [
           {
-            model: models.Dropdowns,
-            as: 'Month',
+            model: models.Months,
           },
           {
-            model: models.Dropdowns,
-            as: 'Year',
+            model: models.Years,
           },
         ],
         raw: true,
-        group: ['yearId', 'monthId', 'Month.id', 'Year.id'],
+        group: ['YearId', 'MonthId', 'Month.id', 'Year.id'],
         // group: ['year', 'monthNumber'],
         // order: [
         //   ['year', 'DESC'],
@@ -51,7 +49,7 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
         const year = Number(journal['Year.name']);
         const yearId = Number(journal['Year.id']);
         const monthName = toTitleCase(journal['Month.name']);
-        const monthNum = journal['Month.monthNum'];
+        const monthNum = journal['Month.sequence'];
         const monthId = journal['Month.id'];
 
         const yearIndex = yearsAndMonths.findIndex((obj) => obj.year === year);

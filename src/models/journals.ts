@@ -15,14 +15,14 @@ export class Journals extends Model<
   declare particulars: string;
   declare amount: number;
   declare date: Date;
-  declare DebitorId: number;
+  declare DebtorId: number;
   declare CreditorId: number;
   declare BkId: number;
   declare OrgId: number;
   // declare monthNumber: number;
   // declare year: number;
-  declare monthId: number;
-  declare yearId: number;
+  declare MonthId: number;
+  declare YearId: number;
   declare isActive: CreationOptional<boolean>;
   declare isAdjustment: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
@@ -49,7 +49,7 @@ Journals.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    DebitorId: {
+    DebtorId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -73,11 +73,11 @@ Journals.init(
     //   type: DataTypes.INTEGER,
     //   allowNull: false,
     // },
-    monthId: {
+    MonthId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    yearId: {
+    YearId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

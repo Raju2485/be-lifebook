@@ -39,7 +39,7 @@ export const getJournalEntries = async (req: Request, res: Response) => {
       include: [
         {
           model: models.Accounts,
-          as: 'Debitor',
+          as: 'Debtor',
           attributes: ['id', 'UserId'],
           include: {
             model: models.Users,

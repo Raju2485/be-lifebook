@@ -7,10 +7,11 @@ const KEYS_AND_LABELS_VALUES = [
     json: {
       journals: 'Journals',
       ledgers: 'Ledgers',
-      trialBalanceUnudjusted: 'Trial Balance (Unadjusted)',
+      trialBalanceUnadjusted: 'Trial Balance (Unadjusted)',
       trialBalanceAdjusted: 'Trial Balance (Adjusted)',
       tradingAccount: 'Trading Account',
       pAndLAccount: 'P&L Account',
+      balanceSheet: 'Balance Sheet',
     },
   },
 ];

@@ -8,14 +8,14 @@ import momentz from 'moment-timezone';
 
 export const postJournalEntry = async (req: Request, res: Response) => {
   try {
-    const { orgId, date, particulars, DebitorId, CreditorId, amount, isAdjustment } =
+    const { orgId, date, particulars, DebtorId, CreditorId, amount, isAdjustment } =
       req.body;
 
     const monthName = momentz(date).format('MMMM');
     // const monthNumber = monthNameToNumber(month);
     const yearName = momentz(date).year();
 
-    const month = await models.Dropdowns.findOne({
+    const month = await models.Months.findOne({
       where: {
         name: {
           [Op.iLike]: monthName,
@@ -23,16 +23,15 @@ export const postJournalEntry = async (req: Request, res: Response) => {
         type: 'months',
       },
     });
-    const year = await models.Dropdowns.findOne({
+    const year = await models.Years.findOne({
       where: {
-        name: String(yearName),
-        type: 'years',
+        name: Number(yearName),
       },
     });
 
     const { id: userId } = req.user;
 
-    if (DebitorId == CreditorId) {
+    if (DebtorId == CreditorId) {
       return res
         .status(400)
         .json({ success: false, msg: "Dr. and Cr. accounts can't be same" });
@@ -42,12 +41,12 @@ export const postJournalEntry = async (req: Request, res: Response) => {
       OrgId: orgId,
       date,
       particulars,
-      DebitorId,
+      DebtorId,
       CreditorId,
       amount,
       BkId: userId,
-      monthId: month?.id,
-      yearId: year?.id,
+      MonthId: month?.id,
+      YearId: year?.id,
       isAdjustment,
     });
 

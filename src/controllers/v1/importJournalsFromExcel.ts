@@ -34,8 +34,8 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
         const dateLabel = 'date (d&m&yyyy)';
         const particularsLabel = 'particulars';
         const amountLabel = 'amount';
-        const debitorAccountNameLabel = 'debitor account name';
-        const debitorAccountEmailLabel = 'debitor account email';
+        const debtorAccountNameLabel = 'debtor account name';
+        const debtorAccountEmailLabel = 'debtor account email';
         const creditorAccountNameLabel = 'creditor account name';
         const creditorAccountEmailLabel = 'creditor account email';
         const isAdjustmentLabel = 'is adjustment?(yes/no)';
@@ -54,11 +54,11 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             index: 3,
           },
           {
-            label: debitorAccountNameLabel,
+            label: debtorAccountNameLabel,
             index: 4,
           },
           {
-            label: debitorAccountEmailLabel,
+            label: debtorAccountEmailLabel,
             index: 5,
           },
           {
@@ -80,11 +80,11 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
           (a) => a.label === particularsLabel
         );
         const amountColumn = columns.find((a) => a.label === amountLabel);
-        const debitorAccountNameColumn = columns.find(
-          (a) => a.label === debitorAccountNameLabel
+        const debtorAccountNameColumn = columns.find(
+          (a) => a.label === debtorAccountNameLabel
         );
-        const debitorAccountEmailColumn = columns.find(
-          (a) => a.label === debitorAccountEmailLabel
+        const debtorAccountEmailColumn = columns.find(
+          (a) => a.label === debtorAccountEmailLabel
         );
 
         const creditorAccountNameColumn = columns.find(
@@ -191,7 +191,7 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
         }
         //#endregion
 
-        // #region Validating debitor account names
+        // #region Validating debtor account names
 
         const isAccountExists = async (value) => {
           const account = await models.Accounts.findOne({
@@ -214,30 +214,30 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
         // let notFoundAccounts = {};
         let notFoundAccounts = [];
 
-        let debitorAccountNameColumnValues = normalizeExcelValues(
-          sheet1?.getColumn(debitorAccountNameColumn?.index)?.values
+        let debtorAccountNameColumnValues = normalizeExcelValues(
+          sheet1?.getColumn(debtorAccountNameColumn?.index)?.values
         ); // column number or key
-        debitorAccountNameColumnValues =
-          debitorAccountNameColumnValues?.slice(2);
+        debtorAccountNameColumnValues =
+          debtorAccountNameColumnValues?.slice(2);
 
         if (
-          debitorAccountNameColumnValues.indexOf(undefined) > 0 ||
-          debitorAccountNameColumnValues.indexOf(null) > 0 ||
-          debitorAccountNameColumnValues.indexOf('') > 0
+          debtorAccountNameColumnValues.indexOf(undefined) > 0 ||
+          debtorAccountNameColumnValues.indexOf(null) > 0 ||
+          debtorAccountNameColumnValues.indexOf('') > 0
         ) {
           fs.unlinkSync(filePath);
 
           return res.status(400).json({
             success: false,
-            msg: 'Debitor account name cannot be empty',
+            msg: 'Debtor account name cannot be empty',
           });
         }
 
-        let debitorAccountEmailColumnValues = normalizeExcelValues(
-          sheet1?.getColumn(debitorAccountEmailColumn?.index)?.values
+        let debtorAccountEmailColumnValues = normalizeExcelValues(
+          sheet1?.getColumn(debtorAccountEmailColumn?.index)?.values
         ); // column number or key
-        debitorAccountEmailColumnValues =
-          debitorAccountEmailColumnValues?.slice(2);
+        debtorAccountEmailColumnValues =
+          debtorAccountEmailColumnValues?.slice(2);
         
         let errors: string[] = [];
         const isUserExists = async ({
@@ -273,24 +273,24 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
           return !!user;
         };
 
-        for (let i = 0; i < debitorAccountNameColumnValues.length; i++) {
-          let debitorAccName = debitorAccountNameColumnValues[i].trim();
-          let debitorAccEmail = debitorAccountEmailColumnValues[i]
-            ? debitorAccountEmailColumnValues[i]?.trim()
+        for (let i = 0; i < debtorAccountNameColumnValues.length; i++) {
+          let debtorAccName = debtorAccountNameColumnValues[i].trim();
+          let debtorAccEmail = debtorAccountEmailColumnValues[i]
+            ? debtorAccountEmailColumnValues[i]?.trim()
             : null;
 
           let notFoundAccIndex = notFoundAccounts.findIndex(
-            (a) => a.accountName === debitorAccName
+            (a) => a.accountName === debtorAccName
           );
           if (notFoundAccIndex === -1) {
-            if (!(await isAccountExists(debitorAccName))) {
+            if (!(await isAccountExists(debtorAccName))) {
               const isUserExistsResult = await isUserExists({
-                email: debitorAccEmail,
-                name: debitorAccName,
+                email: debtorAccEmail,
+                name: debtorAccName,
               });
               notFoundAccounts.push({
-                accountName: debitorAccName,
-                email: debitorAccEmail,
+                accountName: debtorAccName,
+                email: debtorAccEmail,
                 isUserExists: !!isUserExistsResult,
               });
             }
@@ -367,113 +367,6 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
 
         //#endregion
 
-        // // #region Validating debitor account types
-        // let debitorAccountTypeColumnValues = sheet1.getColumn(debitorAccountTypeColumn.index).values; // column number or key
-        // debitorAccountTypeColumnValues = [
-        //   ...new Set(
-        //     debitorAccountTypeColumnValues
-        //   ),
-        // ];
-        // debitorAccountTypeColumnValues = debitorAccountTypeColumnValues.slice(2);
-
-        // for (let i = 0; i < debitorAccountTypeColumnValues.length; i++) {
-        //   if (debitorAccountTypeColumnValues[i] !== 'real' && debitorAccountTypeColumnValues[i] !== 'personal' && debitorAccountTypeColumnValues[i] !== 'nominal') {
-        //     fs.unlinkSync(filePath)
-
-        //     return res.status(400).json({
-        //       success: false,
-        //       msg: `${debitorAccountTypeColumnValues[i]} is not a valid account type`
-        //     });
-        //   }
-        // }
-
-        // if (
-        //   debitorAccountTypeColumnValues.indexOf(undefined) > 0 ||
-        //   debitorAccountTypeColumnValues.indexOf(null) > 0 ||
-        //   debitorAccountTypeColumnValues.indexOf('') > 0
-        // ) {
-        //   fs.unlinkSync(filePath)
-
-        //   return res
-        //     .status(400)
-        //     .json({ success: false, msg: 'debitor account type cannot be empty' });
-        // }
-        // //#endregion
-
-        // // #region Validating debitor account cash or bank
-        // let debitorAccountCashOrBankColumnValues = sheet1.getColumn(debitorAccountCashOrBankColumn.index).values; // column number or key
-        // debitorAccountCashOrBankColumnValues = [
-        //   ...new Set(
-        //     debitorAccountTypeColumnValues
-        //   ),
-        // ];
-        // debitorAccountCashOrBankColumnValues = debitorAccountCashOrBankColumnValues.slice(2);
-
-        // for (let i = 0; i < debitorAccountCashOrBankColumnValues.length; i++) {
-        //   if (debitorAccountCashOrBankColumnValues[i] !== 'cash' && debitorAccountCashOrBankColumnValues[i] !== 'bank' && debitorAccountCashOrBankColumnValues[i] !== '') {
-        //     fs.unlinkSync(filePath)
-
-        //     return res.status(400).json({
-        //       success: false,
-        //       msg: `${debitorAccountCashOrBankColumnValues[i]} is not a valid account nature`
-        //     });
-        //   }
-        // }
-        // //#endregion
-
-        // // #region Validating creditor account types
-        // let creditorAccountTypeColumnValues = sheet1.getColumn(creditorAccountTypeColumn.index).values; // column number or key
-        // creditorAccountTypeColumnValues = [
-        //   ...new Set(
-        //     creditorAccountTypeColumnValues
-        //   ),
-        // ];
-        // creditorAccountTypeColumnValues = creditorAccountTypeColumnValues.slice(2);
-
-        // for (let i = 0; i < creditorAccountTypeColumnValues.length; i++) {
-        //   if (creditorAccountTypeColumnValues[i] !== 'real' && creditorAccountTypeColumnValues[i] !== 'personal' && creditorAccountTypeColumnValues[i] !== 'nominal') {
-        //     fs.unlinkSync(filePath)
-
-        //     return res.status(400).json({
-        //       success: false,
-        //       msg: `${creditorAccountTypeColumnValues[i]} is not a valid account type`
-        //     });
-        //   }
-        // }
-
-        // if (
-        //   creditorAccountTypeColumnValues.indexOf(undefined) > 0 ||
-        //   creditorAccountTypeColumnValues.indexOf(null) > 0 ||
-        //   creditorAccountTypeColumnValues.indexOf('') > 0
-        // ) {
-        //   fs.unlinkSync(filePath)
-
-        //   return res
-        //     .status(400)
-        //     .json({ success: false, msg: 'debitor account type cannot be empty' });
-        // }
-        // //#endregion
-
-        // // #region Validating creditor account cash or bank
-        // let creditorAccountCashOrBankColumnValues = sheet1.getColumn(creditorAccountCashOrBankColumn.index).values; // column number or key
-        // creditorAccountCashOrBankColumnValues = [
-        //   ...new Set(
-        //     debitorAccountTypeColumnValues
-        //   ),
-        // ];
-        // creditorAccountCashOrBankColumnValues = creditorAccountCashOrBankColumnValues.slice(2);
-
-        // for (let i = 0; i < creditorAccountCashOrBankColumnValues.length; i++) {
-        //   if (creditorAccountCashOrBankColumnValues[i] !== 'cash' && creditorAccountCashOrBankColumnValues[i] !== 'bank' && creditorAccountCashOrBankColumnValues[i] !== '') {
-        //     fs.unlinkSync(filePath)
-
-        //     return res.status(400).json({
-        //       success: false,
-        //       msg: `${creditorAccountCashOrBankColumnValues[i]} is not a valid account nature`
-        //     });
-        //   }
-        // }
-        // //#endregion
 
         const rows = sheet1.getSheetValues();
 
@@ -507,49 +400,47 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
               : month;
             let particulars = row[particularsColumn.index];
             let amount = row[amountColumn.index];
-            let debitorAcc = row[debitorAccountNameColumn.index];
-            let debitorAccEmail = row[debitorAccountEmailColumn.index];
-            // let debitorAccCashOrBank = row[debitorAccountCashOrBankColumn.index];
+            let debtorAcc = row[debtorAccountNameColumn.index];
+            let debtorAccEmail = row[debtorAccountEmailColumn.index];
             let creditorAcc = row[creditorAccountNameColumn.index];
             let creditorAccEmail = row[creditorAccountEmailColumn.index];
             let isAdjustment = row[isAdjustmentColumn.index];
             // let creditorAccCashOrBank = row[creditorAccountCashOrBankColumn.index];
 
-    const month2 = await models.Dropdowns.findOne({
+    const month2 = await models.Months.findOne({
       where: {
-        monthNum: Number(month),
+        sequence: Number(month),
         type: 'months',
       },
       raw: true
     });
-    const year2 = await models.Dropdowns.findOne({
+    const year2 = await models.Years.findOne({
       where: {
-        name: String(year),
-        type: 'years',
+        name: Number(year),
       },
       raw: true,
     });
             // console.log('monthNumber = ', month)
             // console.log('month =' , month2, 'year = ', year2)
 
-            // // //#region find or create debitor account
-            let isDebitorUserExists;
-            if (debitorAccEmail) {              
-             isDebitorUserExists  = await models.Users.findOne({
+            // // //#region find or create debtor account
+            let isDebtorUserExists;
+            if (debtorAccEmail) {              
+             isDebtorUserExists  = await models.Users.findOne({
                where: {
                  name: {
-                   [Op.iLike]: debitorAcc,
+                   [Op.iLike]: debtorAcc,
                  },
                  email: {
-                  [Op.iLike]: debitorAccEmail,
+                  [Op.iLike]: debtorAccEmail,
                  },
                },
              });
           } else {
-            isDebitorUserExists = await models.Users.findOne({
+            isDebtorUserExists = await models.Users.findOne({
               where: {
                 name: {
-                  [Op.iLike]: debitorAcc,
+                  [Op.iLike]: debtorAcc,
                 },
                 orgId: orgId,
               },
@@ -557,54 +448,23 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             }
             
 
-            if (!isDebitorUserExists) {
+            if (!isDebtorUserExists) {
               await t.rollback();
               fs.unlinkSync(filePath);
               return res.status(404).json({
                 success: false,
-                msg: `${debitorAcc} not found`,
+                msg: `${debtorAcc} not found`,
               });
             }
 
-            // const accType = await models.AccTypeMasters.findOne({
-            //   where: {
-            //     name: { [Op.iLike]: debitorAccType }
-            //   }
-            // })
 
-            // if (!accType) {
-            //   fs.unlinkSync(filePath)
-            //   throw new Error(`${debitorAccType} is invalid account type`)
-            // }
-
-            let isDebitorAccountExists = await models.Accounts.findOne({
+            let isDebtorAccountExists = await models.Accounts.findOne({
               where: {
                 OrgId: orgId,
-                UserId: isDebitorUserExists.id,
+                UserId: isDebtorUserExists.id,
               },
-              // include: [
-              //   {
-              //     model: models.Users,
-              //     attributes: ['id', 'name'],
-              //     where: {
-              //       name: { [Op.iLike]: debitorAcc },
-              //     },
-              //   },
-              // ],
+
             });
-            // console.log('isDebitorAccountExists = ', isDebitorAccountExists);
-            // console.log('debitorAcc = ', debitorAcc);
-            // console.log('debitorAccEmail = ', debitorAccEmail);
-            // if (!isDebitorAccountExists) {
-            //   isDebitorAccountExists = await models.Accounts.create({
-            //     OrgId: orgId,
-            //     UserId: isDebitorUserExists.id,
-            //     isMember: false,
-            //     AccTypeId: accType.id,
-            //     cashOrBank: debitorAccCashOrBank
-            //   })
-            // }
-            // //#endregion
 
             // // //#region find or create creditor account
             let isCreditorUserExists;
@@ -633,64 +493,16 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
               });
             }
 
-            // let isCreditorUserExists = await models.Users.findOne({
-            //   where: {
-            //     name: {
-            //       [Op.iLike]: creditorAcc,
-            //     },
-            //     orgId,
-            //   },
-            // });
-
-            // if (!isCreditorUserExists) {
-            //   await t.rollback();
-            //   fs.unlinkSync(filePath);
-            //   return res.status(404).json({
-            //     success: false,
-            //     msg: `${creditorAcc} not found`,
-            //   });
-            // }
-
-            // const credAccType = await models.AccTypeMasters.findOne({
-            //   where: {
-            //     name: { [Op.iLike]: creditorAccType }
-            //   }
-            // })
-
-            // if (!credAccType) {
-            //   throw new Error(`${creditorAccType} is invalid account type`)
-            // }
-
             let isCreditorAccountExists = await models.Accounts.findOne({
               where: {
                 OrgId: orgId,
                 UserId: isCreditorUserExists.id,
               },
-              // include: [
-              //   {
-              //     model: models.Users,
-              //     attributes: ['id', 'name'],
-              //     where: {
-              //       name: { [Op.iLike]: creditorAcc },
-              //     },
-              //   },
-              // ],
             });
-            // console.log('isCreditorAccountExists = ', isCreditorAccountExists);
-            // console.log('creditorAcc = ', creditorAcc);
-            // console.log('creditorAccEmail = ', creditorAccEmail);
-            // if (!isCreditorAccountExists) {
-            //   isCreditorAccountExists = await models.Accounts.create({
-            //     OrgId: orgId,
-            //     UserId: isCreditorUserExists.id,
-            //     isMember: false,
-            //     AccTypeId: credAccType.id,
-            //     cashOrBank: creditorAccCashOrBank
-            //   })
-            // }
+            
             // //#endregion
-            console.log('debitorAcc = ', debitorAcc);
-            console.log('DebitorId = ', isDebitorAccountExists?.dataValues?.id);
+            console.log('debtorAcc = ', debtorAcc);
+            console.log('DebtorId = ', isDebtorAccountExists?.dataValues?.id);
             console.log('creditorAcc = ', creditorAcc);
 console.log('CreditorId = ', isCreditorAccountExists?.dataValues?.id);
             // creating journal
@@ -699,7 +511,7 @@ console.log('CreditorId = ', isCreditorAccountExists?.dataValues?.id);
                 OrgId: orgId,
                 date: date2,
                 particulars,
-                DebitorId: isDebitorAccountExists?.dataValues?.id,
+                DebtorId: isDebtorAccountExists?.dataValues?.id,
                 CreditorId: isCreditorAccountExists?.dataValues?.id,
               },
             });
@@ -708,7 +520,7 @@ console.log('CreditorId = ', isCreditorAccountExists?.dataValues?.id);
               fs.unlinkSync(filePath);
               return res.status(400).json({
                 success: false,
-                msg: `particulars = "${particulars}", Debtor = "${debitorAcc}", Creditor = "${creditorAcc}", date = "${rawDate}" and amount = "${amount}" already exists`,
+                msg: `particulars = "${particulars}", Debtor = "${debtorAcc}", Creditor = "${creditorAcc}", date = "${rawDate}" and amount = "${amount}" already exists`,
               });
             }
             await models.Journals.create(
@@ -716,12 +528,12 @@ console.log('CreditorId = ', isCreditorAccountExists?.dataValues?.id);
                 OrgId: orgId,
                 date: date2,
                 particulars,
-                DebitorId: isDebitorAccountExists?.dataValues?.id,
+                DebtorId: isDebtorAccountExists?.dataValues?.id,
                 CreditorId: isCreditorAccountExists?.dataValues?.id,
                 amount,
                 BkId: userId,
-                monthId: month2?.id,
-                yearId: year2?.id,
+                MonthId: month2?.id,
+                YearId: year2?.id,
                 isAdjustment: isAdjustment?.toLowerCase() === 'yes' ? true : false,
               },
               { transaction: t }
