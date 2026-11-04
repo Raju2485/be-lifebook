@@ -1,49 +1,58 @@
 const jwt = require('jsonwebtoken');
 import models from '../models';
 import { Op, Sequelize } from 'sequelize';
-import { getPreviousMonthAndYear } from './getPreviousMonthAndYear'
+import { getPreviousMonthAndYear } from './getPreviousMonthAndYear';
 
-
-export const getPreviouslyAvailableCfMonthAndYear = async ({ orgId, year, month }: { orgId: number, year: Object, month: Object }) => {
+export const getPreviouslyAvailableCfMonthAndYear = async ({
+  orgId,
+  year,
+  month,
+}: {
+  orgId: number;
+  year: Object;
+  month: Object;
+}) => {
   try {
     if (!orgId || !year || !month) {
-      return Promise.reject(
-        'orgId, year and month are incorrect'
-      );
+      return Promise.reject('orgId, year and month are incorrect');
     }
 
-    console.log('year =', year);
-    console.log('month =', month);
+    // console.log('year =', year);
+    // console.log('month =', month);
 
-    const { previousMonthNum, previousYear } = await getPreviousMonthAndYear({ month, year });
-    console.log('previousMonthNum =', previousMonthNum);
-    console.log('previousYear =', previousYear);
+    const { previousMonthNum, previousYear } = await getPreviousMonthAndYear({
+      month,
+      year,
+    });
+    // console.log('previousMonthNum =', previousMonthNum);
+    // console.log('previousYear =', previousYear);
 
     let previousCfYearId: number | false = false;
     let previousCfMonthId: number | false = false;
 
     const carriedForwards = await models.CarriedForwards.findAll({
       where: {
-        orgId: Number(orgId),
+        OrgId: Number(orgId),
       },
       include: [
         {
           model: models.Years,
-          where: { name: { [Op.lte]: previousYear } }
+          where: { name: { [Op.lte]: Number(previousYear) } },
         },
         {
           model: models.Months,
-          where: {
-            sequence: { [Op.lte]: Number(previousMonthNum) },
-          },
+          where: { sequence: { [Op.lte]: Number(previousMonthNum) } },
+          required: true,
         },
       ],
       order: [
-        ['Year.name', 'DESC'],
-        ['Month.sequence', 'DESC'],
+        [models.Years, 'name', 'DESC'],
+        [models.Months, 'sequence', 'DESC'],
       ],
       limit: 1,
     });
+
+    // console.log('carriedForwards =', carriedForwards?.[0]?.dataValues);
 
     if (carriedForwards.length > 0) {
       previousCfYearId = carriedForwards[0].YearId;
@@ -51,8 +60,8 @@ export const getPreviouslyAvailableCfMonthAndYear = async ({ orgId, year, month 
     }
 
     return Promise.resolve({
-      previousCfMonthNum: previousCfYearId,
-      previousCfYear: previousCfMonthId,
+      previousCfYearId: previousCfYearId,
+      previousCfMonthId: previousCfMonthId,
     });
   } catch (error) {
     return Promise.reject(error);

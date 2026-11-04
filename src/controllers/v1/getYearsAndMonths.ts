@@ -46,11 +46,12 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
       let yearsAndMonths = [];
       for (let i = 0; i < journals.length; i++) {
         const journal = journals[i];
+        console.log('journal = ', journal);
         const year = Number(journal['Year.name']);
-        const yearId = Number(journal['Year.id']);
+        const yearId = Number(journal.YearId);
         const monthName = toTitleCase(journal['Month.name']);
         const monthNum = journal['Month.sequence'];
-        const monthId = journal['Month.id'];
+        const monthId = journal.MonthId;
 
         const yearIndex = yearsAndMonths.findIndex((obj) => obj.year === year);
         if (yearIndex === -1) {
@@ -69,7 +70,7 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
         }
       }
 
-      yearsAndMonths.sort((a, b) => b.year - a.year);;
+      yearsAndMonths.sort((a, b) => b.year - a.year);
       yearsAndMonths.forEach((item) => {
         item.months.sort((a, b) => a.monthNum - b.monthNum);
       });;

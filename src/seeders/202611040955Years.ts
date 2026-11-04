@@ -2,48 +2,37 @@ import type { QueryInterface, Op } from 'sequelize';
 
 const YEARS_VALUES = [
   {
-    name: '2020',
-    sequence: 1,
+    name: '2020'
   },
   {
-    name: '2021',
-    sequence: 2,
+    name: '2021'
   },
   {
-    name: '2022',
-    sequence: 3,
+    name: '2022'
   },
   {
-    name: '2023',
-    sequence: 4,
+    name: '2023'
   },
   {
-    name: '2024',
-    sequence: 5,
+    name: '2024'
   },
   {
-    name: '2025',
-    sequence: 6,
+    name: '2025'
   },
   {
-    name: '2026',
-    sequence: 7,
+    name: '2026'
   },
   {
-    name: '2027',
-    sequence: 8,
+    name: '2027'
   },
   {
-    name: '2028',
-    sequence: 9,
+    name: '2028'
   },
   {
-    name: '2029',
-    sequence: 10,
+    name: '2029'
   },
   {
-    name: '2030',
-    sequence: 11,
+    name: '2030'
   },
 ];
 
@@ -54,7 +43,6 @@ export async function up(queryInterface: QueryInterface) {
     'Years',
     YEARS_VALUES.map((obj) => ({
       name: obj.name,
-      sequence: obj.sequence,
       createdAt: now,
       updatedAt: now,
     })),

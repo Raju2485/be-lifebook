@@ -150,24 +150,23 @@ export const generateAccountingReports = async (
     //#endregion
     const accountsIdsArray = Object.values(accountsIds);
     
+    const { previousCfYearId, previousCfMonthId } = await getPreviouslyAvailableCfMonthAndYear({
+      orgId: Number(orgId),
+      year,
+      month,
+    });
+
     if (month.type == 'months') {
 
-      const { previousCfYearId, previousCfMonthId } = await getPreviouslyAvailableCfMonthAndYear({
-        orgId: Number(orgId),
-        year,
-        month,
-      });
-console.log('previousCfYearId =', previousCfYearId);
-      console.log('previousCfMonthId =', previousCfMonthId);
+      // console.log('previousCfYearId =', previousCfYearId);
+      // console.log('previousCfMonthId =', previousCfMonthId);
       
       if (previousCfYearId && previousCfMonthId) {
         const carriedForwards = await models.CarriedForwards.findAll({
           where: {
-            [Op.and]: [
-              { AccountId: { [Op.notIn]: accountsIdsArray } },
-              { YearId: previousCfYearId },
-              { MonthId: previousCfMonthId },
-            ],
+              AccountId: { [Op.notIn]: accountsIdsArray },
+              YearId: previousCfYearId ,
+              MonthId: previousCfMonthId
           },
           attributes: ['AccountId', 'creditAmount', 'debitAmount'],
           include: [
@@ -183,20 +182,21 @@ console.log('previousCfYearId =', previousCfYearId);
               },
             },
           ],
-          raw: true,
+          // raw: true,
         });
         // console.log('carriedForwards =', carriedForwards);
         carriedForwards.forEach((obj) => {
-          const isAccountFound = accounts.find(
-            (account) => account.id === obj.AccountId
-          );
-          if (!isAccountFound) {
+          // const isAccountFound = accounts.find(
+          //   (account) => account.id === obj.AccountId
+          // );
+          // if (!isAccountFound) {
+            console.log('obj =', obj);
             accounts.push({
               id: obj.AccountId,
               name: obj.Account?.User?.name ?? '',
               uid: obj.Account?.User?.uid ?? '',
             });
-          }
+          // }
         });
       }
     }
@@ -227,10 +227,10 @@ console.log('previousCfYearId =', previousCfYearId);
         entries: [],
       };
       // Collecting last month carried forward
-      const { previousMonthNum, previousYear } = await getPreviousMonthAndYear({
-        month,
-        year,
-      });
+      // const { previousMonthNum, previousYear } = await getPreviousMonthAndYear({
+      //   month,
+      //   year,
+      // });
       // console.log(
       //   'previousMonthNum',
       //   previousMonthNum,
@@ -241,32 +241,39 @@ console.log('previousCfYearId =', previousCfYearId);
       //   month.toMonthNum == 1 ? 12 : month.toMonthNum - 1;
       // const previousYear =
       //   month.toMonthNum == 1 ? Number(year.name) - 1 : Number(year.name);
+      if (previousCfYearId && previousCfMonthId) {
+        const carriedForward = await models.CarriedForwards.findOne({
+          where: {
+            AccountId: accounts[i].id,
+            MonthId: previousCfMonthId,
+            YearId: previousCfYearId,
+          },
+        });
+        console.log('carriedForward =', carriedForward?.dataValues);
 
-      const carriedForward = await models.CarriedForwards.findOne({
-        where: {
-          AccountId: accounts[i].id,
-          monthNumber: previousMonthNum,
-          year: previousYear,
-        },
-      });
+        const carriedForwardDebitAmount = Number(carriedForward?.debitAmount) ?? 0;
+        const carriedForwardCreditAmount = Number(carriedForward?.creditAmount) ?? 0;
 
-      const carriedForwardDebitAmount = carriedForward?.debitAmount ?? 0;
-      const carriedForwardCreditAmount = carriedForward?.creditAmount ?? 0;
-
-      ledger.entries.push({
-        date: momentz(
-          `${year.name}-${month.fromMonthNum < 10 ? `0${month.fromMonthNum}` : month.fromMonthNum}-01`
-        ).format('MMM D'),
-        particulars: '',
-        accountName: 'Balance b/f',
-        debitAmount: carriedForwardCreditAmount
-          ? Number(carriedForwardCreditAmount)
-          : 0,
-        creditAmount: carriedForwardDebitAmount
-          ? Number(carriedForwardDebitAmount)
-          : 0,
-        isAdjustment: false,
-      });
+        if (carriedForwardDebitAmount + carriedForwardCreditAmount > 0) {
+          
+          console.log('carriedForwardDebitAmount =', carriedForwardDebitAmount);
+          console.log('carriedForwardCreditAmount =', carriedForwardCreditAmount);
+          ledger.entries.push({
+            date: momentz(
+              `${year.name}-${month.fromMonthNum < 10 ? `0${month.fromMonthNum}` : month.fromMonthNum}-01`
+            ).format('MMM D'),
+            particulars: '',
+            accountName: 'Balance b/f',
+            debitAmount: carriedForwardCreditAmount
+              ? Number(carriedForwardCreditAmount)
+              : 0,
+            creditAmount: carriedForwardDebitAmount
+              ? Number(carriedForwardDebitAmount)
+              : 0,
+            isAdjustment: false,
+          });
+        }
+      }
 
       // running loop on accountJournals and collecting records
       for (let j = 0; j < accountJournals.length; j++) {      

@@ -22,13 +22,13 @@ export async function up( queryInterface: QueryInterface ){
     // month: {
     //   type: DataTypes.STRING,
     // },
-    monthNumber: {
-      type: DataTypes.INTEGER,
-    },
-    year: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+    // monthNumber: {
+    //   type: DataTypes.INTEGER,
+    // },
+    // year: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
     OrgId: {
       type: DataTypes.INTEGER,
       allowNull: false,
