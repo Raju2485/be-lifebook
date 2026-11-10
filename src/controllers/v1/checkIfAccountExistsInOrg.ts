@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export const checkIfAccountExistsInOrg = async (
   req: Request,
   res: Response
 ) => {
   try {
-    let { orgId, name: email } = req.query;
+    const { orgId } = req.query;
+    let { name: email } = req.query;
     email = email?.toString().trim();
 
     // getting users
@@ -33,7 +35,7 @@ export const checkIfAccountExistsInOrg = async (
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

@@ -13,7 +13,7 @@ const fileStorageEngine = multer.diskStorage({
     cb(null, dir);
   },
   filename: (req, file, cb) => {
-    cb(null, `${uuidv4()}-${(file.originalname).replaceAll(/[^a-z0-9.]/gi, '')}`);
+    cb(null, `${uuidv4()}-${file.originalname.replace(/[^a-z0-9.]/gi, '')}`);
   },
 });
 

@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op } from 'sequelize';
+import { InferAttributes, Op, WhereOptions } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
+import { getErrorMessage } from '../../utils/getErrorMessage';
+import type { RoleMasters } from '../../models/roleMasters';
 
 export const getRoles = async (req: Request, res: Response) => {
   try {
@@ -9,10 +11,9 @@ export const getRoles = async (req: Request, res: Response) => {
 
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
-    const whereConditions = {
-    };
+    const whereConditions: WhereOptions<InferAttributes<RoleMasters>> = {};
     if (search) {
-      whereConditions.name = { [Op.iLike]: `%${search}%` };
+      whereConditions.name = { [Op.iLike]: `%${String(search)}%` };
     }
 
     // getting users
@@ -41,7 +42,7 @@ export const getRoles = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

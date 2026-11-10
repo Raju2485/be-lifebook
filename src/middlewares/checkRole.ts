@@ -1,18 +1,26 @@
-export const checkRole = (rolesArray) => {
-    return function (req, res, next) {
-        let orgId = req.query.orgId ?? req.body.orgId ?? req.params.orgId ?? null;
-        if (!orgId) {
-            return res.status(400).json({success: false, msg: 'orgId is missing in payload'})
-        }
+import { Request, Response, NextFunction } from 'express';
 
-        const org = req.user.orgsAndRoles.find(obj => obj.id == orgId)
-        if (!org) {            
-            return res.status(400).json({success: false, msg: 'organization not mapped'})
-        }
+export const checkRole = (rolesArray: string[]) => {
+  return function (req: Request, res: Response, next: NextFunction) {
+    const orgId =
+      req.query.orgId ?? req.body.orgId ?? req.params.orgId ?? null;
+    if (!orgId) {
+      return res
+        .status(400)
+        .json({ success: false, msg: 'orgId is missing in payload' });
+    }
 
-        if (org.roles.some(el => rolesArray.includes(el))) {
-            next();
-        }
-        else { return res.status(403).send("Forbidden"); }
-    };
-}
+    const org = req.user?.orgsAndRoles.find((obj) => obj.id == orgId);
+    if (!org) {
+      return res
+        .status(400)
+        .json({ success: false, msg: 'organization not mapped' });
+    }
+
+    if (org.roles.some((el) => rolesArray.includes(el))) {
+      next();
+    } else {
+      return res.status(403).send('Forbidden');
+    }
+  };
+};

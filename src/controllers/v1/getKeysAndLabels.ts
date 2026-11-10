@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export const getKeysAndLabels = async (req: Request, res: Response) => {
   try {
@@ -26,7 +27,7 @@ export const getKeysAndLabels = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

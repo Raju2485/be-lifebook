@@ -4,8 +4,10 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
 } from 'sequelize';
 import { sequelize } from '../config/database';
+import type { Accounts } from './accounts';
 
 export class CarriedForwards extends Model<
   InferAttributes<CarriedForwards>,
@@ -21,6 +23,8 @@ export class CarriedForwards extends Model<
   declare isActive: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare Account?: NonAttribute<Accounts>;
 }
 
 CarriedForwards.init(

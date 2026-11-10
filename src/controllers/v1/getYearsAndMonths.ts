@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
 import { toTitleCase } from '../../utils/toTitleCase';
+import { getErrorMessage } from '../../utils/getErrorMessage';
+
+type YearMonthBucket = {
+  id: number;
+  year: number;
+  months: { id: number; monthName: string; monthNum: number }[];
+};
 
 export const getYearsAndMonths = async (req: Request, res: Response) => {
   try {
@@ -17,7 +24,7 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
     if (type === 'financial-reports') {
       const journals = await models.Journals.findAll({
         where: {
-          OrgId: orgId,
+          OrgId: Number(orgId),
           isActive: true,
         },
         attributes: ['YearId', 'MonthId'],
@@ -33,20 +40,23 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
         group: ['YearId', 'MonthId', 'Month.id', 'Year.id'],
       });
 
-
-      let yearsAndMonths = [];
+      const yearsAndMonths: YearMonthBucket[] = [];
       for (let i = 0; i < journals.length; i++) {
-        const journal = journals[i];
+        const journal = journals[i] as unknown as Record<string, unknown>;
 
         const year = Number(journal['Year.name']);
         const yearId = Number(journal.YearId);
-        const monthName = toTitleCase(journal['Month.name']);
-        const monthNum = journal['Month.sequence'];
-        const monthId = journal.MonthId;
+        const monthName = toTitleCase(String(journal['Month.name'] ?? ''));
+        const monthNum = Number(journal['Month.sequence']);
+        const monthId = Number(journal.MonthId);
 
         const yearIndex = yearsAndMonths.findIndex((obj) => obj.year === year);
         if (yearIndex === -1) {
-          yearsAndMonths.push({ id: yearId, year, months: [{ id: monthId, monthName, monthNum }] });
+          yearsAndMonths.push({
+            id: yearId,
+            year,
+            months: [{ id: monthId, monthName, monthNum }],
+          });
         } else {
           const monthIndex = yearsAndMonths[yearIndex].months.findIndex(
             (obj) => obj.monthName === monthName
@@ -64,7 +74,7 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
       yearsAndMonths.sort((a, b) => b.year - a.year);
       yearsAndMonths.forEach((item) => {
         item.months.sort((a, b) => a.monthNum - b.monthNum);
-      });;
+      });
 
       return res.status(200).json({
         success: true,
@@ -82,7 +92,7 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

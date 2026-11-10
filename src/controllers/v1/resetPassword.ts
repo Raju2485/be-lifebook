@@ -1,9 +1,10 @@
+import { Request, Response } from 'express';
 import models from '../../models/index';
 import { hashSync, compareSync } from 'bcrypt';
-import { Op }  from 'sequelize';
+import { Op } from 'sequelize';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
-
-export const resetPassword = async (req, res) => {
+export const resetPassword = async (req: Request, res: Response) => {
   try {
     const { email, hash, password } = req.body;
 
@@ -13,15 +14,9 @@ export const resetPassword = async (req, res) => {
         msg: 'Please provide email, hash and password',
       });
     }
-    // Checking the existence of email.
-    let emailExistence = await models.Users.findOne({
+    const emailExistence = await models.Users.findOne({
       where: { email: { [Op.iLike]: email } },
-      attributes: [
-        'id',
-        'hash',
-        'password',
-        'hashExpiresAt'
-      ],
+      attributes: ['id', 'hash', 'password', 'hashExpiresAt'],
     });
 
     if (!emailExistence) {
@@ -37,41 +32,48 @@ export const resetPassword = async (req, res) => {
         msg: 'Invalid password reset link',
       });
     }
-    const hasExpiresAt = new Date(emailExistence.hashExpiresAt);
-    const currentDate = new Date();
-    console.log('hasExpiresAt = ', hasExpiresAt);
-    console.log('currentDate = ', currentDate);
-    if (hasExpiresAt && hasExpiresAt < currentDate) {
+
+    const expiresAt = emailExistence.hashExpiresAt;
+    if (expiresAt == null) {
       return res.status(400).json({
         success: false,
         msg: 'Password reset link has expired',
       });
-    } else {
-      if (
-        emailExistence.password &&
-        compareSync(password, emailExistence.password)
-      ) {
-        return res.status(400).json({
-          success: false,
-          msg: 'New password cannot be the same as the old one',
-        });
-      } else {
-        await emailExistence.update({
-          hash: null,
-          hashExpiresAt: null,
-          password: hashSync(password, 10),
-        });
-      }
     }
+
+    const hasExpiresAt = new Date(expiresAt);
+    const currentDate = new Date();
+    if (hasExpiresAt < currentDate) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Password reset link has expired',
+      });
+    }
+
+    if (
+      emailExistence.password &&
+      compareSync(password, emailExistence.password)
+    ) {
+      return res.status(400).json({
+        success: false,
+        msg: 'New password cannot be the same as the old one',
+      });
+    }
+
+    await emailExistence.update({
+      hash: null,
+      hashExpiresAt: null,
+      password: hashSync(password, 10),
+    });
 
     return res.status(200).json({
       success: true,
       msg: 'Password reset successfully!',
     });
-    //#endregion
-
   } catch (err) {
-    console.log('Error =', err + "");
-    return res.status(500).json({ success: false, msg: err.message });
+    console.log('Error =', err);
+    return res
+      .status(500)
+      .json({ success: false, msg: getErrorMessage(err) });
   }
 };

@@ -1,7 +1,10 @@
-const jwt = require('jsonwebtoken');
 import models from '../models';
-import { Op, Sequelize } from 'sequelize';
-import { getPreviousMonthAndYear } from './getPreviousMonthAndYear';
+import { Op } from 'sequelize';
+import {
+  getPreviousMonthAndYear,
+  type MonthInput,
+  type YearInput,
+} from './getPreviousMonthAndYear';
 
 export const getPreviouslyAvailableCfMonthAndYear = async ({
   orgId,
@@ -9,8 +12,8 @@ export const getPreviouslyAvailableCfMonthAndYear = async ({
   month,
 }: {
   orgId: number;
-  year: Object;
-  month: Object;
+  year: YearInput;
+  month: MonthInput;
 }) => {
   try {
     if (!orgId || !year || !month) {

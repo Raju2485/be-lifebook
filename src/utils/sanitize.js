@@ -10,7 +10,7 @@ const CSV_FORMULA_PATTERN = /^[=+\-@\t\r]/;
 
 const sanitizeCsvValue = (value) => {
   if (value === null || value === undefined) return '';
-  const str = String(value).replace(/\x00/g, '');
+  const str = String(value).replace(/\u0000/g, '');
   if (CSV_FORMULA_PATTERN.test(str)) {
     return `'${str}`;
   }
@@ -19,7 +19,7 @@ const sanitizeCsvValue = (value) => {
 
 const sanitizeString = (value) => {
   if (typeof value !== 'string') return value;
-  return value.replace(/\x00/g, '').trim();
+  return value.replace(/\u0000/g, '').trim();
 };
 
 const sanitizeObject = (obj) => {

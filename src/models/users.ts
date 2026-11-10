@@ -4,8 +4,11 @@ import {
   InferCreationAttributes,
   CreationOptional,
   DataTypes,
+  NonAttribute,
 } from 'sequelize';
 import { sequelize } from '../config/database'; // adjust import to your sequelize instance
+import type { Accounts } from './accounts';
+
 export class Users extends Model<
   InferAttributes<Users>,
   InferCreationAttributes<Users>
@@ -19,17 +22,19 @@ export class Users extends Model<
   declare mobileNumber: number | null;
   declare countryCode: string | null;
   declare isActive: CreationOptional<boolean>;
-  declare dob: Date;
+  declare dob: CreationOptional<Date | null>;
   declare tob: string | null;
   declare isVerified: CreationOptional<boolean>;
   declare TypeId: number | null;
   declare GenderId: number | null;
-  declare uid: number;
+  declare uid: CreationOptional<number | null>;
   declare hash: CreationOptional<string> | null;
   declare hashExpiresAt: CreationOptional<Date> | null;
   declare orgId: CreationOptional<number> | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare Accounts?: NonAttribute<Accounts[]>;
 }
 
 // Initialize model

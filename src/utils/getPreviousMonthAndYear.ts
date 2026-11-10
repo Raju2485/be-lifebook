@@ -1,14 +1,27 @@
-const jwt = require('jsonwebtoken');
+export type MonthInput = {
+  type: string;
+  name: string;
+  sequence: number;
+};
 
+export type YearInput = {
+  name: string;
+};
 
-export const getPreviousMonthAndYear = async ({ month, year}) => {
+export const getPreviousMonthAndYear = async ({
+  month,
+  year,
+}: {
+  month: MonthInput;
+  year: YearInput;
+}) => {
   try {
     if (!month.type || !year.name) {
-      return Promise.reject('month.type || year.name is incorrect')
+      return Promise.reject('month.type || year.name is incorrect');
     }
 
-    let previousMonthNum;
-    let previousYear;
+    let previousMonthNum: number;
+    let previousYear: number;
 
     if (
       (month.type == 'quarters' && month.name.toLowerCase() == '1st quarter') ||
@@ -36,12 +49,11 @@ export const getPreviousMonthAndYear = async ({ month, year}) => {
     ) {
       previousMonthNum = 9;
       previousYear = Number(year.name);
-    }
-    else {      
+    } else {
       previousMonthNum = month.sequence - 1;
       previousYear = Number(year.name);
     }
- 
+
     return Promise.resolve({
       previousMonthNum: previousMonthNum,
       previousYear: previousYear,

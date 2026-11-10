@@ -1,10 +1,19 @@
+import { Request, Response } from 'express';
 import models from '../../models/index';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
-export const signout = async (req, res) => {
-  const { id } = req.user;
-  const accessToken = req.headers.authorization.split(' ')[1];
+export const signout = async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  const accessToken = authHeader?.split(' ')[1];
 
   try {
+    if (!accessToken) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Authorization token is required',
+      });
+    }
+
     const isExists = await models.AccessAndRefreshTokens.findOne({
       where: { accessToken },
     });
@@ -26,7 +35,7 @@ export const signout = async (req, res) => {
     return res.status(500).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message
+      error: getErrorMessage(err),
     });
   }
 };

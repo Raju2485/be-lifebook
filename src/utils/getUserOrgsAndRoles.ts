@@ -1,28 +1,41 @@
 import models from '../models/index';
 import { compare } from 'bcrypt';
 import { Op } from 'sequelize';
-import { Response } from 'express';
+import type { OrgAndRole, RequestMeta } from '../types/auth';
+import { getErrorMessage } from './getErrorMessage';
+
+type GetUserOrgsAndRolesParams = {
+  email?: string;
+  password?: string;
+  userId?: number;
+};
+
+type GetUserOrgsAndRolesSuccess = {
+  newUser: RequestMeta;
+};
+
+type GetUserOrgsAndRolesFailure = {
+  error: {
+    status: number;
+    msg: string;
+  };
+};
+
+export type GetUserOrgsAndRolesResult =
+  | GetUserOrgsAndRolesSuccess
+  | GetUserOrgsAndRolesFailure;
 
 export const getUserOrganizationsAndRoles = async ({
   email,
   password,
   userId,
-  res,
-}: {
-  email: string;
-  password: string;
-  userId: number;
-  res: Response;
-}) => {
+}: GetUserOrgsAndRolesParams): Promise<GetUserOrgsAndRolesResult> => {
   try {
-    let whereConditions = {};
-    if (userId) {
-      whereConditions = { id: userId };
-    } else {
-      whereConditions = { email: { [Op.iLike]: email }, isActive: true };
-    }
+    const whereConditions = userId
+      ? { id: userId }
+      : { email: { [Op.iLike]: email }, isActive: true };
 
-    let user = await models.Users.findOne({
+    const user = await models.Users.findOne({
       where: whereConditions,
       include: [
         {
@@ -44,54 +57,58 @@ export const getUserOrganizationsAndRoles = async ({
         },
       ],
     });
+
     if (email && password && !user) {
-      return res.status(400).json({
-        success: false,
-        msg: 'Invalid email or password',
-      });
+      return {
+        error: {
+          status: 400,
+          msg: 'Invalid email or password',
+        },
+      };
     }
 
-    // user = JSON.parse(JSON.stringify(user))
-
-      if (email && password) {
-          const isPasswordCorrect = await compare(password, user.password || '');
-          if (!isPasswordCorrect) {
-              return res.status(400).json({
-                  success: false,
-                  msg: 'Invalid email or password',
-              });
-          }
+    if (email && password) {
+      const isPasswordCorrect = await compare(password, user?.password || '');
+      if (!isPasswordCorrect) {
+        return {
+          error: {
+            status: 400,
+            msg: 'Invalid email or password',
+          },
+        };
       }
-      
-      const userData = user?.toJSON ? user.toJSON() : user;
-      const orgsAndRoles =
-        userData?.Accounts?.map((account) => {
-          const org = {};
-          org.id = account?.Organization?.id || '';
-          org.name = account?.Organization?.name || '';
-          org.isAdmin = account?.isAdmin || false;
-          org.isMember = account?.isMember || false;
-          org.roles = account?.Roles?.map((role) => role.name) || [];
-          org.isAdmin && org.roles.push('admin')
-          org.isMember && org.roles.push('member');
-          return org;
-        }) || [];
-      const newUser = {
-        id: userData?.id,
-        name: userData?.name,
-        surName: userData?.surName,
-        email: userData?.email,
-        orgsAndRoles,
-      };
+    }
 
-      return { newUser };
+    const orgsAndRoles: OrgAndRole[] =
+      user?.Accounts?.map((account) => {
+        const org: OrgAndRole = {
+          id: account?.Organization?.id || '',
+          name: account?.Organization?.name || '',
+          isAdmin: account?.isAdmin || false,
+          isMember: account?.isMember || false,
+          roles: account?.Roles?.map((role) => role.name) || [],
+        };
+        if (org.isAdmin) org.roles.push('admin');
+        if (org.isMember) org.roles.push('member');
+        return org;
+      }) || [];
 
+    const newUser: RequestMeta = {
+      id: user?.id as number,
+      name: user?.name || '',
+      surName: user?.surName ?? null,
+      email: user?.email ?? null,
+      orgsAndRoles,
+    };
+
+    return { newUser };
   } catch (error) {
     console.error(error);
-    return res.status(400).json({
-      success: false,
-      msg: 'Something went wrong, we are looking into it',
-      error: error.message,
-    });
+    return {
+      error: {
+        status: 400,
+        msg: getErrorMessage(error) || 'Something went wrong, we are looking into it',
+      },
+    };
   }
 };

@@ -1,4 +1,5 @@
-import type { QueryInterface, Op } from 'sequelize';
+import type { QueryInterface } from 'sequelize';
+import { Op } from 'sequelize';
 import momentz from 'moment-timezone';
 
 const MONTHS_VALUES = [

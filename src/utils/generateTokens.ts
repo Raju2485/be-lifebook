@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 
-import config from '../config/config.ts';
+import config from '../config/config';
 
-import models from '../models/index.ts';
+import models from '../models/index';
 
-export const generateTokens = async (user) => {
+export const generateTokens = async (user: Record<string, any>) => {
   try {
     const payload = user;
     let expiresIn: any = '48h';

@@ -2,13 +2,68 @@ import { Request, Response } from 'express';
 import models from '../../models/index';
 import { Op } from 'sequelize';
 import momentz from 'moment-timezone';
-import { getPreviouslyAvailableCfMonthAndYear } from '../../utils/getPreviouslyAvailableCfMonthAndYear.ts';
+import { getPreviouslyAvailableCfMonthAndYear } from '../../utils/getPreviouslyAvailableCfMonthAndYear';
+import { getErrorMessage } from '../../utils/getErrorMessage';
+
+interface ReportAccount {
+  id: number;
+  name: string;
+  uid: string;
+  isAdjustment?: boolean;
+}
+
+interface JournalReportEntry {
+  date: string;
+  particulars: string;
+  amount: number;
+  debtor: string;
+  creditor: string;
+  isAdjustment: boolean;
+}
+
+interface LedgerReportEntry {
+  date: string;
+  particulars: string;
+  accountName: string;
+  debitAmount: number;
+  creditAmount: number;
+  isAdjustment: boolean;
+}
+
+interface LedgerReport {
+  name: string;
+  heading: string;
+  entries: LedgerReportEntry[];
+}
+
+interface TrialBalanceEntry {
+  accountName: string;
+  debitBalance: number;
+  creditBalance: number;
+  isAdjustment?: boolean;
+}
+
+interface ReportSection<TEntry> {
+  heading: string;
+  entries: TEntry[];
+}
+
+interface FinalAccountsReport {
+  journals: ReportSection<JournalReportEntry>;
+  ledgers: LedgerReport[];
+  trialBalanceUnadjusted: ReportSection<TrialBalanceEntry>;
+  trialBalanceAdjusted: ReportSection<TrialBalanceEntry>;
+  tradingAccount: ReportSection<Record<string, never>>;
+  pAndLAccount: ReportSection<Record<string, never>>;
+  balanceSheet: ReportSection<Record<string, never>>;
+}
+
 export const generateAccountingReports = async (
   req: Request,
   res: Response
 ) => {
   try {
-    let { orgId, monthId, yearId } = req.query;
+    const { orgId, monthId, yearId } = req.query;
     if (!orgId || !monthId || !yearId) {
       return res.status(400).json({
         success: false,
@@ -16,14 +71,18 @@ export const generateAccountingReports = async (
       });
     }
 
+    const orgIdNum = Number(orgId);
+    const monthIdNum = Number(monthId);
+    const yearIdNum = Number(yearId);
+
     const month = await models.Months.findOne({
       where: {
-        id: monthId,
+        id: monthIdNum,
       },
     });
     const year = await models.Years.findOne({
       where: {
-        id: yearId,
+        id: yearIdNum,
       },
     });
 
@@ -39,9 +98,9 @@ export const generateAccountingReports = async (
     const journals = await models.Journals.findAll({
       where: {
         isActive: true,
-        MonthId: monthId,
-        YearId: yearId,
-        OrgId: orgId,
+        MonthId: monthIdNum,
+        YearId: yearIdNum,
+        OrgId: orgIdNum,
       },
       attributes: [
         'CreditorId',
@@ -55,22 +114,26 @@ export const generateAccountingReports = async (
         {
           model: models.Accounts,
           as: 'Debtor',
-          include: {
-            model: models.Users,
-          },
+          include: [
+            {
+              model: models.Users,
+            },
+          ],
         },
         {
           model: models.Accounts,
           as: 'Creditor',
-          include: {
-            model: models.Users,
-          },
+          include: [
+            {
+              model: models.Users,
+            },
+          ],
         },
       ],
       order: [['date', 'ASC']],
     });
 
-    const finalAccounts = {
+    const finalAccounts: FinalAccountsReport = {
       journals: {
         heading: `Journals - ${month.name} ${year.name}`,
         entries: [],
@@ -98,8 +161,8 @@ export const generateAccountingReports = async (
       },
     };
 
-    let accounts = [];
-    const accountsIds = {};
+    let accounts: ReportAccount[] = [];
+    const accountsIds: Record<string, number> = {};
     journals?.forEach((obj) => {
       accountsIds[`${obj.CreditorId}`] = obj.CreditorId;
       accountsIds[`${obj.DebtorId}`] = obj.DebtorId;
@@ -111,7 +174,7 @@ export const generateAccountingReports = async (
         accounts.push({
           id: obj.CreditorId,
           name: obj.Creditor?.User?.name ?? '',
-          uid: obj.Creditor?.User?.uid ?? '',
+          uid: String(obj.Creditor?.User?.uid ?? ''),
         });
       }
       const isDebtorFound = accounts.find(
@@ -121,7 +184,7 @@ export const generateAccountingReports = async (
         accounts.push({
           id: obj.DebtorId,
           name: obj.Debtor?.User?.name ?? '',
-          uid: obj.Debtor?.User?.uid ?? '',
+          uid: String(obj.Debtor?.User?.uid ?? ''),
         });
       }
       // collecting journals data
@@ -131,7 +194,7 @@ export const generateAccountingReports = async (
         amount: Number(obj.amount),
         debtor: obj.Debtor?.User?.name ?? '',
         creditor: obj.Creditor?.User?.name ?? '',
-        isAdjustment: obj.isAdjustment ?? false,
+        isAdjustment: Boolean(obj.isAdjustment ?? false),
       });
     });
 
@@ -139,7 +202,7 @@ export const generateAccountingReports = async (
     const accountsIdsArray = Object.values(accountsIds);
     
     const { previousCfYearId, previousCfMonthId } = await getPreviouslyAvailableCfMonthAndYear({
-      orgId: Number(orgId),
+      orgId: orgIdNum,
       year,
       month,
     });
@@ -158,12 +221,14 @@ export const generateAccountingReports = async (
               model: models.Accounts,
               as: 'Account',
               where: {
-                OrgId: orgId,
+                OrgId: orgIdNum,
                 isClosed: false,
               },
-              include: {
-                model: models.Users,
-              },
+              include: [
+                {
+                  model: models.Users,
+                },
+              ],
             },
           ],
           // raw: true,
@@ -173,7 +238,7 @@ export const generateAccountingReports = async (
             accounts.push({
               id: obj.AccountId,
               name: obj.Account?.User?.name ?? '',
-              uid: obj.Account?.User?.uid ?? '',
+              uid: String(obj.Account?.User?.uid ?? ''),
             });
           // }
         });
@@ -190,7 +255,7 @@ export const generateAccountingReports = async (
       );
       const ledgerUserId = accounts[i].id;
 
-      const ledger = {
+      const ledger: LedgerReport = {
         name: `${accounts[i]?.name} (${accounts[i].uid})`,
         heading: accounts[i]?.name
           ? `${accounts[i].name} (${accounts[i].uid}) Account - ${month.name} ${year.name}`
@@ -207,8 +272,12 @@ export const generateAccountingReports = async (
         });
         console.log('carriedForward =', carriedForward?.dataValues);
 
-        const carriedForwardDebitAmount = Number(carriedForward?.debitAmount) ?? 0;
-        const carriedForwardCreditAmount = Number(carriedForward?.creditAmount) ?? 0;
+        const carriedForwardDebitAmount = Number(
+          carriedForward?.debitAmount ?? 0
+        );
+        const carriedForwardCreditAmount = Number(
+          carriedForward?.creditAmount ?? 0
+        );
 
         if (carriedForwardDebitAmount + carriedForwardCreditAmount > 0) {
           
@@ -248,7 +317,7 @@ export const generateAccountingReports = async (
               accountJournals[j]?.CreditorId == ledgerUserId
                 ? Number(accountJournals[j].amount)
                 : 0,
-            isAdjustment: accountJournals[j]?.isAdjustment ?? false,
+            isAdjustment: Boolean(accountJournals[j]?.isAdjustment ?? false),
           });
             if (accountJournals[j]?.isAdjustment) {
               console.log('accountName = ', ledger.entries[ledger.entries.length - 1]);
@@ -267,20 +336,20 @@ export const generateAccountingReports = async (
 
       ledger.entries.forEach((obj) => {
         if (!obj.isAdjustment) {
-          obj.creditAmount
-            ? (totalsUnadjusted.credit += Number(obj.creditAmount))
-            : '';
-          obj.debitAmount
-            ? (totalsUnadjusted.debit += Number(obj.debitAmount))
-            : '';
+          if (obj.creditAmount) {
+            totalsUnadjusted.credit += Number(obj.creditAmount);
+          }
+          if (obj.debitAmount) {
+            totalsUnadjusted.debit += Number(obj.debitAmount);
+          }
         }
 
-        obj.creditAmount
-          ? (totalsAdjusted.credit += Number(obj.creditAmount))
-          : '';
-        obj.debitAmount
-          ? (totalsAdjusted.debit += Number(obj.debitAmount))
-          : '';
+        if (obj.creditAmount) {
+          totalsAdjusted.credit += Number(obj.creditAmount);
+        }
+        if (obj.debitAmount) {
+          totalsAdjusted.debit += Number(obj.debitAmount);
+        }
       });
 
       const debitBalanceUnadjusted =
@@ -342,8 +411,8 @@ export const generateAccountingReports = async (
       let isCfExists = await models.CarriedForwards.findOne({
         where: {
           AccountId: accounts[i].id,
-          MonthId: monthId,
-          YearId: yearId,
+          MonthId: monthIdNum,
+          YearId: yearIdNum,
         },
       });
       if (isCfExists) {
@@ -356,9 +425,9 @@ export const generateAccountingReports = async (
           AccountId: accounts[i].id,
           debitAmount: debitBalanceAdjusted ? debitBalanceAdjusted : 0,
           creditAmount: creditBalanceAdjusted ? creditBalanceAdjusted : 0,
-          YearId: Number(yearId),
-          MonthId: Number(monthId),
-          OrgId: Number(orgId),
+          YearId: yearIdNum,
+          MonthId: monthIdNum,
+          OrgId: orgIdNum,
         });
       }
     }
@@ -428,9 +497,9 @@ export const generateAccountingReports = async (
 
     const isFinalAccountsExists = await models.FinalAccs.findAll({
       where: {
-        OrgId: Number(orgId),
-        YearId: Number(yearId),
-        MonthId: Number(monthId),
+        OrgId: orgIdNum,
+        YearId: yearIdNum,
+        MonthId: monthIdNum,
       },
       order: [['id', 'DESC']],
       limit: 1,
@@ -442,9 +511,12 @@ export const generateAccountingReports = async (
     }
 
     await models.FinalAccs.create({
-      OrgId: Number(orgId),
-      YearId: Number(yearId),
-      MonthId: Number(monthId),
+      OrgId: orgIdNum,
+      YearId: yearIdNum,
+      MonthId: monthIdNum,
+      isLatest: true,
+      isActive: true,
+      newChanges: false,
       jsonData: finalAccounts,
       sequence:
         isFinalAccountsExists?.length > 0
@@ -462,7 +534,7 @@ export const generateAccountingReports = async (
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

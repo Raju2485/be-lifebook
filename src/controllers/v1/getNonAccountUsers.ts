@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op } from 'sequelize'
-import { getLimitAndOffset, getNewPagination} from '../../utils/newPagination'
+import { InferAttributes, Op, WhereOptions } from 'sequelize';
+import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
+import { getErrorMessage } from '../../utils/getErrorMessage';
+import type { Users } from '../../models/users';
 
 export const getNonAccountUsers = async (req: Request, res: Response) => {
   try {
@@ -13,35 +15,40 @@ export const getNonAccountUsers = async (req: Request, res: Response) => {
     }
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
-    let whereConditions = {
+    let whereConditions: WhereOptions<InferAttributes<Users>> = {
       isActive: true,
       orgId: null,
     };
     if (search) {
+      const searchStr = String(search);
+      const orClause: WhereOptions<InferAttributes<Users>>[] = [
+        { name: { [Op.iLike]: `%${searchStr}%` } },
+        { middleName: { [Op.iLike]: `%${searchStr}%` } },
+        { surName: { [Op.iLike]: `%${searchStr}%` } },
+        { email: { [Op.iLike]: `%${searchStr}%` } },
+      ];
+      if (!isNaN(Number(searchStr))) {
+        orClause.push({ uid: Number(searchStr) });
+      }
       whereConditions = {
         isActive: true,
         orgId: null,
-        [Op.or]: [
-          { name: { [Op.iLike]: `%${search}%` } },
-          { middleName: { [Op.iLike]: `%${search}%` } },
-          { surName: { [Op.iLike]: `%${search}%` } },
-          { email: { [Op.iLike]: `%${search}%` } },
-        ],
+        [Op.or]: orClause,
       };
-      if (!isNaN(Number(search))) {
-        whereConditions[Op.or].push({ uid: Number(search) });
-      }
     }
 
     const accounts = await models.Accounts.findAll({
       where: {
-        OrgId: Number(orgId)
-      }
+        OrgId: Number(orgId),
+      },
     });
 
     const accountsUserIds = accounts?.map((account) => account.UserId);
-    whereConditions.id = { [Op.notIn]: accountsUserIds };
-    // getting users
+    whereConditions = {
+      ...whereConditions,
+      id: { [Op.notIn]: accountsUserIds },
+    };
+
     const { count, rows } = await models.Users.findAndCountAll({
       where: whereConditions,
       attributes: [
@@ -58,7 +65,6 @@ export const getNonAccountUsers = async (req: Request, res: Response) => {
       order: [['name', 'ASC']],
     });
 
-    console.log('rows = ', JSON.stringify(rows))
     const pagination = getNewPagination({
       count,
       page: page || 1,
@@ -76,7 +82,7 @@ export const getNonAccountUsers = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

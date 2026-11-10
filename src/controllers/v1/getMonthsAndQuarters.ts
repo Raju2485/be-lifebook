@@ -1,16 +1,20 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op } from 'sequelize';
+import { InferAttributes, Op, WhereOptions } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
-
+import { getErrorMessage } from '../../utils/getErrorMessage';
+import type { Months } from '../../models/months';
 
 export const getMonthsAndQuarters = async (req: Request, res: Response) => {
   try {
-    let { type, page, perPage, search } = req.query;
+    const { page, perPage } = req.query;
+    let { type, search } = req.query;
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
     type = String(type);
-    search ? search = String(search) : null;
+    if (search) {
+      search = String(search);
+    }
     if (!type) {
       return res.status(400).json({
         success: false,
@@ -18,9 +22,10 @@ export const getMonthsAndQuarters = async (req: Request, res: Response) => {
       });
     }
 
-    const typeQuery = type === 'monthsAndQuarters' ? {[Op.or]: ['months', 'quarters']} : type;
+    const typeQuery =
+      type === 'monthsAndQuarters' ? { [Op.or]: ['months', 'quarters'] } : type;
 
-    const whereConditions = {
+    const whereConditions: WhereOptions<InferAttributes<Months>> = {
       type: typeQuery,
       isActive: true,
     };
@@ -46,14 +51,12 @@ export const getMonthsAndQuarters = async (req: Request, res: Response) => {
       pagination: pagination,
       metaData: req?.meta ?? null,
     });
-
-
   } catch (err) {
     console.log(err);
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

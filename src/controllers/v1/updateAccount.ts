@@ -1,5 +1,11 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
+import { getErrorMessage } from '../../utils/getErrorMessage';
+import type { Accounts } from '../../models/accounts';
+
+type AccountsWithRoles = Accounts & {
+  setRoles: (roleIds: number[]) => Promise<unknown>;
+};
 
 export const updateAccount = async (req: Request, res: Response) => {
   try {
@@ -12,8 +18,7 @@ export const updateAccount = async (req: Request, res: Response) => {
         metaData: req?.meta ?? null,
       });
     }
-console.log('account = ', JSON.stringify(account));
-    let { id, RolesIds, isAdjustAcc } = account;
+    const { id, RolesIds, isAdjustAcc } = account;
 
     const isExists = await models.Accounts.findOne({
       where: {
@@ -23,11 +28,12 @@ console.log('account = ', JSON.stringify(account));
     });
 
     if (isExists) {
-      await isExists?.update({ isAdjustAcc });
-      await isExists?.setRoles([]);
-      // if (RolesIds?.length > 0) {
-        await isExists?.setRoles(RolesIds);
-      // }
+      const accountRow = isExists as AccountsWithRoles;
+      if (isAdjustAcc !== undefined) {
+        await isExists.update({ isAdjustAcc } as Parameters<Accounts['update']>[0]);
+      }
+      await accountRow.setRoles([]);
+      await accountRow.setRoles(RolesIds ?? []);
 
       return res.status(200).json({
         success: true,
@@ -46,7 +52,7 @@ console.log('account = ', JSON.stringify(account));
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

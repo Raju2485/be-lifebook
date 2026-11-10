@@ -1,27 +1,31 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op } from 'sequelize';
+import { InferAttributes, Op, WhereOptions } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
+import { getErrorMessage } from '../../utils/getErrorMessage';
+import type { Cards } from '../../models/cards';
 
 export const getCards = async (req: Request, res: Response) => {
   try {
-    let { type, search, page, perPage } = req.query;
+    const { type, page, perPage } = req.query;
+    let { search } = req.query;
     if (!type) {
-      return res.status(400).json({success: false, msg: 'type is mandatory'})
+      return res.status(400).json({ success: false, msg: 'type is mandatory' });
     }
     if (search) {
       search = String(search);
     }
-    // const { id: userId } = req.user;
 
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
-    let whereConditions = {
-      type,
+    let whereConditions: WhereOptions<InferAttributes<Cards>> = {
+      type: String(type),
       isActive: true,
     };
     if (search) {
       whereConditions = {
+        type: String(type),
+        isActive: true,
         [Op.or]: [
           {
             name: { [Op.iLike]: `%${search}%` },
@@ -30,7 +34,6 @@ export const getCards = async (req: Request, res: Response) => {
       };
     }
 
-    // getting users
     const { count, rows } = await models.Cards.findAndCountAll({
       where: whereConditions,
       limit,
@@ -55,7 +58,7 @@ export const getCards = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

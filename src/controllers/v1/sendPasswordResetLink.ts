@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import models from '../../models/index';
 import config from '../../config/config';
 import { sendEmail } from '../../utils/sendEmail2';
@@ -5,15 +6,16 @@ import fs from 'fs';
 import path from 'path';
 import randomstring from 'randomstring';
 import { Op } from 'sequelize';
-  import {
-    HumanizeDurationLanguage,
-    HumanizeDuration,
-  } from 'humanize-duration-ts';
+import {
+  HumanizeDurationLanguage,
+  HumanizeDuration,
+} from 'humanize-duration-ts';
+import moment from 'moment-timezone';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 const humanizeDuration = new HumanizeDuration(new HumanizeDurationLanguage());
-const momentz = require('moment-timezone');
 
-export const sendPasswordResetLink = async (req, res) => {
+export const sendPasswordResetLink = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
 
@@ -23,8 +25,7 @@ export const sendPasswordResetLink = async (req, res) => {
         message: 'Please provide email',
       });
     }
-    // Checking the existence of email.
-    let emailExistence = await models.Users.findOne({
+    const emailExistence = await models.Users.findOne({
       where: { email: { [Op.iLike]: email } },
       attributes: ['id', 'name'],
     });
@@ -35,7 +36,7 @@ export const sendPasswordResetLink = async (req, res) => {
       });
     }
 
-    let hash = randomstring.generate();
+    const hash = randomstring.generate();
     const hashValidityInMilliSeconds = 1000 * 60 * 5;
     const humanizedDurationInMinutes = humanizeDuration.humanize(
       hashValidityInMilliSeconds,
@@ -48,23 +49,23 @@ export const sendPasswordResetLink = async (req, res) => {
     );
     await emailExistence.update({
       hash: hash,
-      hashExpiresAt: momentz(new Date()).add(hashValidityInMilliSeconds, 'milliseconds').format(),
+      hashExpiresAt: moment(new Date())
+        .add(hashValidityInMilliSeconds, 'milliseconds')
+        .toDate(),
     });
-    //#region sending email
-    let logoPath = `${path.join(process.cwd())}/src/assets/logo.png`;
+
+    const logoPath = `${path.join(process.cwd())}/src/assets/logo.png`;
     const logo = `data:image/png;base64, ${fs.readFileSync(logoPath, 'base64')}`;
 
     const subject = 'Reset your password';
-    let recipient_first_name = emailExistence?.name;
-    let hyperlink = `${config.FE_DOMAIN}/resetPassword?email=${email}&hash=${hash}`;
-    // console.log('hyperlink = ', hyperlink)
+    const recipient_first_name = emailExistence?.name;
+    const hyperlink = `${config.FE_DOMAIN}/resetPassword?email=${email}&hash=${hash}`;
     const context = {
       logo,
       recipient_first_name,
       hyperlink,
       humanizedDurationInMinutes,
     };
-    // Uncomment below line to make the email work.
     await sendEmail({
       toEmail: email,
       subject,
@@ -76,13 +77,12 @@ export const sendPasswordResetLink = async (req, res) => {
       success: true,
       msg: 'Password reset link has been sent to your email',
     });
-    //#endregion
   } catch (err) {
     console.log('Error =', err);
     return res.status(500).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

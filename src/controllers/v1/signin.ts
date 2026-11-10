@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 const { generateTokens } = require('../../utils/generateTokens');
 import { getUserOrganizationsAndRoles } from '../../utils/getUserOrgsAndRoles';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export const signin = async (req: Request, res: Response) => {
   try {
@@ -12,11 +13,19 @@ export const signin = async (req: Request, res: Response) => {
         .json({ success: false, msg: 'Email and password are required' });
     }
 
-    const { newUser } = await getUserOrganizationsAndRoles({
+    const result = await getUserOrganizationsAndRoles({
       email,
       password,
-      res,
     });
+
+    if ('error' in result) {
+      return res.status(result.error.status).json({
+        success: false,
+        msg: result.error.msg,
+      });
+    }
+
+    const { newUser } = result;
     const { accessToken, refreshToken } = await generateTokens(newUser);
 
     return res.status(200).json({
@@ -31,7 +40,7 @@ export const signin = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

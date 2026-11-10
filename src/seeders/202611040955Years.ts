@@ -1,4 +1,5 @@
-import type { QueryInterface, Op } from 'sequelize';
+import type { QueryInterface } from 'sequelize';
+import { Op } from 'sequelize';
 
 const YEARS_VALUES = [
   {

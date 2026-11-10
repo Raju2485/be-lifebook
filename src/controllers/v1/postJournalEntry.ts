@@ -2,11 +2,19 @@ import { Request, Response } from 'express';
 import models from '../../models/index';
 import { Op } from 'sequelize';
 import momentz from 'moment-timezone';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export const postJournalEntry = async (req: Request, res: Response) => {
   try {
-    const { orgId, date, particulars, DebtorId, CreditorId, amount, isAdjustment } =
-      req.body;
+    const {
+      orgId,
+      date,
+      particulars,
+      DebtorId,
+      CreditorId,
+      amount,
+      isAdjustment,
+    } = req.body;
 
     const monthName = momentz(date).format('MMMM');
     const yearName = momentz(date).year();
@@ -25,12 +33,22 @@ export const postJournalEntry = async (req: Request, res: Response) => {
       },
     });
 
+    if (!req.user) {
+      return res.status(401).json({ success: false, msg: 'Unauthorized' });
+    }
     const { id: userId } = req.user;
 
     if (DebtorId == CreditorId) {
       return res
         .status(400)
         .json({ success: false, msg: "Dr. and Cr. accounts can't be same" });
+    }
+
+    if (month?.id == null || year?.id == null) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Could not resolve month or year for this date',
+      });
     }
 
     await models.Journals.create({
@@ -41,8 +59,8 @@ export const postJournalEntry = async (req: Request, res: Response) => {
       CreditorId,
       amount,
       BkId: userId,
-      MonthId: month?.id,
-      YearId: year?.id,
+      MonthId: month.id,
+      YearId: year.id,
       isAdjustment,
     });
 
@@ -56,7 +74,7 @@ export const postJournalEntry = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

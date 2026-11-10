@@ -40,7 +40,8 @@ router.post('/signin', signin);
 router.post('/refresh-token', refreshToken);
 router.post('/pdfmake-test', pdfMakeTest);
 
-(router.use(verifyAuth), router.use(attachMetadataToRequest));
+router.use(verifyAuth);
+router.use(attachMetadataToRequest);
 router.get('/profile', profile);
 router.post('/signout', signout);
 router.post('/create-organization', createOrg);

@@ -4,8 +4,10 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
 } from 'sequelize';
 import { sequelize } from '../config/database';
+import type { Accounts } from './accounts';
 
 export class Journals extends Model<
   InferAttributes<Journals>,
@@ -25,6 +27,10 @@ export class Journals extends Model<
   declare isAdjustment: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare Debtor?: NonAttribute<Accounts>;
+  declare Creditor?: NonAttribute<Accounts>;
+  declare BookKeeper?: NonAttribute<Accounts>;
 }
 
 Journals.init(

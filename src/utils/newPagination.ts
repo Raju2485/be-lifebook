@@ -1,71 +1,83 @@
-const getLimitAndOffset = ({ page, perPage }) => {
-    if (!page || isNaN(parseInt(page, 10)) || parseInt(page, 10) <= 0) {
-      page = 0;
-    } else {
-      page = parseInt(page, 10) - 1;
-    }
-  
-    if (
-      !perPage ||
-      isNaN(parseInt(perPage, 10)) ||
-      parseInt(perPage, 10) <= 0
-    ) {
-      perPage = 10;
-    } else {
-      perPage = parseInt(perPage, 10);
-    }
-  
-    const limit = perPage;
-    const offset = perPage * page;
-  
-    return { limit, offset };
-  };
-  
-const getNewPagination = ({ count, page, perPage }) => {
+type PaginationInput = {
+  page?: unknown;
+  perPage?: unknown;
+};
 
-  if (!count || isNaN(parseInt(count, 10)) || parseInt(count, 10) < 0) {
-    count = 0;
+type PaginationWithCountInput = PaginationInput & {
+  count?: unknown;
+};
+
+const getLimitAndOffset = ({ page, perPage }: PaginationInput) => {
+  let pageNum: number;
+  if (!page || isNaN(parseInt(String(page), 10)) || parseInt(String(page), 10) <= 0) {
+    pageNum = 0;
   } else {
-    count = parseInt(count, 10);
+    pageNum = parseInt(String(page), 10) - 1;
   }
 
-  if (!page || isNaN(parseInt(page, 10)) || parseInt(page, 10) <= 0) {
-    page = 1;
-  } else {
-    page = parseInt(page, 10);
-  }
-
+  let perPageNum: number;
   if (
     !perPage ||
-    isNaN(parseInt(perPage, 10)) ||
-    parseInt(perPage, 10) <= 0
+    isNaN(parseInt(String(perPage), 10)) ||
+    parseInt(String(perPage), 10) <= 0
   ) {
-    perPage = 10;
+    perPageNum = 10;
   } else {
-    perPage = parseInt(perPage, 10);
+    perPageNum = parseInt(String(perPage), 10);
   }
 
-  let total_pages = Math.ceil(count / perPage) || 1;
+  const limit = perPageNum;
+  const offset = perPageNum * pageNum;
 
-  let previous_page = null;
-  if (page > 1) {
-    previous_page = page - 1;
+  return { limit, offset };
+};
+
+const getNewPagination = ({ count, page, perPage }: PaginationWithCountInput) => {
+  let countNum: number;
+  if (!count || isNaN(parseInt(String(count), 10)) || parseInt(String(count), 10) < 0) {
+    countNum = 0;
+  } else {
+    countNum = parseInt(String(count), 10);
   }
 
-  let next_page = null;
-  if (page < total_pages) {
-    next_page = page + 1;
+  let pageNum: number;
+  if (!page || isNaN(parseInt(String(page), 10)) || parseInt(String(page), 10) <= 0) {
+    pageNum = 1;
+  } else {
+    pageNum = parseInt(String(page), 10);
+  }
+
+  let perPageNum: number;
+  if (
+    !perPage ||
+    isNaN(parseInt(String(perPage), 10)) ||
+    parseInt(String(perPage), 10) <= 0
+  ) {
+    perPageNum = 10;
+  } else {
+    perPageNum = parseInt(String(perPage), 10);
+  }
+
+  const total_pages = Math.ceil(countNum / perPageNum) || 1;
+
+  let previous_page: number | null = null;
+  if (pageNum > 1) {
+    previous_page = pageNum - 1;
+  }
+
+  let next_page: number | null = null;
+  if (pageNum < total_pages) {
+    next_page = pageNum + 1;
   }
 
   return {
     previousPage: previous_page,
-    currentPage: page,
+    currentPage: pageNum,
     nextPage: next_page,
     totalPages: total_pages,
-    totalPerPage: perPage,
-    totalRecords: count,
+    totalPerPage: perPageNum,
+    totalRecords: countNum,
   };
 };
-  
+
 export { getLimitAndOffset, getNewPagination };
-  

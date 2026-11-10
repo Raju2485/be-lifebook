@@ -23,7 +23,10 @@ Handlebars.registerHelper('formatNumber', function(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 });
 
-export const compile = async (templateName, data) => {
+export const compile = async (
+  templateName: string,
+  data: Record<string, unknown>
+) => {
   const filePath = path.join(
     process.cwd(),
     'src',

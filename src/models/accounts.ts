@@ -4,8 +4,12 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
 } from 'sequelize';
 import { sequelize } from '../config/database';
+import type { Users } from './users';
+import type { Organizations } from './organizations';
+import type { RoleMasters } from './roleMasters';
 
 export class Accounts extends Model<
   InferAttributes<Accounts>,
@@ -22,6 +26,10 @@ export class Accounts extends Model<
   declare isActive: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare User?: NonAttribute<Users>;
+  declare Organization?: NonAttribute<Organizations>;
+  declare Roles?: NonAttribute<RoleMasters[]>;
 }
 
 Accounts.init(

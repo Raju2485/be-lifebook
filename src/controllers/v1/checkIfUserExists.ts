@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import models from '../../models/index';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export const checkIfUserExists = async (
   req: Request,
@@ -26,7 +27,7 @@ export const checkIfUserExists = async (
     return res.status(400).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message,
+      error: getErrorMessage(err),
     });
   }
 };

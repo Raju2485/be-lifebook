@@ -1,4 +1,4 @@
-const monthsNumbers = {
+const monthsNumbers: Record<string, number> = {
   january: 1,
   february: 2,
   march: 3,
@@ -19,7 +19,7 @@ const monthsNumbers = {
   yearly: 12.2,
 };
 
-const monthsNames = {
+const monthsNames: Record<string, string> = {
   '1': 'january',
   '2': 'february',
   '3': 'march',
@@ -40,10 +40,10 @@ const monthsNames = {
   '12.2': 'yearly',
 };
 
-export const monthNameToNumber = (monthName) => {
+export const monthNameToNumber = (monthName: string): number | undefined => {
   return monthsNumbers[monthName.toLowerCase()];
 };
 
-export const monthNumberToName = (monthNumber) => {
+export const monthNumberToName = (monthNumber: string | number): string | undefined => {
   return monthsNames[String(monthNumber)];
 };

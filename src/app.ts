@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction, Application } from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
@@ -102,7 +102,7 @@ app.use(
     err: Error,
     req: express.Request,
     res: express.Response,
-    next: express.NextFunction
+    _next: express.NextFunction
   ) => {
     console.error('Global error handler:', err);
     res.status(500).json({ error: 'Internal server error' });

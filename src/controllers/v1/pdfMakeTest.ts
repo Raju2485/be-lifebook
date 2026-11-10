@@ -23,7 +23,7 @@ const pdfMakeTest = async (req: Request, res: Response): Promise<void> => {
       json = JSON.parse(json);
     }
 
-    var docDefinition = {
+    const docDefinition = {
       pageMargins: [40, 40, 40, 160],
       content: [
         { text: 'This is a header', style: 'header' },

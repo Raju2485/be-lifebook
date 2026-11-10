@@ -1,10 +1,18 @@
+import { Request, Response } from 'express';
 import { compare } from 'bcrypt';
 import models from '../../models/index';
 import bcrypt from 'bcrypt';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
-export const changePassword = async (req, res) => {
+export const changePassword = async (req: Request, res: Response) => {
   try {
     const { oldPassword, newPassword } = req.body;
+    if (!req.user?.email) {
+      return res.status(401).json({
+        success: false,
+        msg: 'Unauthorized',
+      });
+    }
     const { email } = req.user;
     if (!oldPassword || !newPassword) {
       return res.status(400).json({
@@ -19,25 +27,27 @@ export const changePassword = async (req, res) => {
       });
     }
 
-    // Checking the existence of email.
-    let emailExistence = await models.Users.findOne({
+    const emailExistence = await models.Users.findOne({
       where: { email },
       attributes: ['id', 'password', 'isActive'],
     });
 
-    emailExistence = emailExistence?.toJSON();
+    if (!emailExistence) {
+      return res.status(400).json({
+        success: false,
+        msg: 'User not found',
+      });
+    }
 
-    if (emailExistence?.isActive === false) {
+    if (emailExistence.isActive === false) {
       return res.status(500).json({
         success: false,
         msg: 'Your account has been deactivated. Please contact the administrator',
       });
     }
 
-    const isPasswordCorrect = await compare(
-      oldPassword,
-      emailExistence?.password
-    );
+    const storedPassword = emailExistence.password ?? '';
+    const isPasswordCorrect = await compare(oldPassword, storedPassword);
 
     if (isPasswordCorrect) {
       await models.Users.update(
@@ -45,7 +55,7 @@ export const changePassword = async (req, res) => {
           password: bcrypt.hashSync(newPassword, 10),
         },
         {
-          where: { id: emailExistence?.id },
+          where: { id: emailExistence.id },
         }
       );
       return res.status(200).json({
@@ -58,13 +68,12 @@ export const changePassword = async (req, res) => {
         msg: 'Incorrect old password',
       });
     }
-
   } catch (err) {
     console.log('Error =', err);
     return res.status(500).json({
       success: false,
       msg: 'Something went wrong, we are looking into it',
-      error: err.message
+      error: getErrorMessage(err),
     });
   }
 };
