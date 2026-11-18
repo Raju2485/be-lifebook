@@ -588,12 +588,12 @@
  *               message: Something went wrong. Our team is working to fix this issue.
  */
 
-// Get Account Types
+// Get Account Categories
 /**
  * @swagger
- * /api/v1/get-account-types:
+ * /api/v1/get-account-categories:
  *   get:
- *     summary: "get account types"
+ *     summary: "get account categories"
  *     tags:
  *       - Book Keeper
  *     security:
@@ -735,55 +735,26 @@
  *                 items:
  *                   type: object
  *                   required:
- *                     - AccTypeId
+ *                     - name
+ *                     - AccCategId
  *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: John Doe
+ *                       description: Account name
  *                     UserId:
  *                       type: integer
  *                       example: 1
- *                       description: api is '/api/v1/get-non-account-users'
- *                     isPerson:
- *                       type: boolean
- *                       example: true
- *                       description: true if the account is a person.
- *                     email:
- *                       type: string
- *                       example: bheema@mailinator.com
- *                       description: enter email.
- *                     name:
- *                       type: string
- *                       example: cash
- *                       description: enter name if the desired user not found in dropdown. show either users dropdown or name field.
- *                     middleName:
- *                       type: string
- *                       example: cash
- *                       description: enter middle name.
- *                     surname:
- *                       type: string
- *                       example: cash
- *                       description: enter surname.
- *                     AccTypeId:
+ *                       description: api is '/api/v1/get-users'
+ *                     AccCategId:
  *                       type: integer
  *                       example: 4
  *                       description: api is '/api/v1/get-account-types'
- *                     isMember:
- *                       type: boolean
- *                       example: false
- *                       description: Don't populate if selected user has orgId
- *                     RolesIds:
- *                       type: array
- *                       items:
- *                         type: integer
- *                       example: [1, 2]
- *                       description: api is '/api/v1/get-roles'. Dropdown should populate if isMember = true. Not a mandatory field
  *                     natureOfAccount:
  *                       type: string
  *                       enum: [null, cash, bank]
  *                       example: cash
  *                       description: Radio buttons should populate if isMember = true. Not a mandatory field
- *                     isAdjustAcc:
- *                       type: boolean
- *                       example: false
- *                       description: true if the account is an adjust account. Not a mandatory field
  *     responses:
  *       200:
  *         description: successful
@@ -1130,9 +1101,9 @@
  *                   id:
  *                     type: integer
  *                     example: 1
- *                   RolesIds:
- *                     type: array
- *                     example: [1, 2]
+ *                   isActive:
+ *                     type: boolean
+ *                     example: true
  *
  *     responses:
  *       200:
@@ -1242,6 +1213,108 @@
  *          type: string
  *          example: /api/v1/get-accounting-reports
  *         required: true
+ *     responses:
+ *       200:
+ *         description: successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: some message
+ *       500:
+ *         description: Some error occured.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Something went wrong. Our team is working to fix this issue.
+ */
+
+// Map User Org and Roles
+/**
+ * @swagger
+ * /api/v1/map-user-org-and-roles:
+ *   post:
+ *     summary: "Map User Org and Roles"
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - UserId
+ *               - OrgId
+ *               - RolesIds
+ *             properties:
+ *               UserId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: 'method: GET, API:/api/v1/get-users'
+ *               OrgId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: 'Pass the currently logged in Organization Id'
+ *               RolesIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                   example: 1
+ *                 description: 'method: GET, API:/api/v1/get-users'
+
+ *
+ *     responses:
+ *       200:
+ *         description: Generated PDF
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
+ */
+
+
+// Get User Org and Roles
+/**
+ * @swagger
+ * /api/v1/get-user-org-and-roles:
+ *   get:
+ *     summary: "get user org and roles"
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: OrgId
+ *         schema:
+ *          type: integer
+ *          example: 1
+ *         required: true
+ *         description: get this from the currently logged in organization
+ *       - in: query
+ *         name: search
+ *         schema:
+ *          type: string
+ *       - in: query
+ *         name: page
+ *         schema:
+ *          type: integer
+ *         example: 1
+ *       - in: query
+ *         name: perPage
+ *         schema:
+ *          type: integer
+ *         example: 10
+ *       - in: query
+ *         name: UserId
+ *         schema:
+ *          type: integer
+ *         description: 'get this from the User record'
  *     responses:
  *       200:
  *         description: successful

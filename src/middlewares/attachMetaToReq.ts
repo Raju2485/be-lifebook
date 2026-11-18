@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getUserOrganizationsAndRoles } from '../utils/getUserOrgsAndRoles';
+import { getStaffRoles } from '../utils/getStaffRoles';
 import { getErrorMessage } from '../utils/getErrorMessage';
 
 export const attachMetadataToRequest = async (
@@ -9,7 +9,7 @@ export const attachMetadataToRequest = async (
 ) => {
   try {
     const userId = req?.user?.id;
-    const result = await getUserOrganizationsAndRoles({ userId });
+    const result = await getStaffRoles({ userId });
 
     if ('error' in result) {
       return res.status(result.error.status).json({

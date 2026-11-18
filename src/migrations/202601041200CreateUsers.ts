@@ -11,12 +11,17 @@ export async function up( queryInterface: QueryInterface ){
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      unique: true,
+    },
+    handle: {
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     name: {
       type: DataTypes.STRING, 
@@ -59,19 +64,11 @@ export async function up( queryInterface: QueryInterface ){
     GenderId: {
       type: DataTypes.INTEGER,
     },
-    uid: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      unique: true,
-    },
     hash: {
       type: DataTypes.STRING,
     },
     hashExpiresAt: {
       type: DataTypes.DATE,
-    },
-    orgId: {
-      type: DataTypes.INTEGER,
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -84,12 +81,6 @@ export async function up( queryInterface: QueryInterface ){
       defaultValue: DataTypes.NOW
     },
   });
-  await queryInterface.sequelize.query(
-    `CREATE SEQUENCE users_uid_seq START 1000;
-  ALTER TABLE "Users"
-  ALTER COLUMN "uid"
-  SET DEFAULT nextval('users_uid_seq');`
-  );
 };
 
 export async function down(queryInterface: QueryInterface ){

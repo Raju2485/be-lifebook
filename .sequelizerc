@@ -1,5 +1,6 @@
 // .sequelizerc
 require('dotenv').config();
+require('ts-node/register');
 const path = require('path');
 
 module.exports = {

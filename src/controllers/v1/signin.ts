@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 const { generateTokens } = require('../../utils/generateTokens');
-import { getUserOrganizationsAndRoles } from '../../utils/getUserOrgsAndRoles';
+import { getStaffRoles } from '../../utils/getStaffRoles';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export const signin = async (req: Request, res: Response) => {
@@ -13,7 +13,7 @@ export const signin = async (req: Request, res: Response) => {
         .json({ success: false, msg: 'Email and password are required' });
     }
 
-    const result = await getUserOrganizationsAndRoles({
+    const result = await getStaffRoles({
       email,
       password,
     });

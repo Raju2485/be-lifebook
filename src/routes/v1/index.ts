@@ -12,9 +12,10 @@ import { changePassword } from '../../controllers/v1/changePassword';
 import { sendPasswordResetLink } from '../../controllers/v1/sendPasswordResetLink';
 import { resetPassword } from '../../controllers/v1/resetPassword';
 import { getUsers } from '../../controllers/v1/getUsers';
-import { getNonAccountUsers } from '../../controllers/v1/getNonAccountUsers';
+// import { getNonAccountUsers } from '../../controllers/v1/getNonAccountUsers';
 import { getRoles } from '../../controllers/v1/getRoles';
-import { getAccountTypes } from '../../controllers/v1/getAccountTypes';
+// import { getAccountTypes } from '../../controllers/v1/getAccountTypes';
+import { getAccountCategories } from '../../controllers/v1/getAccountCategories';
 import { createAccount } from '../../controllers/v1/createAccount';
 import { getAccounts } from '../../controllers/v1/getAccounts';
 import { checkIfAccountExistsInOrg } from '../../controllers/v1/checkIfAccountExistsInOrg';
@@ -34,6 +35,9 @@ import { checkRole } from '../../middlewares/checkRole';
 import { upload } from '../../utils/multer';
 import { getCards } from '../../controllers/v1/getDashboardCards';
 import { pdfMakeTest } from '../../controllers/v1/pdfMakeTest';
+import { mapStaffMember } from '../../controllers/v1/mapStaffMember';
+import { getStaffMembers } from '../../controllers/v1/getStaffMembers';
+import { updateStaffMember } from '../../controllers/v1/updateStaffMember';
 
 router.post('/signup', signup);
 router.post('/signin', signin);
@@ -60,9 +64,9 @@ router.post('/change-password', changePassword);
 router.post('/send-password-reset-link', sendPasswordResetLink);
 router.post('/reset-password', resetPassword);
 router.get('/get-users', getUsers);
-router.get('/get-non-account-users', getNonAccountUsers);
+// router.get('/get-non-account-users', getNonAccountUsers);
 router.get('/get-roles', getRoles);
-router.get('/get-account-types', getAccountTypes);
+router.get('/get-account-categories', getAccountCategories);
 router.post(
   '/create-accounts',
   checkRole(['book keeper', 'admin']),
@@ -104,5 +108,9 @@ router.post('/update-account', checkRole(['admin']), updateAccount);
 
 router.get('/get-months-and-quarters', getMonthsAndQuarters);
 router.get('/get-keys-and-labels', getKeysAndLabels);
+router.post('/map-staff-member', checkRole(['admin']), mapStaffMember);
+router.get('/get-staff-members', checkRole(['admin']), getStaffMembers);
+router.post('/update-staff-member', checkRole(['admin']), updateStaffMember);
+
 
 export default router;

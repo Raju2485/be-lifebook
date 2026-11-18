@@ -2,14 +2,14 @@ import { DataTypes } from 'sequelize';
 import type { QueryInterface } from 'sequelize';
 
 export async function up( queryInterface: QueryInterface ){
-  await queryInterface.createTable('AccRoles', {
+  await queryInterface.createTable('StaffRoles', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
     },
-    AccountId: {
+    OrgUserId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -36,5 +36,5 @@ export async function up( queryInterface: QueryInterface ){
 };
 
 export async function down(queryInterface: QueryInterface ){
-  await queryInterface.dropTable('AccRoles');
+  await queryInterface.dropTable('StaffRoles');
 };

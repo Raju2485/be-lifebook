@@ -7,19 +7,20 @@ import {
 } from 'sequelize';
 import { sequelize } from '../config/database';
 
-export class AccRoles extends Model<
-  InferAttributes<AccRoles>,
-  InferCreationAttributes<AccRoles>
+export class Staff extends Model<
+  InferAttributes<Staff>,
+  InferCreationAttributes<Staff>
 > {
   declare id: CreationOptional<number>;
-  declare AccountId: number;
-  declare RoleId: number;
+  declare UserId: number;
+  declare OrgId: number;
   declare isActive: CreationOptional<boolean>;
+  declare isAdmin: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
 
-AccRoles.init(
+Staff.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -27,13 +28,18 @@ AccRoles.init(
       primaryKey: true,
       allowNull: false,
     },
-    AccountId: {
+    UserId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    RoleId: {
+    OrgId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     isActive: {
       type: DataTypes.BOOLEAN,
@@ -53,7 +59,7 @@ AccRoles.init(
   },
   {
     sequelize,
-    tableName: 'AccRoles',
+    tableName: 'Staff',
     timestamps: true,
   }
 );

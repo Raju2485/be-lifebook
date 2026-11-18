@@ -18,7 +18,7 @@ export const updateAccount = async (req: Request, res: Response) => {
         metaData: req?.meta ?? null,
       });
     }
-    const { id, RolesIds, isAdjustAcc } = account;
+    const { id, UserId } = account;
 
     const isExists = await models.Accounts.findOne({
       where: {
@@ -28,16 +28,13 @@ export const updateAccount = async (req: Request, res: Response) => {
     });
 
     if (isExists) {
-      const accountRow = isExists as AccountsWithRoles;
-      if (isAdjustAcc !== undefined) {
-        await isExists.update({ isAdjustAcc } as Parameters<Accounts['update']>[0]);
-      }
-      await accountRow.setRoles([]);
-      await accountRow.setRoles(RolesIds ?? []);
+      await isExists.update({ UserId });
+      // await accountRow.setRoles([]);
+      // await accountRow.setRoles(RolesIds ?? []);
 
       return res.status(200).json({
         success: true,
-        msg: 'Account updated successfully!',
+        msg: 'Account linked successfully!',
         metaData: req?.meta ?? null,
       });
     } else {

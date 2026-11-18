@@ -14,7 +14,8 @@ export class Users extends Model<
   InferCreationAttributes<Users>
 > {
   declare id: CreationOptional<number>;
-  declare email: string | null;
+  declare email: string;
+  declare handle: string | null;
   declare password: string | null;
   declare name: string;
   declare middleName: string | null;
@@ -27,10 +28,8 @@ export class Users extends Model<
   declare isVerified: CreationOptional<boolean>;
   declare TypeId: number | null;
   declare GenderId: number | null;
-  declare uid: CreationOptional<number | null>;
   declare hash: CreationOptional<string> | null;
   declare hashExpiresAt: CreationOptional<Date> | null;
-  declare orgId: CreationOptional<number> | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -47,7 +46,11 @@ Users.init(
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      unique: true,
+    },
+    handle: {
+      type: DataTypes.STRING,
       unique: true,
     },
     password: {
@@ -100,19 +103,11 @@ Users.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    uid: {
-      type: DataTypes.INTEGER,
-      unique: true,
-    },
     hash: {
       type: DataTypes.STRING,
     },
     hashExpiresAt: {
       type: DataTypes.DATE,
-    },
-    orgId: {
-      type: DataTypes.INTEGER,
-      // This column describes that this user is not a Person and is dedicated to 1 organization only.
     },
     createdAt: {
       type: DataTypes.DATE,

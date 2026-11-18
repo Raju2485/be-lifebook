@@ -7,45 +7,36 @@ import type { Users } from '../../models/users';
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const { orgId, search, page, perPage } = req.query;
-    if (!orgId) {
-      return res.status(400).json({ success: false, msg: 'orgId is mandatory' });
-    }
+    const {
+      // orgId,
+      search,
+      page,
+      perPage,
+    } = req.query;
+    // if (!orgId) {
+    //   return res.status(400).json({ success: false, msg: 'orgId is mandatory' });
+    // }
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
     let whereConditions: WhereOptions<InferAttributes<Users>> = {
       isActive: true,
-      orgId: null,
     };
     if (search) {
       const searchStr = String(search);
       const orClause: WhereOptions<InferAttributes<Users>>[] = [
         { name: { [Op.iLike]: `%${searchStr}%` } },
-        { middleName: { [Op.iLike]: `%${searchStr}%` } },
-        { surName: { [Op.iLike]: `%${searchStr}%` } },
-        { email: { [Op.iLike]: `%${searchStr}%` } },
+        { handle: { [Op.iLike]: `%${searchStr}%` } },
       ];
-      if (!isNaN(Number(searchStr))) {
-        orClause.push({ uid: Number(searchStr) });
-      }
+
       whereConditions = {
         isActive: true,
-        orgId: null,
         [Op.or]: orClause,
       };
     }
 
     const { count, rows } = await models.Users.findAndCountAll({
       where: whereConditions,
-      attributes: [
-        'id',
-        'name',
-        'middleName',
-        'surName',
-        'email',
-        'uid',
-        'orgId',
-      ],
+      attributes: ['id', 'name', 'middleName', 'surName', 'email', 'handle'],
       limit,
       offset,
       order: [['name', 'ASC']],

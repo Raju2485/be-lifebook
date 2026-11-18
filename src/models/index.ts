@@ -4,11 +4,9 @@ import { Users } from './users';
 import { AccessAndRefreshTokens } from './accessAndRefreshTokens';
 import { RelationMasters } from './relationMasters';
 import { UsrConns } from './usrConns';
-import { AccTypeMasters } from './accTypeMasters';
 import { Organizations } from './organizations';
 import { Accounts } from './accounts';
 import { RoleMasters } from './roleMasters';
-import { AccRoles } from './accRoles';
 import { Journals } from './journals';
 import { CarriedForwards } from './carriedForwards';
 import { Cards } from './cards';
@@ -17,17 +15,30 @@ import { FinalAccs } from './finalAccs';
 import { Months } from './months';
 import { Years } from './years';
 import { KeysAndLabels } from './keysAndLabels';
+import { AccCategs } from './accCategs';
+import { Staff } from './staff';
+import { StaffRoles } from './staffRoles';
 
-TypeMasters.hasMany(Users, {foreignKey: 'TypeId'});
-Users.belongsTo(TypeMasters, {foreignKey: 'TypeId'});
+TypeMasters.hasMany(Users, { foreignKey: 'TypeId' });
+Users.belongsTo(TypeMasters, { foreignKey: 'TypeId' });
 
-GenderMasters.hasMany(Users, {foreignKey: 'GenderId'});
-Users.belongsTo(GenderMasters, {foreignKey: 'GenderId'});
+GenderMasters.hasMany(Users, { foreignKey: 'GenderId' });
+Users.belongsTo(GenderMasters, { foreignKey: 'GenderId' });
 
-Users.belongsToMany(Users, {as: 'Connections', through: UsrConns, foreignKey: 'UserId', otherKey: 'ConnId'});
-Users.belongsToMany(Users, {as: 'Users',through: UsrConns, foreignKey: 'ConnId', otherKey: 'UserId'});
+Users.belongsToMany(Users, {
+  as: 'Connections',
+  through: UsrConns,
+  foreignKey: 'UserId',
+  otherKey: 'ConnId',
+});
+Users.belongsToMany(Users, {
+  as: 'Users',
+  through: UsrConns,
+  foreignKey: 'ConnId',
+  otherKey: 'UserId',
+});
 
-RelationMasters.hasMany(UsrConns, {foreignKey:'RelId'});
+RelationMasters.hasMany(UsrConns, { foreignKey: 'RelId' });
 UsrConns.belongsTo(RelationMasters, { foreignKey: 'RelId' });
 
 Users.hasMany(Accounts, { foreignKey: 'UserId' });
@@ -36,21 +47,62 @@ Accounts.belongsTo(Users, { foreignKey: 'UserId' });
 Organizations.hasMany(Accounts, { foreignKey: 'OrgId' });
 Accounts.belongsTo(Organizations, { foreignKey: 'OrgId' });
 
-AccTypeMasters.hasMany(Accounts, { foreignKey: 'AccTypeId' });
-Accounts.belongsTo(AccTypeMasters, { foreignKey: 'AccTypeId' });
+AccCategs.hasMany(Accounts, { foreignKey: 'AccCategId' });
+Accounts.belongsTo(AccCategs, { foreignKey: 'AccCategId' });
 
-Accounts.belongsToMany(RoleMasters, {
-  as: 'Roles',
-  through: AccRoles,
-  foreignKey: 'AccountId',
+//#region Super many to many association
+Users.belongsToMany(Organizations, {
+  through: Staff,
+  foreignKey: 'UserId',
+  otherKey: 'OrgId',
+});
+Organizations.belongsToMany(Users, {
+  through: Staff,
+  foreignKey: 'OrgId',
+  otherKey: 'UserId',
+});
+
+Users.hasMany(Staff, {
+  foreignKey: 'UserId',
+});
+Staff.belongsTo(Users, {
+  foreignKey: 'UserId',
+});
+
+Organizations.hasMany(Staff, {
+  foreignKey: 'OrgId',
+});
+Staff.belongsTo(Organizations, {
+  foreignKey: 'OrgId',
+});
+//#endregion
+
+//#region Super many to many association
+Staff.belongsToMany(RoleMasters, {
+  through: StaffRoles,
+  foreignKey: 'StaffId',
   otherKey: 'RoleId',
 });
-RoleMasters.belongsToMany(Accounts, {
-  as: 'Accounts',
-  through: AccRoles,
+RoleMasters.belongsToMany(Staff, {
+  through: StaffRoles,
   foreignKey: 'RoleId',
-  otherKey: 'AccountId',
+  otherKey: 'StaffId',
 });
+
+Staff.hasMany(StaffRoles, {
+  foreignKey: 'StaffId',
+});
+StaffRoles.belongsTo(Staff, {
+  foreignKey: 'StaffId',
+});
+
+RoleMasters.hasMany(StaffRoles, {
+  foreignKey: 'RoleId',
+});
+StaffRoles.belongsTo(RoleMasters, {
+  foreignKey: 'RoleId',
+});
+//#endregion
 
 Accounts.hasMany(Journals, { as: 'Debtor', foreignKey: 'DebtorId' });
 Journals.belongsTo(Accounts, { as: 'Debtor', foreignKey: 'DebtorId' });
@@ -89,11 +141,9 @@ export default {
   AccessAndRefreshTokens,
   RelationMasters,
   UsrConns,
-  AccTypeMasters,
   Organizations,
   Accounts,
   RoleMasters,
-  AccRoles,
   Journals,
   CarriedForwards,
   Cards,
@@ -102,4 +152,7 @@ export default {
   Months,
   Years,
   KeysAndLabels,
+  AccCategs,
+  Staff,
+  StaffRoles,
 };

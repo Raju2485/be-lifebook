@@ -8,19 +8,19 @@ export const checkIfUserExists = async (
   res: Response
 ) => {
   try {
-    let { email } = req.query;
-    email = email?.toString().trim();
+    let { handle } = req.query;
+    handle = handle?.toString().trim();
 
     // getting users
     const isUserExists = await models.Users.findOne({
       where: {
-        email: { [Op.iLike]: `${email}` },
+        handle: { [Op.iLike]: `${handle}` },
       },
     });
 
     return res.status(200).json({
       success: true,
-      data: isUserExists ? true : false,
+      data: !!isUserExists,
     });
   } catch (err) {
     console.log(err);

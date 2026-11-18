@@ -27,7 +27,7 @@ export const getOrganizations = async (req: Request, res: Response) => {
         },
         include: [
           {
-            model: models.Accounts,
+            model: models.Staff,
             where: {
               UserId: userId,
             },
@@ -35,7 +35,6 @@ export const getOrganizations = async (req: Request, res: Response) => {
             include: [
               {
                 model: models.RoleMasters,
-                as: 'Roles',
                 through: {
                   attributes: [],
                 },
@@ -55,7 +54,7 @@ export const getOrganizations = async (req: Request, res: Response) => {
       where: whereConditions,
       include: [
         {
-          model: models.Accounts,
+          model: models.Staff,
           where: {
             UserId: userId,
           },

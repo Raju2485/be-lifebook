@@ -1,4 +1,4 @@
-export type OrgAndRole = {
+export type StaffAndRoles = {
   id: number | string;
   name: string;
   isAdmin: boolean;
@@ -11,7 +11,7 @@ export type RequestMeta = {
   name: string;
   surName: string | null;
   email: string | null;
-  orgsAndRoles: OrgAndRole[];
+  staffAndRoles: StaffAndRoles[];
 };
 
 export type JwtUserPayload = RequestMeta & {

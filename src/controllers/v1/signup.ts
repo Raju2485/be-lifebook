@@ -175,7 +175,6 @@ const signup = async (req: Request, res: Response): Promise<void> => {
     // Return success response (exclude password from response)
     const userResponse = {
       id: newUser.id,
-      uid: newUser.uid,
       email: newUser.email,
       name: newUser.name,
       middleName: newUser.middleName,

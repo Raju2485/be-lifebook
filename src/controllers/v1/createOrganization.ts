@@ -22,23 +22,31 @@ export const createOrg = async (req: Request, res: Response) => {
     } else {
       const org = await models.Organizations.create({ name });
 
-      let accType = await models.AccTypeMasters.findOne({
-        where: { name: { [Op.iLike]: 'personal' } },
-      });
-      if (!accType) {
-        accType = await models.AccTypeMasters.create({
-          name: 'personal',
-          goldenRule: 'Debit the receiver, Credit the giver',
-        });
-      }
+      // let accCateg = await models.AccCategs.findOne({
+      //   where: { name: { [Op.iLike]: 'asset' } },
+      // });
+      // if (!accCateg) {
+      //   accCateg = await models.AccCategs.create({
+      //     name: 'Asset',
+      //     debitCreditRule: 'Debit the increase and credit the decrease',
+      //     isActive: true,
+      //   });
+      // }
 
-      await models.Accounts.create({
+      // await models.Accounts.create({
+      //   OrgId: org.id,
+      //   UserId: userId,
+      //   AccCategId: accCateg.id,
+      //   isAdmin: true,
+      //   isMember: true,
+      // });
+
+      await models.Staff.create({
         OrgId: org.id,
         UserId: userId,
-        AccTypeId: accType.id,
         isAdmin: true,
-        isMember: true,
       });
+
       return res.status(200).json({
         success: true,
         msg: 'Organization created successfully!',

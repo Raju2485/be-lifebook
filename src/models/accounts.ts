@@ -9,18 +9,16 @@ import {
 import { sequelize } from '../config/database';
 import type { Users } from './users';
 import type { Organizations } from './organizations';
-import type { RoleMasters } from './roleMasters';
-
+import type { AccCategs } from './accCategs';
 export class Accounts extends Model<
   InferAttributes<Accounts>,
   InferCreationAttributes<Accounts>
 > {
   declare id: CreationOptional<number>;
-  declare UserId: number;
+  declare name: string;
   declare OrgId: number;
-  declare AccTypeId: number;
-  declare isAdmin: CreationOptional<boolean>;
-  declare isMember: CreationOptional<boolean>;
+  declare AccCategId: number;
+  declare UserId: CreationOptional<number>;
   declare isClosed: CreationOptional<boolean>;
   declare natureOfAccount: CreationOptional<'cash' | 'bank' | null>;
   declare isActive: CreationOptional<boolean>;
@@ -28,8 +26,8 @@ export class Accounts extends Model<
   declare updatedAt: CreationOptional<Date>;
 
   declare User?: NonAttribute<Users>;
+  declare AccCateg?: NonAttribute<AccCategs>;
   declare Organization?: NonAttribute<Organizations>;
-  declare Roles?: NonAttribute<RoleMasters[]>;
 }
 
 Accounts.init(
@@ -40,27 +38,20 @@ Accounts.init(
       primaryKey: true,
       allowNull: false,
     },
-    UserId: {
-      type: DataTypes.INTEGER,
+    name: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     OrgId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    AccTypeId: {
+    AccCategId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    isAdmin: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    },
-    isMember: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
+    UserId: {
+      type: DataTypes.INTEGER,
     },
     isClosed: {
       type: DataTypes.BOOLEAN,
@@ -96,5 +87,11 @@ Accounts.init(
     sequelize,
     tableName: 'Accounts',
     timestamps: true,
-  }
-);
+    indexes: [
+      {
+        unique: true,
+        fields: ['OrgId', 'name'],
+        name: 'Accounts_OrgId_name_uk',
+      },
+    ],
+  })

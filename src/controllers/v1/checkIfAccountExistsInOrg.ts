@@ -9,26 +9,29 @@ export const checkIfAccountExistsInOrg = async (
 ) => {
   try {
     const { orgId } = req.query;
-    let { name: email } = req.query;
-    email = email?.toString().trim();
+    let { name } = req.query;
+    name = name?.toString().trim();
 
     // getting users
     const isAccountExists = await models.Accounts.findOne({
       where: {
         OrgId: Number(orgId),
-        isActive: true,
+        [Op.or]: [
+          { name: { [Op.iLike]: name } },
+          { '$User.handle$': { [Op.iLike]: name } },
+        ],
       },
       include: [
         {
           model: models.Users,
-          where: { [Op.or]: [{ email: { [Op.iLike]: `${email}` } }, { name: { [Op.iLike]: `${email}` } }] },
+          required: false,
         },
       ],
     });
 
     return res.status(200).json({
       success: true,
-      data: isAccountExists ? true : false,
+      data: !!isAccountExists,
     });
   } catch (err) {
     console.log(err);

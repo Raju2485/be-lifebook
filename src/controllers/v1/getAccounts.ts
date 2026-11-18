@@ -15,41 +15,30 @@ export const getAccounts = async (req: Request, res: Response) => {
 
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
-    let userWhere: WhereOptions<InferAttributes<Users>> | undefined;
+    let whereConditions = {
+      OrgId: Number(orgId),
+    };
     if (search) {
-      const orClause: WhereOptions<InferAttributes<Users>>[] = [
-        { name: { [Op.iLike]: `%${search}%` } },
-        { email: { [Op.iLike]: `%${search}%` } },
-      ];
-      if (!isNaN(Number(search))) {
-        orClause.push({ uid: Number(search) });
-      }
-      userWhere = { [Op.or]: orClause };
+      whereConditions = {
+        ...whereConditions,
+        [Op.or]: [
+          { name: { [Op.iLike]: `%${search}%` } },
+          { '$User.handle$': { [Op.iLike]: `%${search}%` } },
+        ],
+      };
     }
 
     const { count, rows } = await models.Accounts.findAndCountAll({
-      where: {
-        OrgId: Number(orgId),
-        isActive: true,
-      },
-      attributes: ['id'],
+      where: whereConditions,
+      attributes: ['id', 'name', 'UserId', 'isActive'],
       include: [
         {
           model: models.Users,
-          ...(userWhere ? { where: userWhere, required: true } : {}),
-          attributes: ['id', 'name', 'middleName', 'surName', 'email', 'uid'],
+          attributes: ['id', 'name', 'middleName', 'surName', 'handle'],
         },
         {
-          model: models.AccTypeMasters,
-          attributes: ['id', 'name', 'goldenRule'],
-        },
-        {
-          model: models.RoleMasters,
-          as: 'Roles',
-          attributes: ['id', 'name'],
-          through: {
-            attributes: [],
-          },
+          model: models.AccCategs,
+          attributes: ['id', 'name', 'debitCreditRule'],
         },
       ],
       distinct: true,

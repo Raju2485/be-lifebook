@@ -11,25 +11,18 @@ export async function up(queryInterface: QueryInterface) {
     },
     UserId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     OrgId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    AccTypeId: {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    AccCategId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    isAdmin: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    },
-    isMember: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
     },
     isClosed: {
       type: DataTypes.BOOLEAN,
@@ -54,6 +47,12 @@ export async function up(queryInterface: QueryInterface) {
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+  });
+
+  await queryInterface.addConstraint('Accounts', {
+    fields: ['OrgId', 'name'],
+    type: 'unique',
+    name: 'Accounts_OrgId_name_uk',
   });
 }
 
