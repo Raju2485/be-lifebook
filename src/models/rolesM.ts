@@ -1,0 +1,56 @@
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
+import { sequelize } from '../config/database';
+
+export class RolesM extends Model<
+  InferAttributes<RolesM>,
+  InferCreationAttributes<RolesM>
+> {
+  declare id: CreationOptional<number>;
+  declare name: string;
+  declare code: number;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+}
+
+RolesM.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    code: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    sequelize,
+    tableName: 'RolesM',
+    timestamps: true,
+  }
+);
+

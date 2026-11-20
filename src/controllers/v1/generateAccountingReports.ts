@@ -97,8 +97,8 @@ export const generateAccountingReports = async (
     const journals = await models.Journals.findAll({
       where: {
         isActive: true,
-        MonthId: monthIdNum,
-        YearId: yearIdNum,
+        MonthsM_Id: monthIdNum,
+        YearsM_Id: yearIdNum,
         OrgId: orgIdNum,
       },
       attributes: [
@@ -212,8 +212,8 @@ export const generateAccountingReports = async (
         const carriedForwards = await models.CarriedForwards.findAll({
           where: {
             AccountId: { [Op.notIn]: accountsIdsArray },
-            YearId: previousCfYearId,
-            MonthId: previousCfMonthId,
+            YearsM_Id: previousCfYearId,
+            MonthsM_Id: previousCfMonthId,
           },
           attributes: ['AccountId', 'creditAmount', 'debitAmount'],
           include: [
@@ -267,8 +267,8 @@ export const generateAccountingReports = async (
         const carriedForward = await models.CarriedForwards.findOne({
           where: {
             AccountId: accounts[i].id,
-            MonthId: previousCfMonthId,
-            YearId: previousCfYearId,
+            MonthsM_Id: previousCfMonthId,
+            YearsM_Id: previousCfYearId,
           },
         });
         console.log('carriedForward =', carriedForward?.dataValues);
@@ -303,7 +303,6 @@ export const generateAccountingReports = async (
       // running loop on accountJournals and collecting records
       for (let j = 0; j < accountJournals.length; j++) {
         if (accountJournals[j]?.CreditorId == ledgerUserId) {
-
           ledger.debitSide.push({
             date: momentz(accountJournals[j].date).format('MMM D'),
             particulars: accountJournals[j].particulars,
@@ -317,8 +316,7 @@ export const generateAccountingReports = async (
           //     ledger.entries[ledger.entries.length - 1]
           //   );
           // }
-        }
-        else {
+        } else {
           ledger.creditSide.push({
             date: momentz(accountJournals[j].date).format('MMM D'),
             particulars: accountJournals[j].particulars,
@@ -335,8 +333,12 @@ export const generateAccountingReports = async (
       };
 
       const totalsAdjustments = {
-        debit: ledger.debitSide.filter((obj) => obj.isAdjustment).reduce((sum, obj) => sum + obj.amount, 0),
-        credit: ledger.creditSide.filter((obj) => obj.isAdjustment).reduce((sum, obj) => sum + obj.amount, 0),
+        debit: ledger.debitSide
+          .filter((obj) => obj.isAdjustment)
+          .reduce((sum, obj) => sum + obj.amount, 0),
+        credit: ledger.creditSide
+          .filter((obj) => obj.isAdjustment)
+          .reduce((sum, obj) => sum + obj.amount, 0),
       };
 
       const totalsAdjusted = {
@@ -420,8 +422,8 @@ export const generateAccountingReports = async (
       let isCfExists = await models.CarriedForwards.findOne({
         where: {
           AccountId: accounts[i].id,
-          MonthId: monthIdNum,
-          YearId: yearIdNum,
+          MonthsM_Id: monthIdNum,
+          YearsM_Id: yearIdNum,
         },
       });
       if (isCfExists) {
@@ -434,8 +436,8 @@ export const generateAccountingReports = async (
           AccountId: accounts[i].id,
           debitAmount: debitBalanceAdjusted ? debitBalanceAdjusted : 0,
           creditAmount: creditBalanceAdjusted ? creditBalanceAdjusted : 0,
-          YearId: yearIdNum,
-          MonthId: monthIdNum,
+          YearsM_Id: yearIdNum,
+          MonthsM_Id: monthIdNum,
           OrgId: orgIdNum,
         });
       }
@@ -507,8 +509,8 @@ export const generateAccountingReports = async (
     const isFinalAccountsExists = await models.FinalAccs.findAll({
       where: {
         OrgId: orgIdNum,
-        YearId: yearIdNum,
-        MonthId: monthIdNum,
+        YearsM_Id: yearIdNum,
+        MonthsM_Id: monthIdNum,
       },
       order: [['id', 'DESC']],
       limit: 1,
@@ -521,8 +523,8 @@ export const generateAccountingReports = async (
 
     await models.FinalAccs.create({
       OrgId: orgIdNum,
-      YearId: yearIdNum,
-      MonthId: monthIdNum,
+      YearsM_Id: yearIdNum,
+      MonthsM_Id: monthIdNum,
       isLatest: true,
       isActive: true,
       newChanges: false,

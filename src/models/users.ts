@@ -15,21 +15,23 @@ export class Users extends Model<
 > {
   declare id: CreationOptional<number>;
   declare email: string;
-  declare handle: string | null;
-  declare password: string | null;
+  declare handle: string;
+  declare password: string;
   declare name: string;
-  declare middleName: string | null;
-  declare surName: string | null;
-  declare mobileNumber: number | null;
-  declare countryCode: string | null;
+  declare middleName: CreationOptional<string>;
+  declare surName: CreationOptional<string>;
+  declare mobileNumber: CreationOptional<number>;
+  declare countryCode: CreationOptional<string>;
   declare isActive: CreationOptional<boolean>;
-  declare dob: CreationOptional<Date | null>;
-  declare tob: string | null;
+  declare dob: CreationOptional<Date>;
+  declare tob: CreationOptional<string>;
   declare isVerified: CreationOptional<boolean>;
-  declare TypeId: number | null;
-  declare GenderId: number | null;
-  declare hash: CreationOptional<string> | null;
-  declare hashExpiresAt: CreationOptional<Date> | null;
+  declare TypesM_Id: number;
+  declare typeOthersValue: CreationOptional<string>;
+  declare GendersM_Id: number;
+  declare genderOthersValue: CreationOptional<string>;
+  declare hash: CreationOptional<string>;
+  declare hashExpiresAt: CreationOptional<Date>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -95,13 +97,19 @@ Users.init(
       allowNull: false,
       defaultValue: false,
     },
-    TypeId: {
+    TypesM_Id: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    GenderId: {
+    typeOthersValue: {
+      type: DataTypes.STRING,
+    },
+    GendersM_Id: {
       type: DataTypes.INTEGER,
       allowNull: true,
+    },
+    genderOthersValue: {
+      type: DataTypes.STRING,
     },
     hash: {
       type: DataTypes.STRING,

@@ -14,7 +14,6 @@ export class Organizations extends Model<
 > {
   declare id: CreationOptional<number>;
   declare name: string;
-  declare uid: CreationOptional<number>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -30,10 +29,6 @@ Organizations.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-    },
-    uid: {
-      type: DataTypes.INTEGER,
       unique: true,
     },
     createdAt: {

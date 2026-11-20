@@ -1,45 +1,65 @@
-import { TypeMasters } from './typeMasters';
-import { GenderMasters } from './genderMasters';
-import { Users } from './users';
+import { AccCategsM } from './accCategsM';
 import { AccessAndRefreshTokens } from './accessAndRefreshTokens';
-import { RelationMasters } from './relationMasters';
-import { UsrConns } from './usrConns';
-import { Organizations } from './organizations';
 import { Accounts } from './accounts';
-import { RoleMasters } from './roleMasters';
-import { Journals } from './journals';
-import { CarriedForwards } from './carriedForwards';
 import { Cards } from './cards';
+import { CarriedForwards } from './carriedForwards';
+import { Connections } from './connections';
 import { Documents } from './documents';
 import { FinalAccs } from './finalAccs';
-import { Months } from './months';
-import { Years } from './years';
+import { FriendsAndFams } from './friendsAndFams';
+import { GendersM } from './gendersM';
+import { Journals } from './journals';
 import { KeysAndLabels } from './keysAndLabels';
-import { AccCategs } from './accCategs';
-import { Staff } from './staff';
-import { StaffRoles } from './staffRoles';
+import { MonthsM } from './monthsM';
+import { Organizations } from './organizations';
+import { RelationsM } from './relationsM';
+import { RolesM_TypesM_J } from './rolesM_typesM_J';
+import { RolesM } from './rolesM';
+import { StaffJ } from './staffJ';
+import { StaffRolesJ } from './staffRolesJ';
+import { TypesM } from './typesM';
+import { Users } from './users';
+import { YearsM } from './yearsM';
 
-TypeMasters.hasMany(Users, { foreignKey: 'TypeId' });
-Users.belongsTo(TypeMasters, { foreignKey: 'TypeId' });
+Users.hasMany(Connections, { foreignKey: 'ConnUserId' });
+Connections.belongsTo(Users, { foreignKey: 'ConnUserId' });
 
-GenderMasters.hasMany(Users, { foreignKey: 'GenderId' });
-Users.belongsTo(GenderMasters, { foreignKey: 'GenderId' });
+Connections.hasOne(FriendsAndFams, { foreignKey: 'ConnectionId' });
+FriendsAndFams.belongsTo(Connections, { foreignKey: 'ConnectionId' });
 
-Users.belongsToMany(Users, {
-  as: 'Connections',
-  through: UsrConns,
-  foreignKey: 'UserId',
-  otherKey: 'ConnId',
+TypesM.hasMany(Users, { foreignKey: 'TypesM_Id' });
+Users.belongsTo(TypesM, { foreignKey: 'TypesM_Id' });
+
+GendersM.hasMany(Users, { foreignKey: 'GendersM_Id' });
+Users.belongsTo(GendersM, { foreignKey: 'GendersM_Id' });
+
+
+//#region Super many to many association
+RolesM.belongsToMany(TypesM, {
+  through: RolesM_TypesM_J,
+  foreignKey: 'RolesM_Id',
+  otherKey: 'TypesM_Id',
 });
-Users.belongsToMany(Users, {
-  as: 'Users',
-  through: UsrConns,
-  foreignKey: 'ConnId',
-  otherKey: 'UserId',
+TypesM.belongsToMany(RolesM, {
+  through: RolesM_TypesM_J,
+  foreignKey: 'TypesM_Id',
+  otherKey: 'RolesM_Id',
 });
 
-RelationMasters.hasMany(UsrConns, { foreignKey: 'RelId' });
-UsrConns.belongsTo(RelationMasters, { foreignKey: 'RelId' });
+RolesM.hasMany(RolesM_TypesM_J, {
+  foreignKey: 'RolesM_Id',
+});
+RolesM_TypesM_J.belongsTo(RolesM, {
+  foreignKey: 'RolesM_Id',
+});
+
+TypesM.hasMany(RolesM_TypesM_J, {
+  foreignKey: 'TypesM_Id',
+});
+RolesM_TypesM_J.belongsTo(TypesM, {
+  foreignKey: 'TypesM_Id',
+});
+//#endregion
 
 Users.hasMany(Accounts, { foreignKey: 'UserId' });
 Accounts.belongsTo(Users, { foreignKey: 'UserId' });
@@ -47,60 +67,60 @@ Accounts.belongsTo(Users, { foreignKey: 'UserId' });
 Organizations.hasMany(Accounts, { foreignKey: 'OrgId' });
 Accounts.belongsTo(Organizations, { foreignKey: 'OrgId' });
 
-AccCategs.hasMany(Accounts, { foreignKey: 'AccCategId' });
-Accounts.belongsTo(AccCategs, { foreignKey: 'AccCategId' });
+AccCategsM.hasMany(Accounts, { foreignKey: 'AccCategsM_Id' });
+Accounts.belongsTo(AccCategsM, { foreignKey: 'AccCategsM_Id' });
 
 //#region Super many to many association
 Users.belongsToMany(Organizations, {
-  through: Staff,
+  through: StaffJ,
   foreignKey: 'UserId',
   otherKey: 'OrgId',
 });
 Organizations.belongsToMany(Users, {
-  through: Staff,
+  through: StaffJ,
   foreignKey: 'OrgId',
   otherKey: 'UserId',
 });
 
-Users.hasMany(Staff, {
+Users.hasMany(StaffJ, {
   foreignKey: 'UserId',
 });
-Staff.belongsTo(Users, {
+StaffJ.belongsTo(Users, {
   foreignKey: 'UserId',
 });
 
-Organizations.hasMany(Staff, {
+Organizations.hasMany(StaffJ, {
   foreignKey: 'OrgId',
 });
-Staff.belongsTo(Organizations, {
+StaffJ.belongsTo(Organizations, {
   foreignKey: 'OrgId',
 });
 //#endregion
 
 //#region Super many to many association
-Staff.belongsToMany(RoleMasters, {
-  through: StaffRoles,
-  foreignKey: 'StaffId',
-  otherKey: 'RoleId',
+StaffJ.belongsToMany(RolesM, {
+  through: StaffRolesJ,
+  foreignKey: 'StaffJ_Id',
+  otherKey: 'RolesM_Id',
 });
-RoleMasters.belongsToMany(Staff, {
-  through: StaffRoles,
-  foreignKey: 'RoleId',
-  otherKey: 'StaffId',
-});
-
-Staff.hasMany(StaffRoles, {
-  foreignKey: 'StaffId',
-});
-StaffRoles.belongsTo(Staff, {
-  foreignKey: 'StaffId',
+RolesM.belongsToMany(StaffJ, {
+  through: StaffRolesJ,
+  foreignKey: 'RolesM_Id',
+  otherKey: 'StaffJ_Id',
 });
 
-RoleMasters.hasMany(StaffRoles, {
-  foreignKey: 'RoleId',
+StaffJ.hasMany(StaffRolesJ, {
+  foreignKey: 'StaffJ_Id',
 });
-StaffRoles.belongsTo(RoleMasters, {
-  foreignKey: 'RoleId',
+StaffRolesJ.belongsTo(StaffJ, {
+  foreignKey: 'StaffJ_Id',
+});
+
+RolesM.hasMany(StaffRolesJ, {
+  foreignKey: 'RolesM_Id',
+});
+StaffRolesJ.belongsTo(RolesM, {
+  foreignKey: 'RolesM_Id',
 });
 //#endregion
 
@@ -122,37 +142,37 @@ CarriedForwards.belongsTo(Accounts, { foreignKey: 'AccountId' });
 FinalAccs.hasOne(Documents, { foreignKey: 'DocumentId' });
 Documents.belongsTo(FinalAccs, { foreignKey: 'DocumentId' });
 
-Months.hasMany(Journals, { foreignKey: 'MonthId' });
-Journals.belongsTo(Months, { foreignKey: 'MonthId' });
+MonthsM.hasMany(Journals, { foreignKey: 'MonthsMM_Id' });
+Journals.belongsTo(MonthsM, { foreignKey: 'MonthsMM_Id' });
 
-Years.hasMany(Journals, { foreignKey: 'YearId' });
-Journals.belongsTo(Years, { foreignKey: 'YearId' });
+YearsM.hasMany(Journals, { foreignKey: 'YearsM_Id' });
+Journals.belongsTo(YearsM, { foreignKey: 'YearsM_Id' });
 
-Months.hasMany(CarriedForwards, { foreignKey: 'MonthId' });
-CarriedForwards.belongsTo(Months, { foreignKey: 'MonthId' });
+MonthsM.hasMany(CarriedForwards, { foreignKey: 'MonthsMM_Id' });
+CarriedForwards.belongsTo(MonthsM, { foreignKey: 'MonthsMM_Id' });
 
-Years.hasMany(CarriedForwards, { foreignKey: 'YearId' });
-CarriedForwards.belongsTo(Years, { foreignKey: 'YearId' });
+YearsM.hasMany(CarriedForwards, { foreignKey: 'YearsM_Id' });
+CarriedForwards.belongsTo(YearsM, { foreignKey: 'YearsM_Id' });
 
 export default {
-  TypeMasters,
-  GenderMasters,
+  TypesM,
+  GendersM,
   Users,
   AccessAndRefreshTokens,
-  RelationMasters,
-  UsrConns,
+  RelationsM,
+  Connections,
   Organizations,
   Accounts,
-  RoleMasters,
+  RolesM,
   Journals,
   CarriedForwards,
   Cards,
   Documents,
   FinalAccs,
-  Months,
-  Years,
+  MonthsM,
+  YearsM,
   KeysAndLabels,
-  AccCategs,
-  Staff,
-  StaffRoles,
+  AccCategsM,
+  StaffJ,
+  StaffRolesJ,
 };

@@ -59,8 +59,8 @@ export const postJournalEntry = async (req: Request, res: Response) => {
       CreditorId,
       amount,
       BkId: userId,
-      MonthId: month.id,
-      YearId: year.id,
+      MonthsM_Id: month.id,
+      YearsM_Id: year.id,
       isAdjustment,
     });
 

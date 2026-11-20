@@ -97,12 +97,12 @@
  *                 nullable: true
  *                 example: '14:30:00'
  *                 description: "Time of birth (optional, format: HH:MM or HH:MM:SS)"
- *               TypeId:
+ *               TypesM_Id:
  *                 type: integer
  *                 nullable: true
  *                 example: 19
  *                 description: "Type ID reference (must exist in TypeMasters table)"
- *               GenderId:
+ *               GendersM_Id:
  *                 type: integer
  *                 nullable: true
  *                 example: 4
@@ -736,7 +736,7 @@
  *                   type: object
  *                   required:
  *                     - name
- *                     - AccCategId
+ *                     - AccCategsM_Id
  *                   properties:
  *                     name:
  *                       type: string
@@ -746,7 +746,7 @@
  *                       type: integer
  *                       example: 1
  *                       description: api is '/api/v1/get-users'
- *                     AccCategId:
+ *                     AccCategsM_Id:
  *                       type: integer
  *                       example: 4
  *                       description: api is '/api/v1/get-account-types'

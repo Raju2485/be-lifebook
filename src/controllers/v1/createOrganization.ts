@@ -36,7 +36,7 @@ export const createOrg = async (req: Request, res: Response) => {
       // await models.Accounts.create({
       //   OrgId: org.id,
       //   UserId: userId,
-      //   AccCategId: accCateg.id,
+      //   AccCategsM_Id: accCateg.id,
       //   isAdmin: true,
       //   isMember: true,
       // });

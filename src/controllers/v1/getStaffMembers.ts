@@ -3,7 +3,7 @@ import models from '../../models/index';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 import { Op, WhereOptions, InferAttributes, Sequelize } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
-import type { Staff } from '../../models/Staff';
+import type { Staff } from '../../models/staffJ';
 
 
 export const getStaffMembers = async (req: Request, res: Response) => {

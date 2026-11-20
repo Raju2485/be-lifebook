@@ -3,8 +3,8 @@ import { compare } from 'bcrypt';
 import { Op } from 'sequelize';
 import type { StaffAndRoles, RequestMeta } from '../types/auth';
 import { getErrorMessage } from './getErrorMessage';
-import type { Staff } from '../models/staff';
-import type { RoleMasters } from '../models/roleMasters';
+import type { Staff } from '../models/staffJ';
+import type { RoleMasters } from '../models/rolesM';
 import type { Organizations } from '../models/organizations';
 
 type GetStaffRolesParams = {
@@ -54,7 +54,7 @@ export const getStaffRoles = async ({
             },
             {
               model: models.RoleMasters,
-              through: { attributes: [] },
+              // through: { attributes: [] },
             },
           ],
         },

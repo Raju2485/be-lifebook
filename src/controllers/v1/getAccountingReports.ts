@@ -17,8 +17,8 @@ export const getAccountingReports = async (req: Request, res: Response) => {
     const finalAccounts = await models.FinalAccs.findAll({
       where: {
         OrgId: Number(orgId),
-        YearId: Number(yearId),
-        MonthId: Number(monthId),
+        YearsM_Id: Number(yearId),
+        MonthsM_Id: Number(monthId),
       },
       order: [['id', 'DESC']],
       limit: 1,

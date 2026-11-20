@@ -583,8 +583,8 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
                 CreditorId: isCreditorAccountExists!.id,
                 amount,
                 BkId: userId,
-                MonthId: month2!.id,
-                YearId: year2!.id,
+                MonthsM_Id: month2!.id,
+                YearsM_Id: year2!.id,
                 isAdjustment:
                   String(isAdjustment ?? '').toLowerCase() === 'yes'
                     ? true

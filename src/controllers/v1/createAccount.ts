@@ -16,17 +16,12 @@ export const createAccount = async (req: Request, res: Response) => {
     }
 
     for (let i = 0; i < accounts.length; i++) {
-      const {
-        name,
-        AccCategId,
-        natureOfAccount,
-        UserId,
-      } = accounts[i];
+      const { name, AccCategsM_Id, natureOfAccount, UserId } = accounts[i];
 
       const objToCreate = {
         name: name,
         OrgId: Number(orgId),
-        AccCategId,
+        AccCategsM_Id,
         natureOfAccount,
         UserId,
       };

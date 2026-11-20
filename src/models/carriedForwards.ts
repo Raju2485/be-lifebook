@@ -18,8 +18,8 @@ export class CarriedForwards extends Model<
   declare debitAmount: CreationOptional<number>;
   declare creditAmount: CreationOptional<number>;
   declare OrgId: number;
-  declare MonthId: number;
-  declare YearId: number;
+  declare MonthsM_Id: number;
+  declare YearsM_Id: number;
   declare isActive: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -48,10 +48,10 @@ CarriedForwards.init(
     OrgId: {
       type: DataTypes.INTEGER,
     },
-    MonthId: {
+    MonthsM_Id: {
       type: DataTypes.INTEGER,
     },
-    YearId: {
+    YearsM_Id: {
       type: DataTypes.INTEGER,
     },
     isActive: {

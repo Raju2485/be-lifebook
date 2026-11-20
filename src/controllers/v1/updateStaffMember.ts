@@ -33,17 +33,19 @@ export const updateStaffMember = async (req: Request, res: Response) => {
 
     await models.StaffRoles.destroy({
       where: {
-        StaffId: id,
+        StaffJ_Id: id,
       },
     });
 
     console.log('updated = ', updated);
 
     if (RolesIds.length > 0) {
-      await models.StaffRoles.bulkCreate(RolesIds.map((roleId: number) => ({
-        StaffId: id,
-        RoleId: roleId,
-      })));
+      await models.StaffRoles.bulkCreate(
+        RolesIds.map((roleId: number) => ({
+          StaffJ_Id: id,
+          RolesM_Id: roleId,
+        }))
+      );
     }
 
     return res.status(200).json({

@@ -51,8 +51,8 @@ export const getPreviouslyAvailableCfMonthAndYear = async ({
     });
 
     if (carriedForwards.length > 0) {
-      previousCfYearId = carriedForwards[0].YearId;
-      previousCfMonthId = carriedForwards[0].MonthId;
+      previousCfYearId = carriedForwards[0].YearsM_Id;
+      previousCfMonthId = carriedForwards[0].MonthsM_Id;
     }
 
     return Promise.resolve({

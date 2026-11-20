@@ -9,7 +9,7 @@ import {
 import { sequelize } from '../config/database';
 import type { Users } from './users';
 import type { Organizations } from './organizations';
-import type { AccCategs } from './accCategs';
+import type { AccCategsM } from './accCategsM';
 export class Accounts extends Model<
   InferAttributes<Accounts>,
   InferCreationAttributes<Accounts>
@@ -17,7 +17,7 @@ export class Accounts extends Model<
   declare id: CreationOptional<number>;
   declare name: string;
   declare OrgId: number;
-  declare AccCategId: number;
+  declare AccCategsM_Id: number;
   declare UserId: CreationOptional<number>;
   declare isClosed: CreationOptional<boolean>;
   declare natureOfAccount: CreationOptional<'cash' | 'bank' | null>;
@@ -26,7 +26,7 @@ export class Accounts extends Model<
   declare updatedAt: CreationOptional<Date>;
 
   declare User?: NonAttribute<Users>;
-  declare AccCateg?: NonAttribute<AccCategs>;
+  declare AccCategsM?: NonAttribute<AccCategsM>;
   declare Organization?: NonAttribute<Organizations>;
 }
 
@@ -46,7 +46,7 @@ Accounts.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    AccCategId: {
+    AccCategsM_Id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -62,8 +62,8 @@ Accounts.init(
       type: DataTypes.STRING,
       validate: {
         isIn: {
-          args: [['cash', 'bank', null]],
-          msg: 'natureOfAccount must be one of the following: cash / bank/ null',
+          args: [['Cash', 'Bank', null]],
+          msg: 'natureOfAccount must be one of the following: Cash / Bank/ null',
         },
       },
     },
@@ -94,4 +94,5 @@ Accounts.init(
         name: 'Accounts_OrgId_name_uk',
       },
     ],
-  })
+  }
+);

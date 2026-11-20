@@ -33,10 +33,12 @@ export const mapStaffMember = async (req: Request, res: Response) => {
       UserId: Number(UserId),
       OrgId: Number(OrgId),
     });
-    await models.StaffRoles.bulkCreate(RolesIds.map((roleId: number) => ({
-      OrgUserId: orgUser.id,
-      RoleId: roleId,
-    })));
+    await models.StaffRoles.bulkCreate(
+      RolesIds.map((roleId: number) => ({
+        OrgUserId: orgUser.id,
+        RolesM_Id: roleId,
+      }))
+    );
 
 
     return res.status(200).json({

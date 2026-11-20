@@ -15,8 +15,8 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       countryCode,
       dob,
       tob,
-      TypeId,
-      GenderId,
+      TypesM_Id,
+      GendersM_Id,
     } = req.body;
 
     // Validate required fields
@@ -96,13 +96,13 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       }
     }
 
-    // Validate TypeId if provided
-    if (TypeId) {
-      const typeIdNum = parseInt(TypeId, 10);
+    // Validate TypesM_Id if provided
+    if (TypesM_Id) {
+      const typeIdNum = parseInt(TypesM_Id, 10);
       if (isNaN(typeIdNum) || typeIdNum <= 0) {
         res.status(400).json({
           success: false,
-          msg: 'TypeId must be a valid positive number',
+          msg: 'TypesM_Id must be a valid positive number',
         });
         return;
       }
@@ -110,19 +110,19 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       if (!typeExists) {
         res.status(400).json({
           success: false,
-          msg: 'Invalid TypeId. The specified type does not exist',
+          msg: 'Invalid TypesM_Id. The specified type does not exist',
         });
         return;
       }
     }
 
-    // Validate GenderId if provided
-    if (GenderId) {
-      const genderIdNum = parseInt(GenderId, 10);
+    // Validate GendersM_Id if provided
+    if (GendersM_Id) {
+      const genderIdNum = parseInt(GendersM_Id, 10);
       if (isNaN(genderIdNum) || genderIdNum <= 0) {
         res.status(400).json({
           success: false,
-          msg: 'GenderId must be a valid positive number',
+          msg: 'GendersM_Id must be a valid positive number',
         });
         return;
       }
@@ -130,7 +130,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       if (!genderExists) {
         res.status(400).json({
           success: false,
-          msg: 'Invalid GenderId. The specified gender does not exist',
+          msg: 'Invalid GendersM_Id. The specified gender does not exist',
         });
         return;
       }
@@ -138,7 +138,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
 
     // Check if user with this email already exists
     const existingUser = await models.Users.findOne({
-      where: { email: {[Op.iLike]: email} },
+      where: { email: { [Op.iLike]: email } },
     });
 
     if (existingUser) {
@@ -166,8 +166,8 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       countryCode: countryCode.trim(),
       dob: dobDate,
       tob: tob || null,
-      TypeId: TypeId ? parseInt(TypeId, 10) : null,
-      GenderId: GenderId ? parseInt(GenderId, 10) : null,
+      TypesM_Id: TypesM_Id ? parseInt(TypesM_Id, 10) : null,
+      GendersM_Id: GendersM_Id ? parseInt(GendersM_Id, 10) : null,
       isActive: true,
       isVerified: false,
     } as any);
@@ -185,8 +185,8 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       tob: newUser.tob,
       isActive: newUser.isActive,
       isVerified: newUser.isVerified,
-      TypeId: newUser.TypeId,
-      GenderId: newUser.GenderId,
+      TypesM_Id: newUser.TypesM_Id,
+      GendersM_Id: newUser.GendersM_Id,
       createdAt: newUser.createdAt,
       updatedAt: newUser.updatedAt,
     };

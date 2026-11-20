@@ -27,7 +27,7 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
           OrgId: Number(orgId),
           isActive: true,
         },
-        attributes: ['YearId', 'MonthId'],
+        attributes: ['YearsM_Id', 'MonthsM_Id'],
         include: [
           {
             model: models.Months,
@@ -37,7 +37,7 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
           },
         ],
         raw: true,
-        group: ['YearId', 'MonthId', 'Month.id', 'Year.id'],
+        group: ['YearsM_Id', 'MonthsM_Id', 'Month.id', 'Year.id'],
       });
 
       const yearsAndMonths: YearMonthBucket[] = [];
@@ -45,10 +45,10 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
         const journal = journals[i] as unknown as Record<string, unknown>;
 
         const year = Number(journal['Year.name']);
-        const yearId = Number(journal.YearId);
+        const yearId = Number(journal.YearsM_Id);
         const monthName = toTitleCase(String(journal['Month.name'] ?? ''));
         const monthNum = Number(journal['Month.sequence']);
-        const monthId = Number(journal.MonthId);
+        const monthId = Number(journal.MonthsM_Id);
 
         const yearIndex = yearsAndMonths.findIndex((obj) => obj.year === year);
         if (yearIndex === -1) {

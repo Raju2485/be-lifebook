@@ -3,7 +3,7 @@ import models from '../../models/index';
 import { InferAttributes, Op, WhereOptions } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
 import { getErrorMessage } from '../../utils/getErrorMessage';
-import type { Months } from '../../models/months';
+import type { Months } from '../../models/monthsM';
 
 export const getMonthsAndQuarters = async (req: Request, res: Response) => {
   try {

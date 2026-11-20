@@ -13,14 +13,15 @@ export class FinalAccs extends Model<
 > {
   declare id: CreationOptional<number>;
   declare OrgId: number;
-  declare YearId: number;
-  declare MonthId: number;
+  declare YearsM_Id: number;
+  declare MonthsM_Id: number;
   declare isLatest: boolean;
   declare jsonData: Record<string, any>;
   declare sequence: number;
   declare isActive: boolean;
   declare newChanges: boolean;
   declare DocumentId: CreationOptional<number>;
+  declare AccountId: CreationOptional<number>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -37,13 +38,16 @@ FinalAccs.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    YearId: {
+    YearsM_Id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    MonthId: {
+    MonthsM_Id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    AccountId: {
+      type: DataTypes.INTEGER,
     },
     isLatest: {
       type: DataTypes.BOOLEAN,

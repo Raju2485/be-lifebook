@@ -21,8 +21,8 @@ export class Journals extends Model<
   declare CreditorId: number;
   declare BkId: number;
   declare OrgId: number;
-  declare MonthId: number;
-  declare YearId: number;
+  declare MonthsM_Id: number;
+  declare YearsM_Id: number;
   declare isActive: CreationOptional<boolean>;
   declare isAdjustment: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
@@ -69,11 +69,11 @@ Journals.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    MonthId: {
+    MonthsM_Id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    YearId: {
+    YearsM_Id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

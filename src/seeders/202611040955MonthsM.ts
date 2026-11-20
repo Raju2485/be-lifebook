@@ -1,0 +1,199 @@
+import type { QueryInterface } from 'sequelize';
+import { Op } from 'sequelize';
+import momentz from 'moment-timezone';
+
+const MONTHS_VALUES = [
+  {
+    name: 'January',
+    type: 'months',
+    sequence: 1,
+    fromDate: momentz(new Date('2026-01-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-01-31')).endOf('month').toDate(),
+    fromMonthNum: 1,
+    toMonthNum: 1,
+  },
+  {
+    name: 'February',
+    type: 'months',
+    sequence: 2,
+    fromDate: momentz(new Date('2026-02-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-02-29')).endOf('month').toDate(),
+    fromMonthNum: 2,
+    toMonthNum: 2,
+  },
+  {
+    name: 'March',
+    type: 'months',
+    sequence: 3,
+    fromDate: momentz(new Date('2026-03-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-03-31')).endOf('month').toDate(),
+    fromMonthNum: 3,
+    toMonthNum: 3,
+  },
+  {
+    name: 'April',
+    type: 'months',
+    sequence: 4,
+    fromDate: momentz(new Date('2026-04-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-04-30')).endOf('month').toDate(),
+    fromMonthNum: 4,
+    toMonthNum: 4,
+  },
+  {
+    name: 'May',
+    type: 'months',
+    sequence: 5,
+    fromDate: momentz(new Date('2026-05-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-05-31')).endOf('month').toDate(),
+    fromMonthNum: 5,
+    toMonthNum: 5,
+  },
+  {
+    name: 'June',
+    type: 'months',
+    sequence: 6,
+    fromDate: momentz(new Date('2026-06-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-06-30')).endOf('month').toDate(),
+    fromMonthNum: 6,
+    toMonthNum: 6,
+  },
+  {
+    name: 'July',
+    type: 'months',
+    sequence: 7,
+    fromDate: momentz(new Date('2026-07-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-07-31')).endOf('month').toDate(),
+    fromMonthNum: 7,
+    toMonthNum: 7,
+  },
+  {
+    name: 'August',
+    type: 'months',
+    sequence: 8,
+    fromDate: momentz(new Date('2026-08-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-08-31')).endOf('month').toDate(),
+    fromMonthNum: 8,
+    toMonthNum: 8,
+  },
+  {
+    name: 'September',
+    type: 'months',
+    sequence: 9,
+    fromDate: momentz(new Date('2026-09-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-09-30')).endOf('month').toDate(),
+    fromMonthNum: 9,
+    toMonthNum: 9,
+  },
+  {
+    name: 'October',
+    type: 'months',
+    sequence: 10,
+    fromDate: momentz(new Date('2026-10-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-10-31')).endOf('month').toDate(),
+    fromMonthNum: 10,
+    toMonthNum: 10,
+  },
+  {
+    name: 'November',
+    type: 'months',
+    sequence: 11,
+    fromDate: momentz(new Date('2026-11-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-11-30')).endOf('month').toDate(),
+    fromMonthNum: 11,
+    toMonthNum: 11,
+  },
+  {
+    name: 'December',
+    type: 'months',
+    sequence: 12,
+    fromDate: momentz(new Date('2026-12-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-12-31')).endOf('month').toDate(),
+    fromMonthNum: 12,
+    toMonthNum: 12,
+  },
+  {
+    name: '1st Quarter',
+    type: 'quarters',
+    sequence: 13,
+    fromDate: momentz(new Date('2026-01-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-03-31')).endOf('month').toDate(),
+    fromMonthNum: 1,
+    toMonthNum: 3,
+  },
+  {
+    name: '2nd Quarter',
+    type: 'quarters',
+    sequence: 14,
+    fromDate: momentz(new Date('2026-04-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-06-30')).endOf('month').toDate(),
+    fromMonthNum: 4,
+    toMonthNum: 6,
+  },
+  {
+    name: '3rd Quarter',
+    type: 'quarters',
+    sequence: 15,
+    fromDate: momentz(new Date('2026-07-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-09-30')).endOf('month').toDate(),
+    fromMonthNum: 7,
+    toMonthNum: 9,
+  },
+  {
+    name: '4th Quarter',
+    type: 'quarters',
+    sequence: 16,
+    fromDate: momentz(new Date('2026-10-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-12-31')).endOf('month').toDate(),
+    fromMonthNum: 10,
+    toMonthNum: 12,
+  },
+  {
+    name: 'Half Yearly',
+    type: 'quarters',
+    sequence: 17,
+    fromDate: momentz(new Date('2026-01-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-06-30')).endOf('month').toDate(),
+    fromMonthNum: 1,
+    toMonthNum: 6,
+  },
+  {
+    name: 'Yearly',
+    type: 'quarters',
+    sequence: 18,
+    fromDate: momentz(new Date('2026-01-01')).startOf('month').toDate(),
+    toDate: momentz(new Date('2026-12-31')).endOf('month').toDate(),
+    fromMonthNum: 1,
+    toMonthNum: 12,
+  },
+];
+
+export async function up(queryInterface: QueryInterface) {
+  const now = new Date();
+
+  await queryInterface.bulkInsert(
+    'MonthsM',
+    MONTHS_VALUES.map((obj) => ({
+      name: obj.name,
+      type: obj.type,
+      sequence: obj.sequence,
+      fromDate: obj.fromDate,
+      toDate: obj.toDate,
+      fromMonthNum: obj.fromMonthNum,
+      toMonthNum: obj.toMonthNum,
+      createdAt: now,
+      updatedAt: now,
+    })),
+    {}
+  );
+}
+
+export async function down(queryInterface: QueryInterface) {
+  await queryInterface.bulkDelete(
+    'MonthsM',
+    {
+      name: { [Op.in]: MONTHS_VALUES.map((obj) => obj.name) as string[] },
+      type: { [Op.in]: MONTHS_VALUES.map((obj) => obj.type) as string[] },
+    },
+    {}
+  );
+}
