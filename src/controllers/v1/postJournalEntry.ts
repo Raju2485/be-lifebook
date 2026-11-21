@@ -19,7 +19,7 @@ export const postJournalEntry = async (req: Request, res: Response) => {
     const monthName = momentz(date).format('MMMM');
     const yearName = momentz(date).year();
 
-    const month = await models.Months.findOne({
+    const month = await models.MonthsM.findOne({
       where: {
         name: {
           [Op.iLike]: monthName,
@@ -27,7 +27,7 @@ export const postJournalEntry = async (req: Request, res: Response) => {
         type: 'months',
       },
     });
-    const year = await models.Years.findOne({
+    const year = await models.YearsM.findOne({
       where: {
         name: Number(yearName),
       },

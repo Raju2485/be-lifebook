@@ -3,7 +3,7 @@ import models from '../../models/index';
 import { InferAttributes, Op, WhereOptions } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
 import { getErrorMessage } from '../../utils/getErrorMessage';
-import type { AccCategs } from '../../models/accCategsM';
+import type { AccCategsM } from '../../models/accCategsM';
 
 export const getAccountCategories = async (req: Request, res: Response) => {
   try {
@@ -18,7 +18,7 @@ export const getAccountCategories = async (req: Request, res: Response) => {
     }
 
     // getting users
-    const { count, rows } = await models.AccCategs.findAndCountAll({
+    const { count, rows } = await models.AccCategsM.findAndCountAll({
       where: whereConditions,
       attributes: ['id', 'name', 'debitCreditRule'],
       limit,

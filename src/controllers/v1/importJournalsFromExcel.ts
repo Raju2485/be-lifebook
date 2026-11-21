@@ -464,14 +464,14 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
             const isAdjustment = row[isAdjustmentColumn.index];
             // let creditorAccCashOrBank = row[creditorAccountCashOrBankColumn.index];
 
-    const month2 = await models.Months.findOne({
+    const month2 = await models.MonthsM.findOne({
       where: {
         sequence: Number(month),
         type: 'months',
       },
-      raw: true
+      raw: true,
     });
-    const year2 = await models.Years.findOne({
+    const year2 = await models.YearsM.findOne({
       where: {
         name: Number(year),
       },

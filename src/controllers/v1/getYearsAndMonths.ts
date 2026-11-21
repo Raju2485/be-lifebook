@@ -30,19 +30,20 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
         attributes: ['YearsM_Id', 'MonthsM_Id'],
         include: [
           {
-            model: models.Months,
+            model: models.MonthsM,
           },
           {
-            model: models.Years,
+            model: models.YearsM,
           },
         ],
         raw: true,
-        group: ['YearsM_Id', 'MonthsM_Id', 'Month.id', 'Year.id'],
+        group: ['YearsM_Id', 'MonthsM_Id', 'MonthsM.id', 'YearsM.id'],
       });
 
       const yearsAndMonths: YearMonthBucket[] = [];
       for (let i = 0; i < journals.length; i++) {
         const journal = journals[i] as unknown as Record<string, unknown>;
+        console.log('journal = ', JSON.stringify(journal));
 
         const year = Number(journal['Year.name']);
         const yearId = Number(journal.YearsM_Id);

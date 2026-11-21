@@ -3,8 +3,7 @@ import models from '../../models/index';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 import { Op, WhereOptions, InferAttributes, Sequelize } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
-import type { Staff } from '../../models/staffJ';
-
+import type { StaffJ } from '../../models/staffJ';
 
 export const getStaffMembers = async (req: Request, res: Response) => {
   try {
@@ -20,7 +19,7 @@ export const getStaffMembers = async (req: Request, res: Response) => {
 
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
-    const whereConditions: WhereOptions<InferAttributes<Staff>> = {
+    const whereConditions: WhereOptions<InferAttributes<StaffJ>> = {
       OrgId: Number(OrgId),
     };
 
@@ -32,26 +31,23 @@ export const getStaffMembers = async (req: Request, res: Response) => {
       });
     }
 
-     const { count, rows } = await models.Staff.findAndCountAll({
-       where: whereConditions,
-       include: [
-         {
-           model: models.Users,
-         },
-         {
-           model: models.Organizations,
-         },
-
-         {
-           model: models.RoleMasters,
-         },
-
-       ],
-       limit,
-       offset,
-       order: [[models.Users, 'name', 'ASC']],
-     });
-
+    const { count, rows } = await models.StaffJ.findAndCountAll({
+      where: whereConditions,
+      include: [
+        {
+          model: models.Users,
+        },
+        {
+          model: models.Organizations,
+        },
+        {
+          model: models.RolesM,
+        },
+      ],
+      limit,
+      offset,
+      order: [[models.Users, 'name', 'ASC']],
+    });
 
     return res.status(200).json({
       success: true,

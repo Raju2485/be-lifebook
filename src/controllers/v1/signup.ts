@@ -8,6 +8,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
     const {
       email,
       password,
+      handle,
       name,
       middleName,
       surName,
@@ -106,7 +107,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
         });
         return;
       }
-      const typeExists = await models.TypeMasters.findByPk(typeIdNum);
+      const typeExists = await models.TypesM.findByPk(typeIdNum);
       if (!typeExists) {
         res.status(400).json({
           success: false,
@@ -126,7 +127,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
         });
         return;
       }
-      const genderExists = await models.GenderMasters.findByPk(genderIdNum);
+      const genderExists = await models.GendersM.findByPk(genderIdNum);
       if (!genderExists) {
         res.status(400).json({
           success: false,
@@ -159,6 +160,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
     const newUser = await models.Users.create({
       email: email.trim(),
       password: hashedPassword,
+      handle: handle.trim(),
       name: name.trim(),
       middleName: middleName ? middleName.trim() : null,
       surName: surName ? surName.trim() : null,
@@ -177,6 +179,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       id: newUser.id,
       email: newUser.email,
       name: newUser.name,
+      handle: newUser.handle,
       middleName: newUser.middleName,
       surName: newUser.surName,
       mobileNumber: newUser.mobileNumber,

@@ -13,7 +13,6 @@ export class RolesM extends Model<
 > {
   declare id: CreationOptional<number>;
   declare name: string;
-  declare code: number;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -28,11 +27,6 @@ RolesM.init(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    code: {
-      type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,
     },

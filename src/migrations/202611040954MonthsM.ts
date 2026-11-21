@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import type { QueryInterface } from 'sequelize';
 
 export async function up( queryInterface: QueryInterface ){
-  await queryInterface.createTable('Months', {
+  await queryInterface.createTable('MonthsM', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -58,5 +58,5 @@ export async function up( queryInterface: QueryInterface ){
 };
 
 export async function down(queryInterface: QueryInterface ){
-  await queryInterface.dropTable('Months');
+  await queryInterface.dropTable('MonthsM');
 };

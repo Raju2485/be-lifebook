@@ -17,7 +17,7 @@ export const signin = async (req: Request, res: Response) => {
       email,
       password,
     });
-
+// console.log('result = ', JSON.stringify(result));
     if ('error' in result) {
       return res.status(result.error.status).json({
         success: false,

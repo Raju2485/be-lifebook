@@ -23,7 +23,8 @@ export const checkRole = (rolesArray: string[]) => {
         .status(400)
         .json({ success: false, msg: 'organization not mapped' });
     }
-
+    // console.log('org = ', JSON.stringify(org));
+    // console.log('rolesArray = ', JSON.stringify(rolesArray));
     if (org.roles.some((el) => rolesArray.includes(el))) {
       next();
     } else {

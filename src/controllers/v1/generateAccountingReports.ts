@@ -75,12 +75,12 @@ export const generateAccountingReports = async (
     const monthIdNum = Number(monthId);
     const yearIdNum = Number(yearId);
 
-    const month = await models.Months.findOne({
+    const month = await models.MonthsM.findOne({
       where: {
         id: monthIdNum,
       },
     });
-    const year = await models.Years.findOne({
+    const year = await models.YearsM.findOne({
       where: {
         id: yearIdNum,
       },

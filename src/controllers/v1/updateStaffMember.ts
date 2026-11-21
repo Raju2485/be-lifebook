@@ -14,7 +14,7 @@ export const updateStaffMember = async (req: Request, res: Response) => {
         metaData: req?.meta ?? null,
       });
     }
-    const staff = await models.Staff.findByPk(id);
+    const staff = await models.StaffJ.findByPk(id);
     if (!staff) {
       return res.status(400).json({
         success: false,
@@ -22,25 +22,27 @@ export const updateStaffMember = async (req: Request, res: Response) => {
         metaData: req?.meta ?? null,
       });
     }
-    const updated = await models.Staff.update({
-      isActive: isActive,
-    }, {
-      where: {
-        id: id,
+    const updated = await models.StaffJ.update(
+      {
+        isActive: isActive,
       },
-      returning: true,
-    });
+      {
+        where: {
+          id: id,
+        },
+        returning: true,
+      }
+    );
 
-    await models.StaffRoles.destroy({
+    await models.StaffRolesJ.destroy({
       where: {
         StaffJ_Id: id,
       },
     });
 
-    console.log('updated = ', updated);
 
     if (RolesIds.length > 0) {
-      await models.StaffRoles.bulkCreate(
+      await models.StaffRolesJ.bulkCreate(
         RolesIds.map((roleId: number) => ({
           StaffJ_Id: id,
           RolesM_Id: roleId,
@@ -50,7 +52,7 @@ export const updateStaffMember = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      msg: 'Staff member updated successfully!',
+      msg: 'StaffJ member updated successfully!',
       metaData: req?.meta ?? null,
     });
   } catch (err) {

@@ -27,14 +27,14 @@ export const getOrganizations = async (req: Request, res: Response) => {
         },
         include: [
           {
-            model: models.Staff,
+            model: models.StaffJ,
             where: {
               UserId: userId,
             },
             required: true,
             include: [
               {
-                model: models.RoleMasters,
+                model: models.RolesM,
                 through: {
                   attributes: [],
                 },
@@ -54,7 +54,7 @@ export const getOrganizations = async (req: Request, res: Response) => {
       where: whereConditions,
       include: [
         {
-          model: models.Staff,
+          model: models.StaffJ,
           where: {
             UserId: userId,
           },

@@ -41,7 +41,7 @@ export const createOrg = async (req: Request, res: Response) => {
       //   isMember: true,
       // });
 
-      await models.Staff.create({
+      await models.StaffJ.create({
         OrgId: org.id,
         UserId: userId,
         isAdmin: true,

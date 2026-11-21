@@ -34,18 +34,18 @@ export const getPreviouslyAvailableCfMonthAndYear = async ({
       },
       include: [
         {
-          model: models.Years,
+          model: models.YearsM,
           where: { name: { [Op.lte]: Number(previousYear) } },
         },
         {
-          model: models.Months,
+          model: models.MonthsM,
           where: { sequence: { [Op.lte]: Number(previousMonthNum) } },
           required: true,
         },
       ],
       order: [
-        [models.Years, 'name', 'DESC'],
-        [models.Months, 'sequence', 'DESC'],
+        [models.YearsM, 'name', 'DESC'],
+        [models.MonthsM, 'sequence', 'DESC'],
       ],
       limit: 1,
     });

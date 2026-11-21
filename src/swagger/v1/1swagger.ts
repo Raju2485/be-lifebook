@@ -46,6 +46,7 @@
  *             type: object
  *             required:
  *               - email
+ *               - handle
  *               - password
  *               - name
  *               - mobileNumber
@@ -63,6 +64,10 @@
  *                 minLength: 6
  *                 example: password123
  *                 description: "User's password (minimum 6 characters)"
+ *               handle:
+ *                 type: string
+ *                 example: '@bheema'
+ *                 description: "User's handle (must be unique)"
  *               name:
  *                 type: string
  *                 example: Bheemaraju
@@ -100,13 +105,13 @@
  *               TypesM_Id:
  *                 type: integer
  *                 nullable: true
- *                 example: 19
- *                 description: "Type ID reference (must exist in TypeMasters table)"
+ *                 example: 1
+ *                 description: "Type ID reference (must exist in TypesM table)"
  *               GendersM_Id:
  *                 type: integer
  *                 nullable: true
- *                 example: 4
- *                 description: "Gender ID reference (must exist in GenderMasters table)"
+ *                 example: 1
+ *                 description: "Gender ID reference (must exist in GendersM table)"
  *     responses:
  *       200:
  *         description: Signed up successfully!
@@ -1032,7 +1037,7 @@
  *               message: Something went wrong. Our team is working to fix this issue.
  */
 
-// Get Years and Months
+// Get YearsM and MonthsM
 /**
  * @swagger
  * /api/v1/get-years-and-months:
@@ -1148,7 +1153,7 @@
  */
 
 
-// Get Months and Quarters
+// Get MonthsM and Quarters
 /**
  * @swagger
  * /api/v1/get-months-and-quarters:
@@ -1230,12 +1235,12 @@
  *               message: Something went wrong. Our team is working to fix this issue.
  */
 
-// Map User Org and Roles
+// Map Staff Member
 /**
  * @swagger
- * /api/v1/map-user-org-and-roles:
+ * /api/v1/map-staff-member:
  *   post:
- *     summary: "Map User Org and Roles"
+ *     summary: "Map Staff Member"
  *     tags:
  *       - Admin
  *     security:
@@ -1278,12 +1283,12 @@
  */
 
 
-// Get User Org and Roles
+// Get Staff Members
 /**
  * @swagger
- * /api/v1/get-user-org-and-roles:
+ * /api/v1/get-staff-members:
  *   get:
- *     summary: "get user org and roles"
+ *     summary: "get staff members"
  *     tags:
  *       - Admin
  *     security:

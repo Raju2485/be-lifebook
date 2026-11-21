@@ -142,37 +142,39 @@ CarriedForwards.belongsTo(Accounts, { foreignKey: 'AccountId' });
 FinalAccs.hasOne(Documents, { foreignKey: 'DocumentId' });
 Documents.belongsTo(FinalAccs, { foreignKey: 'DocumentId' });
 
-MonthsM.hasMany(Journals, { foreignKey: 'MonthsMM_Id' });
-Journals.belongsTo(MonthsM, { foreignKey: 'MonthsMM_Id' });
+MonthsM.hasMany(Journals, { foreignKey: 'MonthsM_Id' });
+Journals.belongsTo(MonthsM, { foreignKey: 'MonthsM_Id' });
 
 YearsM.hasMany(Journals, { foreignKey: 'YearsM_Id' });
 Journals.belongsTo(YearsM, { foreignKey: 'YearsM_Id' });
 
-MonthsM.hasMany(CarriedForwards, { foreignKey: 'MonthsMM_Id' });
-CarriedForwards.belongsTo(MonthsM, { foreignKey: 'MonthsMM_Id' });
+MonthsM.hasMany(CarriedForwards, { foreignKey: 'MonthsM_Id' });
+CarriedForwards.belongsTo(MonthsM, { foreignKey: 'MonthsM_Id' });
 
 YearsM.hasMany(CarriedForwards, { foreignKey: 'YearsM_Id' });
 CarriedForwards.belongsTo(YearsM, { foreignKey: 'YearsM_Id' });
 
 export default {
-  TypesM,
-  GendersM,
-  Users,
-  AccessAndRefreshTokens,
-  RelationsM,
-  Connections,
-  Organizations,
-  Accounts,
-  RolesM,
-  Journals,
-  CarriedForwards,
-  Cards,
-  Documents,
-  FinalAccs,
-  MonthsM,
-  YearsM,
-  KeysAndLabels,
-  AccCategsM,
-  StaffJ,
-  StaffRolesJ,
+AccCategsM,
+AccessAndRefreshTokens,
+Accounts,
+Cards,
+CarriedForwards,
+Connections,
+Documents,
+FinalAccs,
+FriendsAndFams,
+GendersM,
+Journals,
+KeysAndLabels,
+MonthsM,
+Organizations,
+RelationsM,
+RolesM_TypesM_J,
+RolesM,
+StaffJ,
+StaffRolesJ,
+TypesM,
+Users,
+YearsM,
 };

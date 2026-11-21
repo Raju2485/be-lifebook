@@ -3,7 +3,7 @@ import models from '../../models/index';
 import { InferAttributes, Op, WhereOptions } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
 import { getErrorMessage } from '../../utils/getErrorMessage';
-import type { RoleMasters } from '../../models/rolesM';
+import type { RolesM } from '../../models/rolesM';
 
 export const getRoles = async (req: Request, res: Response) => {
   try {
@@ -11,13 +11,13 @@ export const getRoles = async (req: Request, res: Response) => {
 
     const { limit, offset } = getLimitAndOffset({ page, perPage });
 
-    const whereConditions: WhereOptions<InferAttributes<RoleMasters>> = {};
+    const whereConditions: WhereOptions<InferAttributes<RolesM>> = {};
     if (search) {
       whereConditions.name = { [Op.iLike]: `%${String(search)}%` };
     }
 
     // getting users
-    const { count, rows } = await models.RoleMasters.findAndCountAll({
+    const { count, rows } = await models.RolesM.findAndCountAll({
       where: whereConditions,
       attributes: ['id', 'name'],
       limit,

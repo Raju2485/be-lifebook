@@ -14,7 +14,7 @@ export const mapStaffMember = async (req: Request, res: Response) => {
         metaData: req?.meta ?? null,
       });
     }
-    let orgUser = await models.Staff.findOne({
+    let orgUser = await models.StaffJ.findOne({
       where: {
         UserId: Number(UserId),
         OrgId: Number(OrgId),
@@ -29,7 +29,7 @@ export const mapStaffMember = async (req: Request, res: Response) => {
       });
     }
 
-    orgUser = await models.Staff.create({
+    orgUser = await models.StaffJ.create({
       UserId: Number(UserId),
       OrgId: Number(OrgId),
     });

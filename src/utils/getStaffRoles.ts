@@ -3,8 +3,8 @@ import { compare } from 'bcrypt';
 import { Op } from 'sequelize';
 import type { StaffAndRoles, RequestMeta } from '../types/auth';
 import { getErrorMessage } from './getErrorMessage';
-import type { Staff } from '../models/staffJ';
-import type { RoleMasters } from '../models/rolesM';
+import type { StaffJ } from '../models/staffJ';
+import type { RolesM } from '../models/rolesM';
 import type { Organizations } from '../models/organizations';
 
 type GetStaffRolesParams = {
@@ -24,9 +24,9 @@ type GetStaffRolesFailure = {
   };
 };
 
-type StaffWithAssocs = Staff & {
+type StaffWithAssocs = StaffJ & {
   Organization?: Organizations;
-  RoleMasters?: RoleMasters[];
+  roles?: RolesM[];
 };
 
 export type GetStaffRolesResult = GetStaffRolesSuccess | GetStaffRolesFailure;
@@ -45,7 +45,7 @@ export const getStaffRoles = async ({
       where: whereConditions,
       include: [
         {
-          model: models.Staff,
+          model: models.StaffJ,
           required: false,
           where: { isActive: true },
           include: [
@@ -53,8 +53,8 @@ export const getStaffRoles = async ({
               model: models.Organizations,
             },
             {
-              model: models.RoleMasters,
-              // through: { attributes: [] },
+              model: models.RolesM,
+              through: { attributes: [] },
             },
           ],
         },
@@ -93,25 +93,27 @@ export const getStaffRoles = async ({
       }
     }
 
-    const staffRows = (user as typeof user & { Staff?: StaffWithAssocs[] })
-      .Staffs;
+    const staffRows =
+      (user as typeof user & { StaffJs?: StaffWithAssocs[] })
+        .StaffJs ?? [];
 
-    const staffAndRoles: StaffAndRoles[] =
-      staffRows?.map((staffMember) => {
-        const roles =
-          staffMember.RoleMasters?.map((role) => role.name).filter(Boolean) ||
-          [];
-        if (staffMember.isAdmin && !roles.includes('admin')) {
-          roles.push('admin');
-        }
-        return {
-          id: staffMember.Organization?.id ?? staffMember.OrgId,
-          name: staffMember.Organization?.name || '',
-          isAdmin: staffMember.isAdmin || false,
-          isMember: false,
-          roles,
-        };
-      }) || [];
+    // console.log('staffRows = ', JSON.stringify(staffRows));
+    const staffAndRoles: StaffAndRoles[] = staffRows.map((staffMember) => {
+      const roles =
+        staffMember.RolesMs
+          ?.map((role) => role.name.toLowerCase())
+          .filter(Boolean) || [];
+      if (staffMember.isAdmin && !roles.includes('admin')) {
+        roles.push('admin');
+      }
+      return {
+        id: staffMember.Organization?.id ?? staffMember.OrgId,
+        name: staffMember.Organization?.name || '',
+        isAdmin: staffMember.isAdmin || false,
+        isMember: false,
+        roles,
+      };
+    });
 
     const newUser: RequestMeta = {
       id: user.id,

@@ -37,7 +37,7 @@ export const getAccounts = async (req: Request, res: Response) => {
           attributes: ['id', 'name', 'middleName', 'surName', 'handle'],
         },
         {
-          model: models.AccCategs,
+          model: models.AccCategsM,
           attributes: ['id', 'name', 'debitCreditRule'],
         },
       ],

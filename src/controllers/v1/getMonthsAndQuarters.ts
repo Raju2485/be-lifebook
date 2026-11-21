@@ -3,7 +3,7 @@ import models from '../../models/index';
 import { InferAttributes, Op, WhereOptions } from 'sequelize';
 import { getLimitAndOffset, getNewPagination } from '../../utils/newPagination';
 import { getErrorMessage } from '../../utils/getErrorMessage';
-import type { Months } from '../../models/monthsM';
+import type { MonthsM } from '../../models/monthsM';
 
 export const getMonthsAndQuarters = async (req: Request, res: Response) => {
   try {
@@ -25,14 +25,14 @@ export const getMonthsAndQuarters = async (req: Request, res: Response) => {
     const typeQuery =
       type === 'monthsAndQuarters' ? { [Op.or]: ['months', 'quarters'] } : type;
 
-    const whereConditions: WhereOptions<InferAttributes<Months>> = {
+    const whereConditions: WhereOptions<InferAttributes<MonthsM>> = {
       type: typeQuery,
       isActive: true,
     };
     if (search) {
       whereConditions.name = { [Op.iLike]: `%${search}%` };
     }
-    const { count, rows } = await models.Months.findAndCountAll({
+    const { count, rows } = await models.MonthsM.findAndCountAll({
       where: whereConditions,
       attributes: ['id', 'name'],
       limit,

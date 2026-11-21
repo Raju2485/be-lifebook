@@ -28,7 +28,6 @@ import { getYearsAndMonths } from '../../controllers/v1/getYearsAndMonths';
 import { updateAccount } from '../../controllers/v1/updateAccount';
 import { getMonthsAndQuarters } from '../../controllers/v1/getMonthsAndQuarters';
 import { getKeysAndLabels } from '../../controllers/v1/getKeysAndLabels';
-const router = Router();
 import { verifyAuth } from '../../middlewares/verifyAuth';
 import { attachMetadataToRequest } from '../../middlewares/attachMetaToReq';
 import { checkRole } from '../../middlewares/checkRole';
@@ -38,6 +37,7 @@ import { pdfMakeTest } from '../../controllers/v1/pdfMakeTest';
 import { mapStaffMember } from '../../controllers/v1/mapStaffMember';
 import { getStaffMembers } from '../../controllers/v1/getStaffMembers';
 import { updateStaffMember } from '../../controllers/v1/updateStaffMember';
+const router = Router();
 
 router.post('/signup', signup);
 router.post('/signin', signin);
