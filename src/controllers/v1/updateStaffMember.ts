@@ -52,7 +52,7 @@ export const updateStaffMember = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      msg: 'StaffJ member updated successfully!',
+      msg: 'Staff member updated successfully!',
       metaData: req?.meta ?? null,
     });
   } catch (err) {

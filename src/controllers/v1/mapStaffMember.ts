@@ -24,7 +24,7 @@ export const mapStaffMember = async (req: Request, res: Response) => {
     if (orgUser) {
       return res.status(400).json({
         success: false,
-        msg: 'User already mapped to this organization',
+        msg: 'Staff member already mapped to this organization',
         metaData: req?.meta ?? null,
       });
     }
@@ -33,9 +33,9 @@ export const mapStaffMember = async (req: Request, res: Response) => {
       UserId: Number(UserId),
       OrgId: Number(OrgId),
     });
-    await models.StaffRoles.bulkCreate(
+    await models.StaffRolesJ.bulkCreate(
       RolesIds.map((roleId: number) => ({
-        OrgUserId: orgUser.id,
+        StaffJ_Id: orgUser.id,
         RolesM_Id: roleId,
       }))
     );
@@ -43,7 +43,7 @@ export const mapStaffMember = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      msg: 'User mapped to organization and roles successfully!',
+      msg: 'Staff member mapped to organization successfully!',
       metaData: req?.meta ?? null,
     });
   } catch (err) {

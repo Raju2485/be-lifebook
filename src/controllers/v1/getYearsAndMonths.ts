@@ -45,10 +45,10 @@ export const getYearsAndMonths = async (req: Request, res: Response) => {
         const journal = journals[i] as unknown as Record<string, unknown>;
         console.log('journal = ', JSON.stringify(journal));
 
-        const year = Number(journal['Year.name']);
+        const year = Number(journal['YearsM.name']);
         const yearId = Number(journal.YearsM_Id);
-        const monthName = toTitleCase(String(journal['Month.name'] ?? ''));
-        const monthNum = Number(journal['Month.sequence']);
+        const monthName = toTitleCase(String(journal['MonthsM.name'] ?? ''));
+        const monthNum = Number(journal['MonthsM.sequence']);
         const monthId = Number(journal.MonthsM_Id);
 
         const yearIndex = yearsAndMonths.findIndex((obj) => obj.year === year);

@@ -24,10 +24,6 @@ export async function up( queryInterface: QueryInterface ){
     AccountId: {
       type: DataTypes.INTEGER
     },
-    monthNumber: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     isLatest: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

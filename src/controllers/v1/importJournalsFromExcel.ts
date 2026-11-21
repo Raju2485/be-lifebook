@@ -10,7 +10,7 @@ type ColumnDef = { label: string; index: number };
 
 type NotFoundAccount = {
   accountName: string;
-  isUserExists: boolean;
+  // isUserExists: boolean;
 };
 
 function getIndexedCell(row: RowValues, index: number): CellValue | undefined {
@@ -90,9 +90,9 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
         const dateLabel = 'date (d&m&yyyy)';
         const particularsLabel = 'particulars';
         const amountLabel = 'amount';
-        const debtorAccountNameLabel = 'debtor account name without UID';
+        const debtorAccountNameLabel = 'debtor account name';
         // const debtorAccountEmailLabel = 'debtor account email';
-        const creditorAccountNameLabel = 'creditor account name without UID';
+        const creditorAccountNameLabel = 'creditor account name';
         // const creditorAccountEmailLabel = 'creditor account email';
         const isAdjustmentLabel = 'is adjustment?(yes/no)';
 
@@ -391,15 +391,15 @@ export const importJournalsFromExcel = async (req: Request, res: Response) => {
           );
           if (notFoundAccIndex === -1) {
             if (!(await isAccountExists(creditorAccName))) {
-              const isUserExistsResult = await isUserExists({
-                name: creditorAccName,
-                // email: creditorAccEmail ?? '',
-              });
+              // const isUserExistsResult = await isUserExists({
+              //   name: creditorAccName,
+              //   // email: creditorAccEmail ?? '',
+              // });
 
               notFoundAccounts.push({
                 accountName: creditorAccName,
                 // email: creditorAccEmail,
-                isUserExists: !!isUserExistsResult,
+                // isUserExists: !!isUserExistsResult,
               });
             }
           }

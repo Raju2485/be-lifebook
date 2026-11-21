@@ -216,7 +216,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
     if (err.name === 'SequelizeUniqueConstraintError') {
       res.status(409).json({
         success: false,
-        msg: 'A user with this email or uid already exists',
+        msg: 'A user with this email or handle already exists',
       });
       return;
     }
